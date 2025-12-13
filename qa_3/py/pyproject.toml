@@ -1,0 +1,11 @@
+[project]
+name = "py"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dotenv>=0.9.9",
+    "pytest-playwright>=0.7.1",
+    "tzafon>=2.6.1",
+]
