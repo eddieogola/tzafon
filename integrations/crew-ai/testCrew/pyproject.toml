@@ -1,0 +1,12 @@
+[project]
+name = "testcrew"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "unknown",
+]
+
+[tool.uv.sources]
+unknown = { path = "dist/unknown-0.0.0.tar.gz" }
