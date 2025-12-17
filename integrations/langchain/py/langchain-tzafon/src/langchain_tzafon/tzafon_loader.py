@@ -11,9 +11,9 @@ from langchain_core.document_loaders.base import BaseLoader
 from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 
-from .core import TzafonClient
-from .utils import get_logger
-from .constants import Settings
+from langchain_tzafon.core import TzafonClient
+from langchain_tzafon.utils import get_logger
+from langchain_tzafon.constants import Settings
 
 logger = get_logger(__name__)
 
@@ -54,12 +54,7 @@ class TzafonLoader(BaseLoader):
         self.api_key = api_key or config.api_key.get_secret_value()
         self.text_content = text_content
 
-        client = TzafonClient(api_key=self.api_key)
-        browser = client.initialize()
-
-        self.browser = browser
-
-        logger.info("TzafonLoader initialized")
+        self.client = TzafonClient(api_key=self.api_key)
 
 
     def lazy_load(self) -> Iterator[Document]:
@@ -69,34 +64,38 @@ class TzafonLoader(BaseLoader):
         Yields:
              Iterator[Document]: An iterator of Document objects containing the page content.
         """
-        computer_id = self.browser.id
+        computer = self.client.initialize()
+        cdp_url = f"{config.api_base_url}/computers/{computer.id}/cdp?token={self.api_key}"
 
-        for url in self.urls:
+        try:
             with sync_playwright() as playwright:
-                cdp_url = f"{config.api_base_url}/computers/{computer_id}/cdp?token={self.api_key}"
                 browser = playwright.chromium.connect_over_cdp(cdp_url)
-                context = browser.new_context()
-                page = context.new_page()
-                
-                page.goto(url)
-                if self.text_content:
-                    page_text = page.inner_text("body")
-                    content = str(page_text)
-                else:
-                    page_html = page.content()
-                    content = str(page_html)
+                context =  browser.contexts[0] if browser.contexts else browser.new_context()
+                for url in self.urls:
+                    page = context.new_page()
+                    
+                    page.goto(url)
+                    if self.text_content:
+                        page_text = page.inner_text("body")
+                        content = str(page_text)
+                    else:
+                        page_html = page.content()
+                        content = str(page_html)
 
-                page.close()
+                    page.close()
                 browser.close()
 
                 yield Document(
                     page_content=content,
                     metadata={
                         "url": url,
-                        },
-                    )
-
-        self.browser.terminate()
+                    },
+                )
+        except Exception as e:
+            logger.error(f"Error loading page: {e}")
+            raise
+        finally:
+            computer.terminate()
 
     async def alazy_load(self) -> AsyncIterator[Document]:
         """
@@ -105,24 +104,26 @@ class TzafonLoader(BaseLoader):
         Yields:
              AsyncIterator[Document]: An async iterator of Document objects containing the page content.
         """
-        computer_id = self.browser.id
+        computer = self.client.initialize()
+        cdp_url = f"{config.api_base_url}/computers/{computer.id}/cdp?token={self.api_key}"
 
-        for url in self.urls:
+        try:
             async with async_playwright() as playwright:
-                cdp_url = f"{config.api_base_url}/computers/{computer_id}/cdp?token={self.api_key}"
                 browser = await playwright.chromium.connect_over_cdp(cdp_url)
-                context = await browser.new_context()
-                page = await context.new_page()
+                context = browser.contexts[0] if browser.contexts else await browser.new_context()
+                
+                for url in self.urls:
+                    page = await context.new_page()
 
-                await page.goto(url)
-                if self.text_content:
-                    page_text = await page.inner_text("body")
-                    content = str(page_text)
-                else:
-                    page_html = await page.content()
-                    content = str(page_html)
+                    await page.goto(url)
+                    if self.text_content:
+                        page_text = await page.inner_text("body")
+                        content = str(page_text)
+                    else:
+                        page_html = await page.content()
+                        content = str(page_html)
 
-                await page.close()
+                    await page.close()
                 await browser.close()
 
                 yield Document(
@@ -131,5 +132,8 @@ class TzafonLoader(BaseLoader):
                         "url": url,
                         },
                     )
-
-        self.browser.terminate()
+        except Exception as e:
+            logger.error(f"Error loading page: {e}")
+            raise
+        finally:
+            computer.terminate()
