@@ -257,7 +257,7 @@ dev = [
 requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "requests", specifier = ">=2.32.5" },
-    { name = "tzafon", specifier = ">=2.8.1" },
+    { name = "tzafon", specifier = ">=2.9.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -443,7 +443,7 @@ wheels = [
 
 [[package]]
 name = "tzafon"
-version = "2.8.1"
+version = "2.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -453,16 +453,16 @@ dependencies = [
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/22/1f/1ec7065c190128cc6f83c65de37f2f9040cb83718f2cbdbb4fc0af8c2ba3/tzafon-2.8.1.tar.gz", hash = "sha256:c34b0149a4c22dd1eced540d3c5f241e3e927b4ccd34b06ac62dea24d4317ca4", size = 105697, upload-time = "2025-11-28T19:04:37.516Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f6/7d/da7a33bc9dc22dc1e0ae2de9ac8321a70b289f04217e24c3ebfb2a046349/tzafon-2.9.0.tar.gz", hash = "sha256:e9187b5b9a5cc12cea81f1ba02766ea0b960768be909091561f8711c0388c993", size = 114168, upload-time = "2025-12-19T09:42:04.444Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/3d/c28dfe2278518165794cd952382ebcfb52fd183d4ff478d2aadf66dd9ce9/tzafon-2.8.1-py3-none-any.whl", hash = "sha256:391fbf75a758c7103b5b2f62d32385b63b687a73925f9b842dd222f05eda4822", size = 84845, upload-time = "2025-11-28T19:04:36.349Z" },
+    { url = "https://files.pythonhosted.org/packages/60/03/f1ec4cd6fce5993c190f45f88987ff5bca5339ffc64be3cd2ce13ef37e16/tzafon-2.9.0-py3-none-any.whl", hash = "sha256:385b3ab58af3865149ac2c165ce67f822e2f4b6934659916fc2c8701d31961b6", size = 98863, upload-time = "2025-12-19T09:42:02.957Z" },
 ]
 
 [[package]]
 name = "urllib3"
-version = "2.6.1"
+version = "2.6.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/5e/1d/0f3a93cca1ac5e8287842ed4eebbd0f7a991315089b1a0b01c7788aa7b63/urllib3-2.6.1.tar.gz", hash = "sha256:5379eb6e1aba4088bae84f8242960017ec8d8e3decf30480b3a1abdaa9671a3f", size = 432678, upload-time = "2025-12-08T15:25:26.773Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/24/a2a2ed9addd907787d7aa0355ba36a6cadf1768b934c652ea78acbd59dcd/urllib3-2.6.2.tar.gz", hash = "sha256:016f9c98bb7e98085cb2b4b17b87d2c702975664e4f060c6532e64d1c1a5e797", size = 432930, upload-time = "2025-12-11T15:56:40.252Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bc/56/190ceb8cb10511b730b564fb1e0293fa468363dbad26145c34928a60cb0c/urllib3-2.6.1-py3-none-any.whl", hash = "sha256:e67d06fe947c36a7ca39f4994b08d73922d40e6cca949907be05efa6fd75110b", size = 131138, upload-time = "2025-12-08T15:25:25.51Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/b9/4095b668ea3678bf6a0af005527f39de12fb026516fb3df17495a733b7f8/urllib3-2.6.2-py3-none-any.whl", hash = "sha256:ec21cddfe7724fc7cb4ba4bea7aa8e2ef36f607a4bab81aa6ce42a13dc3f03dd", size = 131182, upload-time = "2025-12-11T15:56:38.584Z" },
 ]

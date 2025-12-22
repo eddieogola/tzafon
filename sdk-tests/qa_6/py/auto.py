@@ -108,7 +108,11 @@ def checkout_at_target(client: Computer):
         computer.navigate("https://www.target.com/orders")
         computer.wait(1)
         computer.click(1500, 320)
-        computer.wait(20)
+        computer.wait(2)
+        computer.click(800,200)
+        computer.type("9211624201@mailinator.com")
+        computer.hotkey("enter")
+        computer.wait(1)
 
         result = computer.screenshot()
         handle_screenshot_result(computer, result, "Screenshot")

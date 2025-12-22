@@ -6,7 +6,9 @@ load_dotenv()
 
 TOKEN = os.getenv("TZAFON_API_KEY") 
 
-BASE_URL = "https://v2.tzafon.ai"
+BASE_URL = "https://api.tzafon.ai"
+
+print(BASE_URL)
 
 def create_computer() -> str:
     print("Creating computer...")
@@ -16,7 +18,7 @@ def create_computer() -> str:
     }
     resp = requests.request(
         "POST",
-        f"{BASE_URL}/v1/computers",
+        f"{BASE_URL}/computers",
         json={"kind": "browser"},
         headers=headers,
         timeout=180,
@@ -67,6 +69,6 @@ def run(playwright: Playwright, cdp_url: str, computer_id: str) -> None:
 
 if __name__ == "__main__":
     computer_id = create_computer()
-    cdp_url = f"{BASE_URL}/v1/computers/{computer_id}/cdp?token={TOKEN}"
+    cdp_url = f"{BASE_URL}/computers/{computer_id}/cdp?token={TOKEN}"
     with sync_playwright() as p:
         run(p, cdp_url, computer_id)
