@@ -15,6 +15,7 @@ from tasks.task_2_1 import basic_batch_execution
 from tasks.task_2_2 import batch_error_handling
 from tasks.task_3_1 import keep_alive
 from tasks.task_3_2 import event_streaming
+from tasks.task_3_3 import event_screencast
 
 load_dotenv()
 
@@ -70,3 +71,10 @@ Task 3: Streaming & Session Management [~60 min]
 """
 
 # event_streaming(client)
+
+"""
+3.3 Event Screencast (Optional/Advanced)
+"""
+
+event_screencast(client)
+

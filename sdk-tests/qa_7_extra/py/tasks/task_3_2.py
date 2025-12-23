@@ -7,7 +7,6 @@ from tzafon import Computer
 def get_event_stream_info(computer_id: str):
     url = f"https://api.tzafon.ai/computers/{computer_id}/events"
     headers = {"Authorization": f"Bearer {os.getenv('TZAFON_API_KEY')}"}
-    print("STREAMING")
 
     try:
         with requests.get(url, headers=headers, stream=True) as response:

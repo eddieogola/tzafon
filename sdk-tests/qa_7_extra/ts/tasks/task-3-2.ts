@@ -1,18 +1,28 @@
-import { EventSource } from "eventsource";
 import type Computer from "tzafon";
+import { EventSource } from "eventsource";
 
 const getEventStreamInfo = async (computerId: string) => {
+  // Using EventSource for SSE
   const eventSource = new EventSource(
     `https://api.tzafon.ai/computers/${computerId}/events`,
-    { headers: { Authorization: `Bearer ${process.env.TZAFON_API_KEY}` } }
+    {
+      fetch: (input, init) =>
+        fetch(input, {
+          ...init,
+          headers: {
+            ...init.headers,
+            Authorization: `Bearer ${process.env.TZAFON_API_KEY}`,
+          },
+        }),
+    }
   );
 
-  eventSource.onmessage = (event: any) => {
+  eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log("Event:", data);
+    console.log("Event:", JSON.stringify(data));
   };
 
-  eventSource.onerror = (error: any) => {
+  eventSource.onerror = (error) => {
     console.error("SSE error:", error);
   };
 };

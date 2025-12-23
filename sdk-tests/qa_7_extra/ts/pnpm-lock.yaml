@@ -21,9 +21,9 @@ importers:
         specifier: ^1.14.0
         version: 1.14.0
     devDependencies:
-      '@types/eventsource':
-        specifier: ^3.0.0
-        version: 3.0.0
+      '@types/node':
+        specifier: ^25.0.3
+        version: 25.0.3
 
 packages:
 
@@ -183,9 +183,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@types/eventsource@3.0.0':
-    resolution: {integrity: sha512-yEhFj31FTD29DtNeqePu+A+lD6loRef6YOM5XfN1kUwBHyy2DySGlA3jJU+FbQSkrfmlBVluf2Dub/OyReFGKA==}
-    deprecated: This is a stub types definition. eventsource provides its own type definitions, so you do not need this installed.
+  '@types/node@25.0.3':
+    resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
 
   dotenv@17.2.3:
     resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
@@ -222,6 +221,9 @@ packages:
 
   tzafon@1.14.0:
     resolution: {integrity: sha512-0d9x45flf9nMUggrVrwKKLnfUQdFyCDKk8G9oQ33kxldv7/zkvSdVeGTZEDm1uUljhrZ28DFcu3uFdTXo0pmWg==}
+
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
 snapshots:
 
@@ -303,9 +305,9 @@ snapshots:
   '@esbuild/win32-x64@0.27.2':
     optional: true
 
-  '@types/eventsource@3.0.0':
+  '@types/node@25.0.3':
     dependencies:
-      eventsource: 4.1.0
+      undici-types: 7.16.0
 
   dotenv@17.2.3: {}
 
@@ -361,3 +363,5 @@ snapshots:
       fsevents: 2.3.3
 
   tzafon@1.14.0: {}
+
+  undici-types@7.16.0: {}
