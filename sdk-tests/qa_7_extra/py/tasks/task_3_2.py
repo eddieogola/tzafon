@@ -1,8 +1,8 @@
 import requests
 import os
 import threading
+
 from tzafon import Computer
-from .utils import handle_screenshot_result
 
 def get_event_stream_info(computer_id: str):
     url = f"https://api.tzafon.ai/computers/{computer_id}/events"
@@ -31,6 +31,5 @@ def event_streaming(client: Computer):
         computer.wait(1)
         computer.hotkey("enter")
         computer.wait(1)
-        result = computer.screenshot()
-        handle_screenshot_result(computer, result)
+        computer.screenshot()
     

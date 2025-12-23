@@ -12,7 +12,11 @@
   "packageManager": "pnpm@10.18.0",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "eventsource": "^4.1.0",
     "tsx": "^4.21.0",
     "tzafon": "^1.14.0"
+  },
+  "devDependencies": {
+    "@types/eventsource": "^3.0.0"
   }
 }

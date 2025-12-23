@@ -10,6 +10,7 @@ import { basicBatchExecution } from "./tasks/task-2-1.js";
 import dotenv from "dotenv";
 import { batchErrorHandling } from "./tasks/task-2-2.js";
 import { keepAlive } from "./tasks/task-3-1.js";
+import { eventStreaming } from "./tasks/task-3-2.js";
 
 dotenv.config();
 
@@ -59,3 +60,5 @@ const client = new Computer({ apiKey: process.env.TZAFON_API_KEY });
 /**
  * 3.2 Event Streaming (Optional/Advanced)
  */
+
+eventStreaming(client);

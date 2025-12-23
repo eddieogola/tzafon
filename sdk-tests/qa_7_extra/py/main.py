@@ -69,4 +69,4 @@ Task 3: Streaming & Session Management [~60 min]
 3.2 Event Streaming (Optional/Advanced)
 """
 
-event_streaming(client)
+# event_streaming(client)
