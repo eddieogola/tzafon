@@ -4,11 +4,12 @@ import {
   controlClickSelection,
   altClickSelection,
   checkKeyUpReleasesKey,
-} from "./tasks/task-1-1";
-import { drawLine } from "./tasks/task-1-2";
-import { basicBatchExecution } from "./tasks/task-2-1";
+} from "./tasks/task-1-1.js";
+import { drawLine } from "./tasks/task-1-2.js";
+import { basicBatchExecution } from "./tasks/task-2-1.js";
 import dotenv from "dotenv";
 import { batchErrorHandling } from "./tasks/task-2-2.js";
+import { keepAlive } from "./tasks/task-3-1.js";
 
 dotenv.config();
 
@@ -51,4 +52,10 @@ const client = new Computer({ apiKey: process.env.TZAFON_API_KEY });
 
 /**
  * 3.1 Keep Alive
+ */
+
+// keepAlive(client);
+
+/**
+ * 3.2 Event Streaming (Optional/Advanced)
  */

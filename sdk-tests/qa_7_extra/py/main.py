@@ -14,6 +14,7 @@ from tasks.task_1_2 import draw_line
 from tasks.task_2_1 import basic_batch_execution
 from tasks.task_2_2 import batch_error_handling
 from tasks.task_3_1 import keep_alive
+from tasks.task_3_2 import event_streaming
 
 load_dotenv()
 
@@ -62,4 +63,10 @@ Task 3: Streaming & Session Management [~60 min]
 3.1 Keep Alive
 """
 
-keep_alive(client)
+# keep_alive(client)
+
+"""
+3.2 Event Streaming (Optional/Advanced)
+"""
+
+event_streaming(client)

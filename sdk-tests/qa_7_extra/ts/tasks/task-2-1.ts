@@ -1,5 +1,5 @@
 import Computer from "tzafon";
-import { handleBatchResult } from "./utils";
+import { handleBatchResult } from "./utils.js";
 
 export const basicBatchExecution = async (client: Computer) => {
   const computer = await client.create({ kind: "browser" });
