@@ -1,10 +1,10 @@
-import Computer from "tzafon"
-import { handleScreenshotResult } from "./utils";
+import Computer from "tzafon";
+import { handleScreenshotResult } from "./utils.js";
 
 export const shiftClickSelection = async (client: Computer) => {
-    const computer = await client.create({ kind: 'browser' });
+  const computer = await client.create({ kind: "browser" });
 
-    try {
+  try {
     await computer.setViewport(1920, 1080);
     await computer.navigate("https://www.tldraw.com/");
     await computer.wait(1);
@@ -17,19 +17,21 @@ export const shiftClickSelection = async (client: Computer) => {
     const result = await computer.screenshot();
 
     handleScreenshotResult(computer, result);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        await computer.terminate();
-    }
-}
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await computer.terminate();
+  }
+};
 
 export const controlClickSelection = async (client: Computer) => {
-    const computer = await client.create({ kind: 'browser' });
+  const computer = await client.create({ kind: "browser" });
 
-    try {
+  try {
     await computer.setViewport(1920, 1080);
-    await computer.navigate("https://www.tldraw.com/f/6O_RQhA2cilo3Yho9kr9X?d=v-109.-141.1684.1152.page");
+    await computer.navigate(
+      "https://www.tldraw.com/f/6O_RQhA2cilo3Yho9kr9X?d=v-109.-141.1684.1152.page"
+    );
     await computer.wait(1);
     await computer.execute({ type: "key_down", key: "Control" });
     await computer.click(880, 700);
@@ -38,20 +40,21 @@ export const controlClickSelection = async (client: Computer) => {
     const result = await computer.screenshot();
 
     handleScreenshotResult(computer, result);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        await computer.terminate();
-    }
-}
-
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await computer.terminate();
+  }
+};
 
 export const altClickSelection = async (client: Computer) => {
-    const computer = await client.create({ kind: 'browser' });
+  const computer = await client.create({ kind: "browser" });
 
-    try {
+  try {
     await computer.setViewport(1920, 1080);
-    await computer.navigate("https://www.tldraw.com/f/6O_RQhA2cilo3Yho9kr9X?d=v-109.-141.1684.1152.page");
+    await computer.navigate(
+      "https://www.tldraw.com/f/6O_RQhA2cilo3Yho9kr9X?d=v-109.-141.1684.1152.page"
+    );
     await computer.wait(1);
     await computer.execute({ type: "key_down", key: "Alt" });
     await computer.click(880, 700);
@@ -61,17 +64,17 @@ export const altClickSelection = async (client: Computer) => {
     const result = await computer.screenshot();
 
     handleScreenshotResult(computer, result);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        await computer.terminate();
-    }
-}
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await computer.terminate();
+  }
+};
 
 export const checkKeyUpReleasesKey = async (client: Computer) => {
-    const computer = await client.create({ kind: 'browser' });
+  const computer = await client.create({ kind: "browser" });
 
-    try {
+  try {
     await computer.setViewport(1920, 1080);
     await computer.navigate("https://keyboardsimulator.xyz/");
     await computer.wait(1);
@@ -81,9 +84,9 @@ export const checkKeyUpReleasesKey = async (client: Computer) => {
     const result = await computer.screenshot();
 
     handleScreenshotResult(computer, result);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        await computer.terminate();
-    }
-}
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await computer.terminate();
+  }
+};

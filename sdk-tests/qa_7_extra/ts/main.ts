@@ -12,6 +12,14 @@ import { batchErrorHandling } from "./tasks/task-2-2.js";
 import { keepAlive } from "./tasks/task-3-1.js";
 import { eventStreaming } from "./tasks/task-3-2.js";
 import { eventScreencast } from "./tasks/task-3-3.js";
+import {
+  mouseUp,
+  mouseDown,
+  keyDown,
+  keyUp,
+  changeProxy,
+  webSocket,
+} from "./tasks/task-4-2.js";
 
 dotenv.config();
 
@@ -68,4 +76,25 @@ const client = new Computer({ apiKey: process.env.TZAFON_API_KEY });
  * 3.3 Event Screencast (Optional/Advanced)
  */
 
-eventScreencast(client);
+// eventScreencast(client);
+
+/**
+ * Task 4: Documentation Review
+ */
+
+/**
+ * 4.2 Documentation Pages
+ */
+
+// Low-level Input Actions https://docs.tzafon.ai/core-concepts/actions#low-level-input-actions
+
+// mouseUp(client);
+// mouseDown(client);
+// keyDown(client);
+// keyUp(client);
+
+// Change Proxy https://docs.tzafon.ai/core-concepts/actions#change-proxy-proxy-url
+// changeProxy(client);
+
+//WebSocket https://docs.tzafon.ai/core-concepts/streaming#connectwebsocket
+webSocket(client);

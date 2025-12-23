@@ -16,6 +16,7 @@ from tasks.task_2_2 import batch_error_handling
 from tasks.task_3_1 import keep_alive
 from tasks.task_3_2 import event_streaming
 from tasks.task_3_3 import event_screencast
+from tasks.task_4_2 import mouse_up, mouse_down, key_down, key_up
 
 load_dotenv()
 
@@ -76,5 +77,20 @@ Task 3: Streaming & Session Management [~60 min]
 3.3 Event Screencast (Optional/Advanced)
 """
 
-event_screencast(client)
+# event_screencast(client)
+
+"""
+Task 4: Documentation Review
+"""
+
+"""
+4.2 Documentation Pages
+"""
+
+# Low-level Input Actions https://docs.tzafon.ai/core-concepts/actions#low-level-input-actions
+
+# mouse_up(client)
+# mouse_down(client)
+# key_down(client)
+# key_up(client)
 
