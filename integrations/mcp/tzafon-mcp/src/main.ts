@@ -1,40 +1,13 @@
-import server from "@/core/server";
 import { logger } from "@/core/telemetry";
 import { mcpDeleteHandler } from "@/handlers/delete";
 import { mcpGetHandler } from "@/handlers/get";
 import { mcpPostHandler, transports } from "@/handlers/post";
-import executeAction from "@/tools/executeAction";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
-import { z } from "zod";
+import dotenv from "dotenv";
 
-const MCP_PORT = 5545;
+dotenv.config();
 
-server.registerTool(
-  "execute_action",
-  {
-    title: "Execute Action",
-    description: "Execute an action on a Tzafon client",
-    inputSchema: {
-      action: z.object({
-        type: z.enum(["navigate"]),
-        url: z.string(),
-      }),
-    },
-  },
-  async ({ action }) => {
-    const result = await executeAction(action);
-
-    if (result) {
-      return {
-        content: [{ type: "text", text: "Action executed successfully" }],
-      };
-    } else {
-      return {
-        content: [{ type: "text", text: "Action failed" }],
-      };
-    }
-  }
-);
+const MCP_PORT = 5540;
 
 const app = createMcpExpressApp();
 

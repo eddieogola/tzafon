@@ -1,9 +1,7 @@
-import server from "@/core/server";
+import getServer from "@/core/server";
 import { logger } from "@/core/telemetry";
-import {
-  StreamableHTTPServerTransport,
-  isInitializeRequest,
-} from "@modelcontextprotocol/sdk/server";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import type { Request, Response } from "express";
 import { randomUUID } from "node:crypto";
 
@@ -17,7 +15,7 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
   if (sessionId) {
     logger.info(`Received MCP request for session: ${sessionId}`);
   } else {
-    logger.info(`Request Body: ${req.body}`);
+    logger.info(`Request Body: ${JSON.stringify(req.body)}`);
   }
 
   try {
@@ -43,9 +41,10 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
           delete transports[sid];
         }
       };
-
+      const server = getServer();
       await server.connect(transport);
       await transport.handleRequest(req, res, req.body);
+
       return;
     } else {
       res.status(400).json({
