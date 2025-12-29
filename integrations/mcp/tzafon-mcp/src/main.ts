@@ -3,9 +3,6 @@ import { mcpDeleteHandler } from "@/handlers/delete";
 import { mcpGetHandler } from "@/handlers/get";
 import { mcpPostHandler, transports } from "@/handlers/post";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const MCP_PORT = 5540;
 

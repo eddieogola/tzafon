@@ -1,4 +1,3 @@
-import { logger } from "@/core/telemetry";
 import executeAction from "@/tools/executeAction";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
@@ -37,8 +36,6 @@ const getServer = () => {
       }
     }
   );
-
-  logger.debug("Registered execute_action tool");
 
   return server;
 };
