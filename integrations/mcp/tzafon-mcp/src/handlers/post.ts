@@ -42,7 +42,7 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
         }
       };
 
-      const server = getServer();
+      const server = await getServer();
       await server.connect(transport);
 
       await transport.handleRequest(req, res, req.body);

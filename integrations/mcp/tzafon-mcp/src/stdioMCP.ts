@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 async function main() {
   const transport = new StdioServerTransport();
-  const server = getServer();
+  const server = await getServer();
   await server.connect(transport);
   logger.info("Tzafon MCP Server running on stdio");
 }

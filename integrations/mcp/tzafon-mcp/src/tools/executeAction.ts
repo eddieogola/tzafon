@@ -1,8 +1,13 @@
-import client from "@/core/client";
 import { logger } from "@/core/telemetry";
-import { ActionResult, ComputerExecuteActionParams } from "tzafon";
+import {
+  ActionResult,
+  ComputerExecuteActionParams,
+  ComputerSession,
+} from "tzafon";
 
-interface ExecuteActionParams extends ComputerExecuteActionParams {}
+interface ExecuteActionParams extends ComputerExecuteActionParams {
+  computer: ComputerSession;
+}
 // Action Types: navigate|click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
 
 interface ExecuteActionResponse extends ActionResult {
@@ -12,10 +17,9 @@ interface ExecuteActionResponse extends ActionResult {
 }
 
 const executeAction = async ({
+  computer,
   action,
 }: ExecuteActionParams): Promise<ExecuteActionResponse> => {
-  const computer = await client.create({ kind: "browser" });
-
   logger.info(`Executing action ${action?.type}`);
 
   let actionResult: ActionResult | null = null;
