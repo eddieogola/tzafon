@@ -4,11 +4,20 @@ import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import z from "zod";
 
 const getServer = () => {
-  const server = new McpServer({
-    name: "tzafon",
-    version: "1.0.0",
-    websiteUrl: "https://tzafon.ai",
-  });
+  const server = new McpServer(
+    {
+      name: "tzafon",
+      version: "1.0.0",
+      websiteUrl: "https://tzafon.ai",
+    },
+    {
+      capabilities: {
+        tools: {
+          listChanged: true,
+        },
+      },
+    }
+  );
 
   server.registerTool(
     "execute_action",
@@ -17,13 +26,13 @@ const getServer = () => {
       description: "Execute an action on a Tzafon client",
       inputSchema: {
         action: z.object({
-          type: z.enum(["navigate"]),
+          type: z.enum(["navigate", "screenshot"]),
           url: z.string(),
         }),
       },
     },
     async ({ action }): Promise<CallToolResult> => {
-      const result = await executeAction(action);
+      const result = await executeAction({ action });
 
       if (result) {
         return {

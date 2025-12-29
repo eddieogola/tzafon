@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Tzafon MCP Server",
   "scripts": {
-    "build": "tsc && tsc-alias && chmod 755 build/main.js",
-    "start": "node build/main.js",
-    "dev": "tsx watch src/main.ts",
-    "inspect": "npx @modelcontextprotocol/inspector node build/main.js"
+    "build": "tsc && tsc-alias && chmod 755 build/stdioMCP.js",
+    "start": "node build/stdioMCP.js",
+    "dev": "tsx watch src/stdioMCP.ts",
+    "inspect": "npx @modelcontextprotocol/inspector node build/stdioMCP.js"
   },
   "keywords": [],
   "author": "",

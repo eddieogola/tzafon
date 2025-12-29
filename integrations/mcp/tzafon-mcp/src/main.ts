@@ -4,7 +4,7 @@ import { mcpGetHandler } from "@/handlers/get";
 import { mcpPostHandler, transports } from "@/handlers/post";
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 
-const MCP_PORT = 5540;
+const MCP_PORT = process.env.MCP_PORT || 3000;
 
 const app = createMcpExpressApp();
 
