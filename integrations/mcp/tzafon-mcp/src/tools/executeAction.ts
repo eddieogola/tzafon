@@ -4,15 +4,15 @@ import {
   ComputerExecuteActionParams,
   ComputerSession,
 } from "tzafon";
+import { TzafonToolResult } from "./common";
 
 interface ExecuteActionParams extends ComputerExecuteActionParams {
   computer: ComputerSession;
+  action: ComputerExecuteActionParams.Action & { seconds?: number };
 }
 // Action Types: navigate|click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
 
-interface ExecuteActionResponse extends ActionResult {
-  status: "success" | "error";
-  message: string | null;
+interface ExecuteActionResponse extends TzafonToolResult {
   data: ActionResult | null;
 }
 
@@ -160,6 +160,22 @@ const executeAction = async ({
         message: null,
         data: actionResult,
       };
+      break;
+    case "wait":
+      if (!action?.seconds) {
+        response = {
+          status: "error",
+          message: "Seconds are required",
+          data: null,
+        };
+      } else {
+        await computer.wait(action.seconds);
+        response = {
+          status: "success",
+          message: null,
+          data: null,
+        };
+      }
       break;
     default:
       response = {
