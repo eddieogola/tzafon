@@ -41,8 +41,10 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
           delete transports[sid];
         }
       };
+
       const server = getServer();
       await server.connect(transport);
+
       await transport.handleRequest(req, res, req.body);
 
       return;
@@ -57,6 +59,8 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
       });
       return;
     }
+
+    await transport.handleRequest(req, res, req.body);
   } catch (error) {
     logger.error(`Error handling MCP request: ${error}`);
     res.status(500).json({
