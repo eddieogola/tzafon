@@ -1,0 +1,23 @@
+{
+  "name": "tzafon-braintrust",
+  "version": "1.0.0",
+  "description": "Tzafon Braintrust integration",
+  "scripts": {
+    "dev": "tsx watch main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "braintrust": "^1.1.1",
+    "dotenv": "^17.2.3",
+    "tzafon": "^1.14.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
