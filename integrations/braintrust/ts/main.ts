@@ -7,26 +7,24 @@ dotenv.config();
 
 const TZAFON_API_KEY = process.env.TZAFON_API_KEY;
 
-const client = new Computer({
-  apiKey: TZAFON_API_KEY,
-});
-
-// Load page from the internet
 async function loadPage({ url }: { url: string }) {
+  const client = new Computer({
+    apiKey: TZAFON_API_KEY,
+  });
   const browser = await client.create({ kind: "browser" });
 
   try {
-    browser.navigate(url);
-    browser.wait(2);
-    const html = browser.getHTML();
+    await browser.navigate(url);
+    await browser.wait(1);
+    const result = await browser.getHTML();
+    const htmlContent = result.result?.html_content;
 
-    return { page: html };
+    return { page: htmlContent };
   } finally {
     await browser.terminate();
   }
 }
 
-// Create a new project and tool in Braintrust
 const project = braintrust.projects.create({
   name: "TZAFON API Tool - TypeScript",
 });
