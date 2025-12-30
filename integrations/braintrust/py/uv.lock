@@ -558,6 +558,7 @@ dependencies = [
     { name = "dotenv" },
     { name = "openai" },
     { name = "playwright" },
+    { name = "tzafon" },
 ]
 
 [package.dev-dependencies]
@@ -572,6 +573,7 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "openai", specifier = ">=2.14.0" },
     { name = "playwright", specifier = ">=1.57.0" },
+    { name = "tzafon", specifier = ">=2.9.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -965,6 +967,23 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/55/e3/70399cb7dd41c10ac53367ae42139cf4b1ca5f36bb3dc6c9d33acdb43655/typing_inspection-0.4.2.tar.gz", hash = "sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464", size = 75949, upload-time = "2025-10-01T02:14:41.687Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl", hash = "sha256:4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7", size = 14611, upload-time = "2025-10-01T02:14:40.154Z" },
+]
+
+[[package]]
+name = "tzafon"
+version = "2.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "distro" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f6/7d/da7a33bc9dc22dc1e0ae2de9ac8321a70b289f04217e24c3ebfb2a046349/tzafon-2.9.0.tar.gz", hash = "sha256:e9187b5b9a5cc12cea81f1ba02766ea0b960768be909091561f8711c0388c993", size = 114168, upload-time = "2025-12-19T09:42:04.444Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/60/03/f1ec4cd6fce5993c190f45f88987ff5bca5339ffc64be3cd2ce13ef37e16/tzafon-2.9.0-py3-none-any.whl", hash = "sha256:385b3ab58af3865149ac2c165ce67f822e2f4b6934659916fc2c8701d31961b6", size = 98863, upload-time = "2025-12-19T09:42:02.957Z" },
 ]
 
 [[package]]

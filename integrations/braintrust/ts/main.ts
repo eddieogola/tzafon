@@ -5,7 +5,6 @@ import { z } from "zod";
 
 dotenv.config();
 
-const BASE_URL = "https://api.tzafon.ai";
 const TZAFON_API_KEY = process.env.TZAFON_API_KEY;
 
 const client = new Computer({
