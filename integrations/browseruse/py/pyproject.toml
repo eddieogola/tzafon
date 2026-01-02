@@ -1,0 +1,12 @@
+[project]
+name = "py"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anchorbrowser>=0.5.3",
+    "browser-use>=0.11.2",
+    "dotenv>=0.9.9",
+    "tzafon>=2.9.0",
+]
