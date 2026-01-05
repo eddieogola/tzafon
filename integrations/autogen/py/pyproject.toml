@@ -1,0 +1,13 @@
+[project]
+name = "tzafon-autogen"
+version = "0.1.0"
+description = "Tzafon Autogen Integration"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "autogen-agentchat>=0.7.5",
+    "autogen-ext[openai]>=0.7.5",
+    "dotenv>=0.9.9",
+    "playwright>=1.57.0",
+    "tzafon>=2.10.0",
+]
