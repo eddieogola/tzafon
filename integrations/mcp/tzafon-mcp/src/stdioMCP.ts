@@ -3,6 +3,7 @@ import { logger } from "@/core/telemetry";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 async function main() {
+  logger.debug("Starting Tzafon MCP Server");
   const transport = new StdioServerTransport();
   const server = await getServer();
   await server.connect(transport);
