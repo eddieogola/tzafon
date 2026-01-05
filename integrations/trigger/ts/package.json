@@ -1,0 +1,24 @@
+{
+  "name": "tzafon-trigger",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.27.0",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@trigger.dev/build": "^4.3.1",
+    "@trigger.dev/sdk": "^4.3.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "playwright-core": "^1.57.0",
+    "puppeteer": "^24.34.0",
+    "puppeteer-core": "^24.34.0",
+    "trigger.dev": "^4.3.1"
+  }
+}
