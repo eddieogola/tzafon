@@ -1,0 +1,27 @@
+{
+  "name": "tzafon-vercel",
+  "version": "1.0.0",
+  "description": "Wikipedia search agent using Vercel AI SDK with Tzafon",
+  "scripts": {
+    "start": "tsx main.ts",
+    "dev": "tsx watch main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.2",
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.2",
+    "ai": "^6.0.0",
+    "ai-sdk-ollama": "^3.0.1",
+    "dotenv": "^17.2.3",
+    "playwright-core": "^1.57.0",
+    "tzafon": "^1.14.0",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
