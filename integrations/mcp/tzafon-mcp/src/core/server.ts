@@ -5,6 +5,7 @@ import z from "zod";
 
 const VIEWPORT_WIDTH = 1920;
 const VIEWPORT_HEIGHT = 1080;
+
 const getServer = async () => {
   const server = new McpServer(
     {
@@ -280,79 +281,135 @@ const getServer = async () => {
     }
   );
 
-  // server.registerTool(
-  //   "execute_action",
-  //   {
-  //     title: "Execute Action",
-  //     description: "Execute an action on a Tzafon client",
-  //     inputSchema: {
-  //       action: z.object({
-  //         type: z.enum(["screenshot", "click", "wait"]),
-  //         url: z.string().optional().describe("URL to navigate to"),
-  //         x: z
-  //           .number()
-  //           .optional()
-  //           .describe(
-  //             "X coordinate of the viewport (0-" + VIEWPORT_WIDTH + ")"
-  //           ),
-  //         y: z
-  //           .number()
-  //           .optional()
-  //           .describe(
-  //             "Y coordinate of the viewport (0-" + VIEWPORT_HEIGHT + ")"
-  //           ),
-  //         seconds: z
-  //           .number()
-  //           .optional()
-  //           .describe(
-  //             "Seconds to wait for page to load usually 2 seconds is enough, used with the wait action type"
-  //           ),
-  //       }),
-  //     },
-  //   },
-  //   async ({ action }): Promise<CallToolResult> => {
-  //     const computerId = await getActiveComputerId();
-  //     const result = await executeAction({ computerId, action });
+  server.registerTool(
+    "right_click",
+    {
+      title: "Right Click",
+      description: "Right click on a specific element on the page",
+      inputSchema: {
+        x: z
+          .number()
+          .describe("X coordinate of the viewport (0-" + VIEWPORT_WIDTH + ")"),
+        y: z
+          .number()
+          .describe("Y coordinate of the viewport (0-" + VIEWPORT_HEIGHT + ")"),
+      },
+    },
+    async ({ x, y }): Promise<CallToolResult> => {
+      const computerId = await getActiveComputerId();
+      try {
+        await client.computers.rightClick(computerId, {
+          x,
+          y,
+        });
+        return {
+          content: [{ type: "text", text: "Right clicked at " + x + ", " + y }],
+        };
+      } catch (error) {
+        return {
+          content: [{ type: "text", text: "Right click failed" }],
+          isError: true,
+        };
+      }
+    }
+  );
 
-  //     if (result.status === "success") {
-  //       switch (action.type) {
-  //         case "screenshot":
-  //           return {
-  //             content: [
-  //               {
-  //                 type: "text",
-  //                 text:
-  //                   "Screenshot taken " + result.data?.result?.screenshot_url,
-  //               },
-  //             ],
-  //           };
-  //         case "click":
-  //           return {
-  //             content: [
-  //               {
-  //                 type: "text",
-  //                 text: "Clicked at " + action.x + ", " + action.y,
-  //               },
-  //             ],
-  //           };
-  //         case "wait":
-  //           return {
-  //             content: [
-  //               {
-  //                 type: "text",
-  //                 text: "Waited for " + action.seconds + " seconds",
-  //               },
-  //             ],
-  //           };
-  //       }
-  //     } else {
-  //       return {
-  //         content: [{ type: "text", text: result.message || "Action failed" }],
-  //         isError: true,
-  //       };
-  //     }
-  //   }
-  // );
+  server.registerTool(
+    "double_click",
+    {
+      title: "Double Click",
+      description: "Double click on a specific element on the page",
+      inputSchema: {
+        x: z
+          .number()
+          .describe("X coordinate of the viewport (0-" + VIEWPORT_WIDTH + ")"),
+        y: z
+          .number()
+          .describe("Y coordinate of the viewport (0-" + VIEWPORT_HEIGHT + ")"),
+      },
+    },
+    async ({ x, y }): Promise<CallToolResult> => {
+      const computerId = await getActiveComputerId();
+      try {
+        await client.computers.doubleClick(computerId, {
+          x,
+          y,
+        });
+        return {
+          content: [
+            { type: "text", text: "Double clicked at " + x + ", " + y },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [{ type: "text", text: "Double click failed" }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "drag",
+    {
+      title: "Drag",
+      description: "Drag an element on the page",
+      inputSchema: {
+        x1: z
+          .number()
+          .describe(
+            "X1 coordinate of the viewport (0-" +
+              VIEWPORT_WIDTH +
+              ") to drag from"
+          ),
+        y1: z
+          .number()
+          .describe(
+            "Y1 coordinate of the viewport (0-" +
+              VIEWPORT_HEIGHT +
+              ") to drag from"
+          ),
+        x2: z
+          .number()
+          .describe(
+            "X2 coordinate of the viewport (0-" +
+              VIEWPORT_WIDTH +
+              ") to drag to"
+          ),
+        y2: z
+          .number()
+          .describe(
+            "Y2 coordinate of the viewport (0-" +
+              VIEWPORT_HEIGHT +
+              ") to drag to"
+          ),
+      },
+    },
+    async ({ x1, y1, x2, y2 }): Promise<CallToolResult> => {
+      const computerId = await getActiveComputerId();
+      try {
+        await client.computers.drag(computerId, {
+          x1,
+          y1,
+          x2,
+          y2,
+        });
+        return {
+          content: [
+            {
+              type: "text",
+              text: "Dragged at " + x1 + ", " + y1 + " to " + x2 + ", " + y2,
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [{ type: "text", text: "Drag failed" }],
+          isError: true,
+        };
+      }
+    }
+  );
 
   return server;
 };
