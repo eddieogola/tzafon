@@ -225,14 +225,23 @@ const getServer = async () => {
     "click",
     {
       title: "Click",
-      description: "Click a specific element on the page",
+      description:
+        "Click a specific element on the page, using coordinates relative to the viewport (0-" +
+        VIEWPORT_WIDTH +
+        ") pixels and (0-" +
+        VIEWPORT_HEIGHT +
+        ") pixels",
       inputSchema: {
         x: z
           .number()
-          .describe("X coordinate of the viewport (0-" + VIEWPORT_WIDTH + ")"),
+          .describe(
+            "X coordinate of the viewport (0-" + VIEWPORT_WIDTH + ") pixels"
+          ),
         y: z
           .number()
-          .describe("Y coordinate of the viewport (0-" + VIEWPORT_HEIGHT + ")"),
+          .describe(
+            "Y coordinate of the viewport (0-" + VIEWPORT_HEIGHT + ") pixels"
+          ),
       },
     },
     async ({ x, y }): Promise<CallToolResult> => {
