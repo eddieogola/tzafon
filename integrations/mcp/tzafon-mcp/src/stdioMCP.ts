@@ -1,3 +1,4 @@
+import { startKeepAlive, stopKeepAlive } from "@/core/keepAlive";
 import getServer from "@/core/server";
 import { logger } from "@/core/telemetry";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -8,6 +9,19 @@ async function main() {
   const server = await getServer();
   await server.connect(transport);
   logger.info("Tzafon MCP Server running on stdio");
+
+  // Start keep alive mechanism
+  await startKeepAlive();
+
+  // Clean up on process exit
+  process.on("SIGINT", () => {
+    stopKeepAlive();
+    process.exit(0);
+  });
+  process.on("SIGTERM", () => {
+    stopKeepAlive();
+    process.exit(0);
+  });
 }
 
 main().catch((error) => {

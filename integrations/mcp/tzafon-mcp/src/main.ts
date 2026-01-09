@@ -1,3 +1,4 @@
+import { startKeepAlive, stopKeepAlive } from "@/core/keepAlive";
 import { logger } from "@/core/telemetry";
 import { mcpDeleteHandler } from "@/handlers/delete";
 import { mcpGetHandler } from "@/handlers/get";
@@ -12,16 +13,22 @@ app.get("/mcp", mcpGetHandler);
 app.post("/mcp", mcpPostHandler);
 app.delete("/mcp", mcpDeleteHandler);
 
-app.listen(MCP_PORT, (error) => {
+app.listen(MCP_PORT, async (error) => {
   if (error) {
     logger.error(`Error starting MCP server: ${error}`);
     process.exit(1);
   }
   logger.info(`MCP server running on port ${MCP_PORT}`);
+
+  // Start keep alive mechanism
+  await startKeepAlive();
 });
 
 process.on("SIGINT", async () => {
   logger.info("Shutting down server...");
+
+  // Stop keep alive
+  stopKeepAlive();
 
   for (const sessionId in transports) {
     try {

@@ -1,10 +1,12 @@
-import client, { getActiveComputerId } from "@/core/client";
+import client, {
+  getActiveComputerId,
+  VIEWPORT_HEIGHT,
+  VIEWPORT_WIDTH,
+} from "@/core/client";
+import { recordActivity } from "@/core/keepAlive";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import z from "zod";
-
-const VIEWPORT_WIDTH = 1920;
-const VIEWPORT_HEIGHT = 1080;
 
 const getServer = async () => {
   const server = new McpServer(
@@ -33,6 +35,7 @@ const getServer = async () => {
       },
     },
     async ({ url }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
 
       try {
@@ -59,13 +62,52 @@ const getServer = async () => {
       inputSchema: {},
     },
     async (): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         const screenshot = await client.computers.captureScreenshot(computerId);
         const screenshotUrl = screenshot.result?.screenshot_url;
+
+        if (!screenshotUrl || typeof screenshotUrl !== "string") {
+          return {
+            content: [
+              { type: "text", text: "Screenshot failed: No URL returned" },
+            ],
+            isError: true,
+          };
+        }
+
+        // Fetch the screenshot and convert to base64
+        const response = await fetch(screenshotUrl as string);
+        if (!response.ok) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "Screenshot failed: Could not fetch image",
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const base64Data = Buffer.from(arrayBuffer).toString("base64");
+
+        // Determine media type from content-type header or default to png
+        const contentType = response.headers.get("content-type") || "image/png";
+
         return {
           content: [
-            { type: "text", text: "Screenshot taken " + screenshotUrl },
+            {
+              type: "image",
+              data: base64Data,
+              mimeType: contentType,
+            },
+            {
+              type: "text",
+              text: "Screenshot URL: " + screenshotUrl,
+            },
           ],
         };
       } catch (error) {
@@ -100,12 +142,9 @@ const getServer = async () => {
       },
     },
     async ({ dx, dy }) => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
-        await client.computers.setViewport(computerId, {
-          width: VIEWPORT_WIDTH,
-          height: VIEWPORT_HEIGHT,
-        });
         await client.computers.scrollViewport(computerId, {
           dx,
           dy,
@@ -132,6 +171,7 @@ const getServer = async () => {
       },
     },
     async ({ text }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.typeText(computerId, {
@@ -163,6 +203,7 @@ const getServer = async () => {
       },
     },
     async ({ hotkeys }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.pressHotkey(computerId, {
@@ -195,12 +236,9 @@ const getServer = async () => {
       },
     },
     async ({ x, y }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
-        await client.computers.setViewport(computerId, {
-          width: VIEWPORT_WIDTH,
-          height: VIEWPORT_HEIGHT,
-        });
         await client.computers.click(computerId, {
           x,
           y,
@@ -225,6 +263,7 @@ const getServer = async () => {
       inputSchema: {},
     },
     async (): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         const result = await client.computers.getHTML(computerId);
@@ -262,6 +301,7 @@ const getServer = async () => {
       },
     },
     async ({ seconds }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.executeAction(computerId, {
@@ -296,6 +336,7 @@ const getServer = async () => {
       },
     },
     async ({ x, y }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.rightClick(computerId, {
@@ -329,6 +370,7 @@ const getServer = async () => {
       },
     },
     async ({ x, y }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.doubleClick(computerId, {
@@ -386,6 +428,7 @@ const getServer = async () => {
       },
     },
     async ({ x1, y1, x2, y2 }): Promise<CallToolResult> => {
+      await recordActivity();
       const computerId = await getActiveComputerId();
       try {
         await client.computers.drag(computerId, {
