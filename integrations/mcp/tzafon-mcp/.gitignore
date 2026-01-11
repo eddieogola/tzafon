@@ -5,3 +5,5 @@ build
 .mcp.json
 .claude
 .gemini
+
+coverage
