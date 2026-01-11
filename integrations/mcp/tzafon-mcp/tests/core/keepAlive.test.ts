@@ -59,9 +59,8 @@ describe("keepAlive", () => {
 
   describe("startKeepAlive", () => {
     it("should send initial keep-alive signal", async () => {
-      const { startKeepAlive, stopKeepAlive } = await import(
-        "@/core/keepAlive"
-      );
+      const { startKeepAlive, stopKeepAlive } =
+        await import("@/core/keepAlive");
       const { getClient } = await import("@/core/client");
 
       // Use a unique key to get a fresh client
@@ -77,9 +76,8 @@ describe("keepAlive", () => {
     });
 
     it("should send periodic keep-alive signals", async () => {
-      const { startKeepAlive, stopKeepAlive } = await import(
-        "@/core/keepAlive"
-      );
+      const { startKeepAlive, stopKeepAlive } =
+        await import("@/core/keepAlive");
       const { getClient } = await import("@/core/client");
 
       // Use a unique key to get a fresh client
@@ -99,9 +97,8 @@ describe("keepAlive", () => {
 
   describe("stopKeepAlive", () => {
     it("should stop keep-alive for specific client", async () => {
-      const { startKeepAlive, stopKeepAlive } = await import(
-        "@/core/keepAlive"
-      );
+      const { startKeepAlive, stopKeepAlive } =
+        await import("@/core/keepAlive");
       const { getClient } = await import("@/core/client");
 
       const client = getClient("stop-test-key-spec");
@@ -117,9 +114,8 @@ describe("keepAlive", () => {
     });
 
     it("should stop all keep-alives when no client specified", async () => {
-      const { startKeepAlive, stopKeepAlive } = await import(
-        "@/core/keepAlive"
-      );
+      const { startKeepAlive, stopKeepAlive } =
+        await import("@/core/keepAlive");
       const { getClient } = await import("@/core/client");
 
       const client1 = getClient("stop-all-key-1-all");

@@ -81,6 +81,20 @@ node build/server.js
 pnpm inspect:stdio
 ```
 
+### Docker Deployment
+
+```bash
+# Build and run with Docker Compose
+docker compose up -d
+
+# Or build manually
+docker build -t tzafon-mcp .
+docker run -d -p 5400:5400 tzafon-mcp
+
+# View logs
+docker compose logs -f
+```
+
 ## Available Tools
 
 | Tool              | Description                           |
