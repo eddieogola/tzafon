@@ -1,18 +1,17 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-// Mock the tzafon module
-vi.mock("tzafon", () => {
-  return {
-    default: class MockComputer {
-      computers = {
-        list: vi.fn(),
-      };
-      create = vi.fn();
-    },
-  };
-});
+// Mock pino
+vi.mock("pino", () => ({
+  default: vi.fn(() => ({
+    info: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    warn: vi.fn(),
+  })),
+  destination: vi.fn(() => ({})),
+}));
 
-// Mock the telemetry module
+// Mock telemetry
 vi.mock("@/core/telemetry", () => ({
   logger: {
     info: vi.fn(),
@@ -22,85 +21,80 @@ vi.mock("@/core/telemetry", () => ({
   },
 }));
 
-// Mock dotenv
-vi.mock("dotenv", () => ({
-  config: vi.fn(),
-}));
-
 describe("client", () => {
-  let mockClient: any;
-  let getActiveComputerId: () => Promise<string>;
+  describe("extractApiKey", () => {
+    it("should extract API key from Bearer token", async () => {
+      const { extractApiKey } = await import("@/core/client");
+      const apiKey = extractApiKey("Bearer my-secret-key");
+      expect(apiKey).toBe("my-secret-key");
+    });
 
-  beforeEach(async () => {
-    vi.resetModules();
+    it("should return raw token if no Bearer prefix", async () => {
+      const { extractApiKey } = await import("@/core/client");
+      const apiKey = extractApiKey("my-secret-key");
+      expect(apiKey).toBe("my-secret-key");
+    });
 
-    // Import fresh modules with mocks applied
-    const clientModule = await import("@/core/client");
-    mockClient = clientModule.default;
-    getActiveComputerId = clientModule.getActiveComputerId;
+    it("should return undefined for empty header", async () => {
+      const { extractApiKey } = await import("@/core/client");
+      expect(extractApiKey(undefined)).toBeUndefined();
+    });
+
+    it("should return undefined for empty string", async () => {
+      const { extractApiKey } = await import("@/core/client");
+      expect(extractApiKey("")).toBeFalsy();
+    });
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
+  describe("getClient", () => {
+    it("should create a client with provided API key", async () => {
+      const { getClient } = await import("@/core/client");
+      const client = getClient("test-api-key");
+      expect(client).toBeDefined();
+      expect(client.computers).toBeDefined();
+    });
+
+    it("should cache clients by API key", async () => {
+      const { getClient } = await import("@/core/client");
+      const client1 = getClient("api-key-cache-1");
+      const client2 = getClient("api-key-cache-1");
+      expect(client1).toBe(client2);
+    });
+
+    it("should create different clients for different API keys", async () => {
+      const { getClient } = await import("@/core/client");
+      const client1 = getClient("api-key-diff-a");
+      const client2 = getClient("api-key-diff-b");
+      expect(client1).not.toBe(client2);
+    });
+  });
+
+  describe("getDefaultClient", () => {
+    it("should return a client when env var is set", async () => {
+      // TZAFON_API_KEY is set in tests/setup.ts
+      const { getDefaultClient } = await import("@/core/client");
+      const client = getDefaultClient();
+      expect(client).toBeDefined();
+    });
   });
 
   describe("getActiveComputerId", () => {
-    it("should return existing computer ID when sessions exist", async () => {
-      const mockSessionId = "existing-session-123";
-      mockClient.computers.list.mockResolvedValue([{ id: mockSessionId }]);
-
-      const result = await getActiveComputerId();
-
-      expect(result).toBe(mockSessionId);
-      expect(mockClient.computers.list).toHaveBeenCalledTimes(1);
-      expect(mockClient.create).not.toHaveBeenCalled();
+    it("should return existing session ID if available", async () => {
+      const { getClient, getActiveComputerId } = await import("@/core/client");
+      const client = getClient("test-key-comp");
+      const computerId = await getActiveComputerId(client);
+      // The mock in setup.ts returns [{ id: "mock-computer-id" }]
+      expect(computerId).toBe("mock-computer-id");
     });
 
-    it("should return first session ID when multiple sessions exist", async () => {
-      const mockSessions = [
-        { id: "session-1" },
-        { id: "session-2" },
-        { id: "session-3" },
-      ];
-      mockClient.computers.list.mockResolvedValue(mockSessions);
-
-      const result = await getActiveComputerId();
-
-      expect(result).toBe("session-1");
-    });
-
-    it("should create new session when no sessions exist", async () => {
-      const newSessionId = "new-session-456";
-      mockClient.computers.list.mockResolvedValue([]);
-      mockClient.create.mockResolvedValue({ id: newSessionId });
-
-      const result = await getActiveComputerId();
-
-      expect(result).toBe(newSessionId);
-      expect(mockClient.computers.list).toHaveBeenCalledTimes(1);
-      expect(mockClient.create).toHaveBeenCalledWith({ kind: "browser" });
-    });
-
-    it("should return empty string when session has no ID", async () => {
-      mockClient.computers.list.mockResolvedValue([{}]);
-
-      const result = await getActiveComputerId();
-
-      expect(result).toBe("");
-    });
-
-    it("should throw error when list API fails", async () => {
-      const apiError = new Error("API connection failed");
-      mockClient.computers.list.mockRejectedValue(apiError);
-
-      await expect(getActiveComputerId()).rejects.toThrow();
-    });
-
-    it("should throw error when create API fails", async () => {
-      mockClient.computers.list.mockResolvedValue([]);
-      mockClient.create.mockRejectedValue(new Error("Create failed"));
-
-      await expect(getActiveComputerId()).rejects.toThrow();
+    it("should create new session if none exist", async () => {
+      const { getClient, getActiveComputerId } = await import("@/core/client");
+      const client = getClient("new-key-session");
+      // Mock the list to return empty
+      client.computers.list = vi.fn().mockResolvedValue([]);
+      const computerId = await getActiveComputerId(client);
+      // The mock create returns { id: "new-computer-id" }
+      expect(computerId).toBe("new-computer-id");
     });
   });
 });

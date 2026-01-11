@@ -1,3 +1,4 @@
+import { extractApiKey } from "@/core/client";
 import getServer from "@/core/server";
 import { logger } from "@/core/telemetry";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -11,6 +12,8 @@ export const transports: {
 
 export const mcpPostHandler = async (req: Request, res: Response) => {
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
+  const authHeader = req.headers["authorization"] as string | undefined;
+  const apiKey = extractApiKey(authHeader);
 
   if (sessionId) {
     logger.info(`Received MCP request for session: ${sessionId}`);
@@ -42,7 +45,8 @@ export const mcpPostHandler = async (req: Request, res: Response) => {
         }
       };
 
-      const server = await getServer();
+      // Pass API key from Authorization header to getServer
+      const server = await getServer(apiKey);
       await server.connect(transport);
 
       await transport.handleRequest(req, res, req.body);

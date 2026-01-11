@@ -1,4 +1,4 @@
-import client, { getActiveComputerId } from "@/core/client";
+import { getActiveComputerId, getClient } from "@/core/client";
 import { recordActivity } from "@/core/keepAlive";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
@@ -14,7 +14,7 @@ const GRID_SIZE = 1000;
  * @param gridY - Y coordinate in 0-999 range
  * @returns Object containing the actual viewport pixel coordinates
  */
-const gridToViewport = (
+export const gridToViewport = (
   gridX: number,
   gridY: number,
   viewportWidth: number,
@@ -31,7 +31,14 @@ const gridToViewport = (
   return { x, y };
 };
 
-const getServer = async () => {
+/**
+ * Creates an MCP server with tools for computer control.
+ * @param apiKey - Optional API key for Tzafon client (if not provided, uses environment variable)
+ */
+const getServer = async (apiKey?: string) => {
+  // Get client for this API key (will throw if no key and no env var)
+  const client = getClient(apiKey);
+
   const server = new McpServer(
     {
       name: "tzafon",
@@ -58,8 +65,8 @@ const getServer = async () => {
       },
     },
     async ({ url }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
 
       try {
         await client.computers.navigate(computerId, {
@@ -85,8 +92,8 @@ const getServer = async () => {
       inputSchema: {},
     },
     async (): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         const screenshot = await client.computers.captureScreenshot(computerId);
         const screenshotUrl = screenshot.result?.screenshot_url;
@@ -180,8 +187,8 @@ const getServer = async () => {
       },
     },
     async ({ dx, dy, viewportWidth, viewportHeight }) => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid delta to viewport pixel delta
         const pixelDx = Math.round(
@@ -222,8 +229,8 @@ const getServer = async () => {
       },
     },
     async ({ text }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         await client.computers.typeText(computerId, {
           text,
@@ -254,8 +261,8 @@ const getServer = async () => {
       },
     },
     async ({ hotkeys }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         await client.computers.pressHotkey(computerId, {
           keys: hotkeys,
@@ -307,8 +314,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const viewport = gridToViewport(x, y, viewportWidth, viewportHeight);
@@ -342,8 +349,8 @@ const getServer = async () => {
       inputSchema: {},
     },
     async (): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         const result = await client.computers.getHTML(computerId);
         const html = result.result?.html_content;
@@ -380,8 +387,8 @@ const getServer = async () => {
       },
     },
     async ({ seconds }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         await client.computers.executeAction(computerId, {
           action: { type: "wait", ms: seconds * 1000 },
@@ -433,8 +440,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const viewport = gridToViewport(x, y, viewportWidth, viewportHeight);
@@ -493,8 +500,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const viewport = gridToViewport(x, y, viewportWidth, viewportHeight);
@@ -570,8 +577,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const startViewport = gridToViewport(
@@ -644,8 +651,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const viewport = gridToViewport(x, y, viewportWidth, viewportHeight);
@@ -704,8 +711,8 @@ const getServer = async () => {
       viewportWidth,
       viewportHeight,
     }): Promise<CallToolResult> => {
-      await recordActivity();
-      const computerId = await getActiveComputerId();
+      await recordActivity(client);
+      const computerId = await getActiveComputerId(client);
       try {
         // Convert grid coordinates to viewport pixels
         const viewport = gridToViewport(x, y, viewportWidth, viewportHeight);

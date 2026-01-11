@@ -31,11 +31,22 @@ cp .env.example .env
 
 ## Configuration
 
+### Stdio Transport (CLI tools)
+
 Create a `.env` file with the following variables:
 
 ```env
 TZAFON_API_KEY=your-api-key-here
-MCP_PORT=3000  # Optional, for HTTP server
+```
+
+The stdio transport requires the `TZAFON_API_KEY` environment variable.
+
+### HTTP Transport (web applications)
+
+For the HTTP server, the API key is **optional** in the environment. Instead, clients provide their API key via the `Authorization` header when connecting:
+
+```env
+MCP_PORT=3000  # Optional, defaults to 3000
 ```
 
 Get your API key from [Tzafon Dashboard](https://tzafon.ai/dashboard).
@@ -174,6 +185,16 @@ pnpm build:server
 | DELETE | `/mcp` | Terminate session            |
 
 All requests require the `mcp-session-id` header (except initial POST).
+
+### Authentication
+
+For the HTTP transport, you can provide the Tzafon API key via the `Authorization` header:
+
+```
+Authorization: Bearer your-api-key-here
+```
+
+This allows different users to use different API keys without modifying the server configuration. If no `Authorization` header is provided, the server falls back to the `TZAFON_API_KEY` environment variable.
 
 ## Tech Stack
 

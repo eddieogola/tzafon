@@ -1,4 +1,4 @@
-import { startKeepAlive, stopKeepAlive } from "@/core/keepAlive";
+import { stopKeepAlive } from "@/core/keepAlive";
 import { logger } from "@/core/telemetry";
 import { mcpDeleteHandler } from "@/handlers/delete";
 import { mcpGetHandler } from "@/handlers/get";
@@ -13,21 +13,19 @@ app.get("/mcp", mcpGetHandler);
 app.post("/mcp", mcpPostHandler);
 app.delete("/mcp", mcpDeleteHandler);
 
-app.listen(MCP_PORT, async (error) => {
+app.listen(MCP_PORT, (error) => {
   if (error) {
     logger.error(`Error starting MCP server: ${error}`);
     process.exit(1);
   }
   logger.info(`MCP server running on port ${MCP_PORT}`);
-
-  // Start keep alive mechanism
-  await startKeepAlive();
+  // Note: Keep-alive is now started per-client when they connect with their API key
 });
 
 process.on("SIGINT", async () => {
   logger.info("Shutting down server...");
 
-  // Stop keep alive
+  // Stop all keep-alive intervals
   stopKeepAlive();
 
   for (const sessionId in transports) {

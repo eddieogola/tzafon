@@ -42,22 +42,26 @@ const mockGetActiveComputerId = vi
 // Mock fetch for screenshot test
 global.fetch = vi.fn();
 
-vi.mock("@/core/client", () => ({
-  default: {
-    computers: {
-      navigate: (...args: any[]) => mockNavigate(...args),
-      captureScreenshot: (...args: any[]) => mockCaptureScreenshot(...args),
-      scrollViewport: (...args: any[]) => mockScrollViewport(...args),
-      typeText: (...args: any[]) => mockTypeText(...args),
-      pressHotkey: (...args: any[]) => mockPressHotkey(...args),
-      click: (...args: any[]) => mockClick(...args),
-      getHTML: (...args: any[]) => mockGetHTML(...args),
-      executeAction: (...args: any[]) => mockExecuteAction(...args),
-      rightClick: (...args: any[]) => mockRightClick(...args),
-      doubleClick: (...args: any[]) => mockDoubleClick(...args),
-      drag: (...args: any[]) => mockDrag(...args),
-    },
+// Create mock client
+const mockClient = {
+  computers: {
+    navigate: (...args: any[]) => mockNavigate(...args),
+    captureScreenshot: (...args: any[]) => mockCaptureScreenshot(...args),
+    scrollViewport: (...args: any[]) => mockScrollViewport(...args),
+    typeText: (...args: any[]) => mockTypeText(...args),
+    pressHotkey: (...args: any[]) => mockPressHotkey(...args),
+    click: (...args: any[]) => mockClick(...args),
+    getHTML: (...args: any[]) => mockGetHTML(...args),
+    executeAction: (...args: any[]) => mockExecuteAction(...args),
+    rightClick: (...args: any[]) => mockRightClick(...args),
+    doubleClick: (...args: any[]) => mockDoubleClick(...args),
+    drag: (...args: any[]) => mockDrag(...args),
   },
+};
+
+vi.mock("@/core/client", () => ({
+  default: mockClient,
+  getClient: () => mockClient,
   getActiveComputerId: () => mockGetActiveComputerId(),
 }));
 

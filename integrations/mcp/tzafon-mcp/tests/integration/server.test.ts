@@ -8,6 +8,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * npx @modelcontextprotocol/inspector node build/stdio.js
  */
 
+// Mock pino
+vi.mock("pino", () => ({
+  default: vi.fn(() => ({
+    info: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    warn: vi.fn(),
+  })),
+  destination: vi.fn(() => ({})),
+}));
+
 // Mock telemetry explicitly to prevent pino import issues
 vi.mock("@/core/telemetry", () => ({
   logger: {
@@ -18,8 +29,34 @@ vi.mock("@/core/telemetry", () => ({
   },
 }));
 
+// Mock client
+const mockClient = {
+  computers: {
+    navigate: vi.fn(),
+    captureScreenshot: vi.fn(),
+    scrollViewport: vi.fn(),
+    typeText: vi.fn(),
+    pressHotkey: vi.fn(),
+    click: vi.fn(),
+    getHTML: vi.fn(),
+    executeAction: vi.fn(),
+    rightClick: vi.fn(),
+    doubleClick: vi.fn(),
+    drag: vi.fn(),
+  },
+};
+
+vi.mock("@/core/client", () => ({
+  getClient: () => mockClient,
+  getActiveComputerId: vi.fn().mockResolvedValue("test-computer-id"),
+}));
+
+vi.mock("@/core/keepAlive", () => ({
+  recordActivity: vi.fn(),
+}));
+
 describe("MCP Server Integration", () => {
-  let getServer: () => Promise<any>;
+  let getServer: (apiKey?: string) => Promise<any>;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -41,13 +78,6 @@ describe("MCP Server Integration", () => {
 
     it("should have serverInfo property", async () => {
       const server = await getServer();
-      // The server's name is accessible via serverInfo or _options or directly
-      // Different SDK versions may store this differently
-      const serverName =
-        server.serverInfo?.name ||
-        server._options?.serverInfo?.name ||
-        server._serverInfo?.name ||
-        server.name;
       // Just check that server is defined and has expected structure
       expect(server).toBeDefined();
       expect(typeof server).toBe("object");
