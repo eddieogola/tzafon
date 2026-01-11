@@ -1,0 +1,11 @@
+[project]
+name = "tzafon-google-adk"
+version = "0.1.0"
+description = "Tzafon Google ADK Integration"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-adk>=1.22.0",
+    "mcp>=1.25.0",
+    "python-dotenv>=1.2.1",
+]
