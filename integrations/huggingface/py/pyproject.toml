@@ -1,11 +1,13 @@
 [project]
-name = "huggingface-agent"
+name = "tzafon-huggingface"
 version = "0.1.0"
-description = "Add your description here"
+description = "Tzafon HuggingFace integration"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "python-dotenv>=1.2.1",
     "smolagents>=1.23.0",
     "litellm>=1.59.3",
+    "tzafon>=2.10.0",
+    "openai>=1.59.3",
 ]
