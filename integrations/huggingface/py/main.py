@@ -1,5 +1,6 @@
-from smolagents import Tool, CodeAgent, InferenceClientModel
+from smolagents import Tool, CodeAgent, LiteLLMModel
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -40,22 +41,20 @@ class CalculatorTool(Tool):
 
 
 def main():
-    print("Initializing Hugging Face Agent with Calculator Tool...")
-
-    import os
-
-    print("HF" * 30)
-    print(os.getenv("HUGGINGFACE_TOKEN"))
-    print("HF" * 30)
+    print("Initializing Agent with Local Ollama Model...")
 
     # Initialize the calculator tool
     calculator = CalculatorTool()
 
+    # Get model ID from environment or use default
+    model_id = os.getenv("OLLAMA_MODEL", "ollama_chat/ministral-3")
+    print(f"Using model: {model_id}")
+
     # Create an agent with the calculator tool
-    # Using a small model for demonstration (you can change this to any HuggingFace model)
+    # Using LiteLLMModel for local Ollama support
     agent = CodeAgent(
         tools=[calculator],
-        model=InferenceClientModel(),  # Uses default model from HuggingFace
+        model=LiteLLMModel(model_id=model_id),
     )
 
     print("\nAgent initialized successfully!")
@@ -71,8 +70,10 @@ def main():
         print(f"\nResult: {result}")
     except Exception as e:
         print(f"\nError running agent: {e}")
-        print("\nNote: You may need to set HUGGINGFACE_TOKEN environment variable")
-        print("Or use a different model configuration.")
+        print("\nNote: Make sure Ollama is running and you have the model pulled.")
+        print(
+            f"To pull the model, run: ollama pull {model_id.replace('ollama_chat/', '')}"
+        )
 
     print("\n" + "=" * 50)
     print("Calculator tool is ready to use!")
