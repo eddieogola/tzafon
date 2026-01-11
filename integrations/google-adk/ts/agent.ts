@@ -1,23 +1,34 @@
-import { FunctionTool, LlmAgent } from '@google/adk';
-import { z } from 'zod';
+import { LlmAgent, MCPToolset } from '@google/adk';
+import * as dotenv from 'dotenv';
 
-/* Mock tool implementation */
-const getCurrentTime = new FunctionTool({
-  name: 'get_current_time',
-  description: 'Returns the current time in a specified city.',
-  parameters: z.object({
-    city: z.string().describe("The name of the city for which to retrieve the current time."),
-  }),
-  execute: ({city}) => {
-    return {status: 'success', report: `The current time in ${city} is 10:30 AM`};
-  },
-});
+dotenv.config();
 
+const TZAFON_API_KEY = process.env.TZAFON_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+/**
+ * Tzafon Agent implemented using Google ADK.
+ * This agent uses the Tzafon MCP server to interact with web pages.
+ */
 export const rootAgent = new LlmAgent({
-  name: 'hello_time_agent',
-  model: 'gemini-2.5-flash',
-  description: 'Tells the current time in a specified city.',
-  instruction: `You are a helpful assistant that tells the current time in a city.
-                Use the 'getCurrentTime' tool for this purpose.`,
-  tools: [getCurrentTime],
+  name: 'tzafon_agent',
+  model: 'gemini-2.5-pro',
+  description: 'Help users get information from web pages using Tzafon',
+  instruction: 'Help users get information from web pages using Tzafon',
+  tools: [
+    new MCPToolset({
+      type: "StdioConnectionParams",
+      serverParams: {
+        command: "node",
+        args: [
+          "Tzafon MCP Path Here",
+          "--proxies",
+        ],
+        env: {
+          TZAFON_API_KEY: TZAFON_API_KEY || '',
+          GEMINI_API_KEY: GEMINI_API_KEY || '',
+        },
+      },
+    }),
+  ],
 });
