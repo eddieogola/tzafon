@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "/Users/eddieogola/dev/job/tzafon/sdk-tests/qa_8_extra/py/.venv/bin/python",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never"
+  },
+  "python.analysis.typeCheckingMode": "basic"
+}

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tzafon-mcp": {
+      "name": "tzafon-mcp",
+      "type": "sse",
+      "url": "https://computer.stlmcp.com/sse"
+    }
+  }
+}
