@@ -6,6 +6,7 @@ import {
   checkModifierKeysAlt,
   checkMouseDownUp,
 } from "@/auto/regressionTest";
+import { checkBatchActions } from "./auto/newFeatures";
 dotenv.config();
 
 const client = new Computer({
@@ -27,3 +28,11 @@ const client = new Computer({
 
 // *** Test B: mouse_down / mouse_up ***
 checkMouseDownUp(client);
+
+/**
+ * Task 2: New Features - Computers API
+ */
+
+// 2.5 TypeScript SDK (@tzafon/computer)
+
+checkBatchActions(client);

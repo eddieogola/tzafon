@@ -9,6 +9,10 @@ from auto.regression_test import (
     check_modifier_keys_alt,
     check_mouse_down_up,
 )
+from auto.new_features import (
+    check_batch_actions,
+    check_batch_actions_stops_on_first_error,
+)
 
 client = Computer(
     api_key=os.getenv("TZAFON_API_KEY"),
@@ -37,7 +41,7 @@ Task 1: Regression Testing
 # check_modifier_keys_alt(client)
 
 # *** Test B: mouse_down / mouse_up ***
-check_mouse_down_up(client)
+# check_mouse_down_up(client)
 
 
 """
@@ -45,4 +49,6 @@ Task 2: New Features - Computers API
 
 """
 
-# === 2.3 Improved Playwright Support
+# === 2.4 Batch Actions ===
+# check_batch_actions(client)
+# check_batch_actions_stops_on_first_error(client)
