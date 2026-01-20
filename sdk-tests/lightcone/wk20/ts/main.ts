@@ -27,7 +27,7 @@ const client = new Computer({
 // checkModifierKeysAlt(client);
 
 // *** Test B: mouse_down / mouse_up ***
-checkMouseDownUp(client);
+// checkMouseDownUp(client);
 
 /**
  * Task 2: New Features - Computers API
@@ -35,4 +35,4 @@ checkMouseDownUp(client);
 
 // 2.5 TypeScript SDK (@tzafon/computer)
 
-checkBatchActions(client);
+// checkBatchActions(client);
