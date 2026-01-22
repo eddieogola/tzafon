@@ -10,8 +10,8 @@ load_dotenv()
 BASE_URL = "https://api.tzafon.ai"
 TOKEN = os.getenv("TZAFON_API_KEY")
 
-# Proxy configuration (example using Oxylabs)
-PROXY = "http://username:password@proxy-server:port"
+
+PROXY = "https://154.3.236.202:3128"  # picked a proxy from https://free-proxy-list.net/en/us-proxy.html
 
 
 def create_computer_with_proxy() -> str:

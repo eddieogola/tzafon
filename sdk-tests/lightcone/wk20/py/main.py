@@ -13,6 +13,7 @@ from auto.new_features import (
     check_batch_actions,
     check_batch_actions_stops_on_first_error,
 )
+from auto.compatibility import check_open_ai_compatibility
 
 client = Computer(
     api_key=os.getenv("TZAFON_API_KEY"),
@@ -52,3 +53,9 @@ Task 2: New Features - Computers API
 # === 2.4 Batch Actions ===
 # check_batch_actions(client)
 # check_batch_actions_stops_on_first_error(client)
+
+"""
+Task 4: New Features - Computers API 
+
+"""
+check_open_ai_compatibility()
