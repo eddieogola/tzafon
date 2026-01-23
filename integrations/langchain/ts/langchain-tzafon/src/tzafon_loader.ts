@@ -1,6 +1,6 @@
 import {
-  BaseDocumentLoader,
-  type DocumentLoader,
+    BaseDocumentLoader,
+    type DocumentLoader,
 } from "@langchain/core/document_loaders/base";
 import { Document, type DocumentInterface } from "@langchain/core/documents";
 import Computer from "tzafon";
@@ -17,6 +17,10 @@ export interface TzafonLoaderOptions {
    * The kind of computer to create. Defaults to "browser".
    */
   kind?: "browser" | "desktop";
+  /**
+   * Whether to extract clean text (true) or raw HTML (false). Defaults to true.
+   */
+  textContent?: boolean;
 }
 
 /**
@@ -47,7 +51,10 @@ export class TzafonLoader extends BaseDocumentLoader implements DocumentLoader {
     } else {
       this.urls = urls;
     }
-    this.options = options;
+    this.options = {
+      textContent: true,
+      ...options,
+    };
 
     const apiKey = options.apiKey ?? process.env.TZAFON_API_KEY;
 
@@ -86,12 +93,15 @@ export class TzafonLoader extends BaseDocumentLoader implements DocumentLoader {
     try {
       for (const url of this.urls) {
         await browser.navigate(url);
-        const result = await browser.getHTML();
+        
+        // Pass the textContent option to getHTML
+        // In Tzafon SDK, getHTML(true) extracts visible text content
+        const result = await browser.getHTML(this.options.textContent);
 
-        const htmlContent = result.result?.html_content;
+        const content = result.result?.html_content;
 
         yield new Document({
-          pageContent: htmlContent || "",
+          pageContent: content || "",
           metadata: {
             url,
           },

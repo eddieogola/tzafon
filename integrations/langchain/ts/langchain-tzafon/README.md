@@ -1,8 +1,8 @@
-# 🦜 langchain-tzafon
+# 🦜 @tzafon/langchain-tzafon
 
 An integration package connecting **[Tzafon](https://tzafon.ai)** and **[LangChain](https://www.langchain.com/)**.
 
-`langchain-tzafon` allows you to seamlessly use Tzafon's headless browser infrastructure as a [Document Loader](https://js.langchain.com/docs/modules/data_connection/document_loaders/) in your LangChain applications. It handles complex web page rendering (including JavaScript) and extracts clean text or raw HTML for your LLM pipelines.
+`@tzafon/langchain-tzafon` allows you to seamlessly use Tzafon's headless browser infrastructure as a [Document Loader](https://js.langchain.com/docs/modules/data_connection/document_loaders/) in your LangChain applications. It handles complex web page rendering (including JavaScript) and extracts clean text or raw HTML for your LLM pipelines.
 
 ---
 
@@ -19,7 +19,7 @@ An integration package connecting **[Tzafon](https://tzafon.ai)** and **[LangCha
 ## 🚀 Installation
 
 ```bash
-pnpm add langchain-tzafon @langchain/core tzafon
+pnpm add @tzafon/langchain-tzafon @langchain/core tzafon
 ```
 
 ---
@@ -41,12 +41,12 @@ Alternatively, you can pass the API key directly when initializing the loader.
 
 ## 📖 Usage
 
-### Basic Usage
+### Basic Usage (Text Extraction)
 
-By default, `TzafonLoader` extracts the raw HTML from the page.
+By default, `TzafonLoader` extracts the visible text from the page, which is ideal for LLM processing.
 
 ```typescript
-import { TzafonLoader } from "langchain-tzafon";
+import { TzafonLoader } from "@tzafon/langchain-tzafon";
 
 // Initialize with one or more URLs
 const loader = new TzafonLoader(["https://example.com"]);
@@ -60,12 +60,25 @@ for (const doc of documents) {
 }
 ```
 
+### Loading Raw HTML
+
+If you need the full HTML structure for custom parsing, set `textContent` to `false`.
+
+```typescript
+import { TzafonLoader } from "@tzafon/langchain-tzafon";
+
+const loader = new TzafonLoader("https://example.com", {
+  textContent: false
+});
+const documents = await loader.load();
+```
+
 ### Lazy Loading
 
 For better performance when handling multiple URLs, use the lazy loader:
 
 ```typescript
-import { TzafonLoader } from "langchain-tzafon";
+import { TzafonLoader } from "@tzafon/langchain-tzafon";
 
 const loader = new TzafonLoader([
   "https://example.com",
@@ -100,6 +113,7 @@ const documents = await loader.load();
 | `urls` | `string \| string[]` | A single URL or an array of URLs to load. |
 | `options.apiKey` | `string` | Your Tzafon API key. Defaults to `TZAFON_API_KEY` env var. |
 | `options.kind` | `"browser" \| "desktop"` | The type of environment to use. Defaults to `"browser"`. |
+| `options.textContent` | `boolean` | If `true` (default), extracts visible text. If `false`, returns raw HTML. |
 
 ---
 
