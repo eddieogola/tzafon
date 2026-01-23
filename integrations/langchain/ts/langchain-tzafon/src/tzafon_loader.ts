@@ -1,8 +1,8 @@
-import { Document, type DocumentInterface } from "@langchain/core/documents";
 import {
   BaseDocumentLoader,
   type DocumentLoader,
 } from "@langchain/core/document_loaders/base";
+import { Document, type DocumentInterface } from "@langchain/core/documents";
 import Computer from "tzafon";
 
 /**
