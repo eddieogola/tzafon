@@ -117,12 +117,6 @@ const documents = await loader.load();
 
 ---
 
-## 🧪 Development
+## 📄 License
 
-This project uses `pnpm` for dependency management and `jest` for testing.
-
-### Running Tests
-
-```bash
-pnpm test
-```
+This project is licensed under the MIT License.

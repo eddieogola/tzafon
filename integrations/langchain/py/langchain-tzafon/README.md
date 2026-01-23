@@ -8,7 +8,7 @@ An integration package connecting **[Tzafon](https://tzafon.ai)** and **[LangCha
 
 ## ✨ Features
 
-- **Headless Browser Rendering**: Power by Tzafon's cloud-based browser instances.
+- **Headless Browser Rendering**: Powered by Tzafon's cloud-based browser instances.
 - **JavaScript Support**: Naturally handles SPAs and dynamically loaded content.
 - **Sync & Async Support**: Features both `lazy_load` and `alazy_load` for high-performance applications.
 - **Configurable Extraction**: Choice between clean text content or full source HTML.
@@ -21,6 +21,8 @@ An integration package connecting **[Tzafon](https://tzafon.ai)** and **[LangCha
 ```bash
 pip install langchain-tzafon
 ```
+
+*Note: This package requires Playwright for connecting to the remote browser.*
 
 ---
 
@@ -43,7 +45,7 @@ Alternatively, you can pass the API key directly when initializing the loader.
 
 ### Basic Usage (Text Extraction)
 
-By default, `TzafonLoader` extracts the visible text from the `<body>` of the page.
+By default, `TzafonLoader` extracts the visible text from the `<body>` of the page, which is ideal for LLM processing.
 
 ```python
 from langchain_tzafon import TzafonLoader
@@ -103,21 +105,10 @@ documents = loader.load()
 | `urls` | `str \| List[str]` | A single URL or a list of URLs to load. |
 | `api_key` | `Optional[str]` | Your Tzafon API key. Defaults to `TZAFON_API_KEY` env var. |
 | `text_content` | `bool` | If `True` (default), extracts visible text. If `False`, returns raw HTML. |
-
----
-
-## 🧪 Development
-
-This project uses `uv` for dependency management and `pytest` for testing.
-
-### Running Tests
-
-```bash
-uv run pytest
-```
+| `kind` | `"browser" \| "desktop"` | The type of environment to use. Defaults to `"browser"`. |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details (if available).
+This project is licensed under the MIT License.
