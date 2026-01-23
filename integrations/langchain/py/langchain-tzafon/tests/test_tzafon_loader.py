@@ -35,8 +35,7 @@ def test_initialization(mock_settings, mock_client):
     assert loader.urls == ["http://example.com"]
     assert loader.api_key == "test_key"
     mock_client.assert_called_with(api_key="test_key")
-    mock_client.return_value.initialize.assert_called()
-    assert loader.browser == mock_client.return_value.initialize.return_value
+    # initialize() is now called in lazy_load, not __init__
 
     # Test 2: List of URLs
     loader = TzafonLoader(urls=["http://a.com", "http://b.com"], api_key="test_key")
@@ -46,6 +45,7 @@ def test_lazy_load_text(mock_settings, mock_client, mock_sync_playwright):
     # Setup Playwright mocks
     mock_pw_context = mock_sync_playwright.return_value.__enter__.return_value
     mock_browser = mock_pw_context.chromium.connect_over_cdp.return_value
+    mock_browser.contexts = []
     mock_context = mock_browser.new_context.return_value
     mock_page = mock_context.new_page.return_value
     
@@ -73,7 +73,9 @@ def test_lazy_load_text(mock_settings, mock_client, mock_sync_playwright):
 
 def test_lazy_load_html(mock_settings, mock_client, mock_sync_playwright):
     mock_pw_context = mock_sync_playwright.return_value.__enter__.return_value
-    mock_page = mock_pw_context.chromium.connect_over_cdp.return_value.new_context.return_value.new_page.return_value
+    mock_browser = mock_pw_context.chromium.connect_over_cdp.return_value
+    mock_browser.contexts = []
+    mock_page = mock_browser.new_context.return_value.new_page.return_value
     mock_page.content.return_value = "<html><body>Mock HTML</body></html>"
     
     loader = TzafonLoader(urls="http://example.com", api_key="test_key", text_content=False)
@@ -89,6 +91,7 @@ async def test_alazy_load_text(mock_settings, mock_client, mock_async_playwright
     mock_pw_context = mock_async_playwright.return_value.__aenter__.return_value
     
     mock_browser = AsyncMock()
+    mock_browser.contexts = []
     mock_pw_context.chromium.connect_over_cdp.return_value = mock_browser
     
     mock_context = AsyncMock()

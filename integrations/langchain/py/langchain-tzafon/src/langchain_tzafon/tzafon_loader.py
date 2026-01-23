@@ -70,27 +70,29 @@ class TzafonLoader(BaseLoader):
         try:
             with sync_playwright() as playwright:
                 browser = playwright.chromium.connect_over_cdp(cdp_url)
-                context =  browser.contexts[0] if browser.contexts else browser.new_context()
+                # Use existing context if available, otherwise create one
+                context = browser.contexts[0] if browser.contexts else browser.new_context()
+                
                 for url in self.urls:
                     page = context.new_page()
-                    
-                    page.goto(url)
-                    if self.text_content:
-                        page_text = page.inner_text("body")
-                        content = str(page_text)
-                    else:
-                        page_html = page.content()
-                        content = str(page_html)
+                    try:
+                        page.goto(url)
+                        if self.text_content:
+                            page_text = page.inner_text("body")
+                            content = str(page_text)
+                        else:
+                            page_html = page.content()
+                            content = str(page_html)
 
-                    page.close()
+                        yield Document(
+                            page_content=content,
+                            metadata={
+                                "url": url,
+                            },
+                        )
+                    finally:
+                        page.close()
                 browser.close()
-
-                yield Document(
-                    page_content=content,
-                    metadata={
-                        "url": url,
-                    },
-                )
         except Exception as e:
             logger.error(f"Error loading page: {e}")
             raise
@@ -110,28 +112,29 @@ class TzafonLoader(BaseLoader):
         try:
             async with async_playwright() as playwright:
                 browser = await playwright.chromium.connect_over_cdp(cdp_url)
-                context = browser.contexts[0] if browser.contexts else await browser.new_context()
+                # Use existing context if available, otherwise create one
+                context = browser.contexts[0] if getattr(browser, "contexts", None) else await browser.new_context()
                 
                 for url in self.urls:
                     page = await context.new_page()
+                    try:
+                        await page.goto(url)
+                        if self.text_content:
+                            page_text = await page.inner_text("body")
+                            content = str(page_text)
+                        else:
+                            page_html = await page.content()
+                            content = str(page_html)
 
-                    await page.goto(url)
-                    if self.text_content:
-                        page_text = await page.inner_text("body")
-                        content = str(page_text)
-                    else:
-                        page_html = await page.content()
-                        content = str(page_html)
-
-                    await page.close()
+                        yield Document(
+                            page_content=content,
+                            metadata={
+                                "url": url,
+                            },
+                        )
+                    finally:
+                        await page.close()
                 await browser.close()
-
-                yield Document(
-                    page_content=content,
-                    metadata={
-                        "url": url,
-                        },
-                    )
         except Exception as e:
             logger.error(f"Error loading page: {e}")
             raise
