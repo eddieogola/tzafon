@@ -12,7 +12,7 @@ importers:
         specifier: ^0.3.0
         version: 0.3.79
       tzafon:
-        specifier: latest
+        specifier: ^1.14.0
         version: 1.14.0
     devDependencies:
       '@jest/globals':

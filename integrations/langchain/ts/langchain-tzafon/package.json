@@ -1,5 +1,5 @@
 {
-  "name": "langchain-tzafon",
+  "name": "@tzafon/langchain-tzafon",
   "version": "1.0.0",
   "description": "LangChain integration for Tzafon",
   "main": "dist/index.js",
@@ -35,5 +35,8 @@
   },
   "peerDependencies": {
     "@langchain/core": ">=0.2.0"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
