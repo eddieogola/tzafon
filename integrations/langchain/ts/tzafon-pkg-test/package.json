@@ -1,0 +1,21 @@
+{
+  "name": "tzafon-pkg-test",
+  "version": "0.1.0",
+  "description": "Test package for @tzafon/langchain-tzafon",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "doc-loader": "tsx src/docLoader.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@tzafon/langchain-tzafon": "file:../langchain-tzafon",
+    "@langchain/core": "^0.3.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5"
+  }
+}

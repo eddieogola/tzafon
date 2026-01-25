@@ -1,16 +1,16 @@
 /* eslint-disable no-process-env */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  jest,
-  test,
-  expect,
-  describe,
-  afterEach,
-  beforeAll,
-  afterAll,
+    afterAll,
+    afterEach,
+    beforeAll,
+    describe,
+    expect,
+    jest,
+    test,
 } from "@jest/globals";
+import Computer from "@tzafon/computer";
 import { TzafonLoader } from "../src/tzafon_loader";
-import Computer from "tzafon";
 
 describe("TzafonLoader", () => {
   const originalEnv = process.env;
