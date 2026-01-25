@@ -1,0 +1,12 @@
+[project]
+name = "tzafon-pkg-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-tzafon",
+]
+
+[tool.uv.sources]
+langchain-tzafon = { path = "../langchain-tzafon/dist/langchain_tzafon-1.1.0.tar.gz" }

@@ -2,17 +2,20 @@
 
 An integration package connecting **[Tzafon](https://tzafon.ai)** and **[LangChain](https://www.langchain.com/)**.
 
-`langchain-tzafon` allows you to seamlessly use Tzafon's headless browser infrastructure as a [Document Loader](https://python.langchain.com/docs/modules/data_connection/document_loaders/) in your LangChain applications. It handles complex web page rendering (including JavaScript) and extracts clean text or raw HTML for your LLM pipelines.
+`langchain-tzafon` provides two powerful integrations:
+- **ChatTzafon**: A LangChain chat model for Tzafon's AI models (chat completions with streaming support)
+- **TzafonLoader**: A Document Loader using Tzafon's headless browser infrastructure
 
 ---
 
 ## ✨ Features
 
-- **Headless Browser Rendering**: Powered by Tzafon's cloud-based browser instances.
-- **JavaScript Support**: Naturally handles SPAs and dynamically loaded content.
-- **Sync & Async Support**: Features both `lazy_load` and `alazy_load` for high-performance applications.
-- **Configurable Extraction**: Choice between clean text content or full source HTML.
-- **Seamless Integration**: Fully compatible with LangChain's `BaseLoader` interface.
+- **Chat Completions**: Access Tzafon's AI models via LangChain's chat model interface
+- **Streaming Support**: Real-time token streaming for chat responses
+- **Headless Browser Rendering**: Powered by Tzafon's cloud-based browser instances
+- **JavaScript Support**: Naturally handles SPAs and dynamically loaded content
+- **Sync & Async Support**: Features both synchronous and asynchronous APIs
+- **Seamless Integration**: Fully compatible with LangChain's interfaces
 
 ---
 
@@ -43,17 +46,59 @@ Alternatively, you can pass the API key directly when initializing the loader.
 
 ## 📖 Usage
 
-### Basic Usage (Text Extraction)
+### ChatTzafon - Chat Completions
 
-By default, `TzafonLoader` extracts the visible text from the `<body>` of the page, which is ideal for LLM processing.
+Use Tzafon's AI models for chat completions:
+
+```python
+from langchain_tzafon import ChatTzafon
+
+# Initialize the chat model
+chat = ChatTzafon(model="tzafon.sm-1")
+
+# Simple invocation
+response = chat.invoke("Hello, how are you?")
+print(response.content)
+```
+
+### ChatTzafon - Streaming
+
+Stream responses token by token:
+
+```python
+from langchain_tzafon import ChatTzafon
+
+chat = ChatTzafon(model="tzafon.sm-1", temperature=0.8)
+
+for chunk in chat.stream("Write a haiku about coding"):
+    print(chunk.content, end="", flush=True)
+```
+
+### ChatTzafon - With Messages
+
+Use structured messages for conversations:
+
+```python
+from langchain_tzafon import ChatTzafon
+from langchain_core.messages import HumanMessage, SystemMessage
+
+chat = ChatTzafon()
+messages = [
+    SystemMessage(content="You are a helpful assistant."),
+    HumanMessage(content="What is the capital of France?"),
+]
+response = chat.invoke(messages)
+print(response.content)
+```
+
+### TzafonLoader - Text Extraction
+
+Load web pages using Tzafon's headless browser:
 
 ```python
 from langchain_tzafon import TzafonLoader
 
-# Initialize with one or more URLs
 loader = TzafonLoader(urls=["https://example.com"])
-
-# Load documents
 documents = loader.load()
 
 for doc in documents:
@@ -61,9 +106,9 @@ for doc in documents:
     print(doc.page_content[:200])
 ```
 
-### Async Loading
+### TzafonLoader - Async Loading
 
-For better performance when handling multiple URLs, use the asynchronous loader:
+For better performance when handling multiple URLs:
 
 ```python
 import asyncio
@@ -82,21 +127,19 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### Loading Raw HTML
-
-If you need the full HTML structure for custom parsing:
-
-```python
-loader = TzafonLoader(
-    urls="https://example.com",
-    text_content=False  # Set to False for raw HTML
-)
-documents = loader.load()
-```
-
 ---
 
 ## 🛠️ API Reference
+
+### `ChatTzafon`
+
+| Argument | Type | Description |
+| :--- | :--- | :--- |
+| `model` | `str` | Tzafon model ID. Defaults to `"tzafon.sm-1"`. Options: `tzafon.sm-1`, `tzafon.northstar.cua.sft`. |
+| `temperature` | `float` | Sampling temperature (0-1). Defaults to `0.7`. |
+| `max_tokens` | `Optional[int]` | Maximum tokens to generate. |
+| `stop` | `Optional[List[str]]` | Stop sequences. |
+| `api_key` | `Optional[str]` | Tzafon API key. Defaults to `TZAFON_API_KEY` env var. |
 
 ### `TzafonLoader`
 
@@ -105,7 +148,6 @@ documents = loader.load()
 | `urls` | `str \| List[str]` | A single URL or a list of URLs to load. |
 | `api_key` | `Optional[str]` | Your Tzafon API key. Defaults to `TZAFON_API_KEY` env var. |
 | `text_content` | `bool` | If `True` (default), extracts visible text. If `False`, returns raw HTML. |
-| `kind` | `"browser" \| "desktop"` | The type of environment to use. Defaults to `"browser"`. |
 
 ---
 
