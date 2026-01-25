@@ -6,19 +6,11 @@ Make sure to set TZAFON_API_KEY environment variable before running.
 
 from langchain_tzafon import ChatTzafon
 from langchain_core.messages import HumanMessage, SystemMessage
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 
 def main():
     # Initialize the chat model
-    chat = ChatTzafon(
-        model="tzafon.northstar.cua.sft",
-        temperature=0.9,
-        api_key=os.getenv("TZAFON_API_KEY"),
-    )
+    chat = ChatTzafon(model="tzafon.northstar.cua.sft", temperature=0.9)
 
     # Simple invocation
     print("=== Simple Invocation ===")

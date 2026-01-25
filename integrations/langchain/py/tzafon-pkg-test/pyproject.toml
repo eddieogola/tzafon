@@ -9,4 +9,4 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-langchain-tzafon = { path = "../langchain-tzafon/dist/langchain_tzafon-1.1.0.tar.gz" }
+langchain-tzafon = { path = "../langchain-tzafon/dist/langchain_tzafon-1.1.1.tar.gz" }
