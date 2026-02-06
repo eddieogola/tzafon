@@ -34,4 +34,5 @@ def event_streaming(client: Computer):
         computer.wait(1)
         computer.hotkey("enter")
         computer.wait(1)
-        computer.screenshot()
+        result = computer.screenshot()
+        print(computer.get_screenshot_url(result))

@@ -38,4 +38,5 @@ export const eventStreaming = async (client: Computer) => {
   await computer.execute({ type: "mouse_down", x: 1000, y: 440 });
   await computer.execute({ type: "mouse_up", x: 700, y: 520 });
   await computer.screenshot();
+  await computer.terminate();
 };

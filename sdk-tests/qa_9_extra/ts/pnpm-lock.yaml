@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tzafon/computer':
-        specifier: ^1.21.1
-        version: 1.21.1
+        specifier: ^1.21.2
+        version: 1.21.2
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -186,8 +186,8 @@ packages:
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
 
-  '@tzafon/computer@1.21.1':
-    resolution: {integrity: sha512-vrwC/Y5Ha4/ydNuUg2FwCV7KLVXn/Rrn/Lz6ztVJlPtfn4aAAIgKxLMIt41dLEqzWILOT9sUhjnKvRtLmivIvg==}
+  '@tzafon/computer@1.21.2':
+    resolution: {integrity: sha512-v2qZ/OMOAIiecoo+RPmkiCAOQasNG44AQon90q6k/8NXUBzQDD+rQYDdUhVX7dLqWpw/lR/FEuivsMpdQXDtJw==}
 
   dotenv@17.2.3:
     resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
@@ -309,7 +309,7 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
-  '@tzafon/computer@1.21.1': {}
+  '@tzafon/computer@1.21.2': {}
 
   dotenv@17.2.3: {}
 

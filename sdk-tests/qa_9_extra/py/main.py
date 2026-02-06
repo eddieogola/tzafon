@@ -100,7 +100,7 @@ Task 4: Documentation Review
 # desktop_automation_example(client)
 # session_configuration_example(client)
 # page_context_api_example(client)
-chat_completion_example()
+# chat_completion_example()
 # versioning_example()
 
 """

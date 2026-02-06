@@ -76,7 +76,7 @@ const client = new Computer({ apiKey: process.env.TZAFON_API_KEY });
  * 3.3 Event Screencast (Optional/Advanced)
  */
 
-// eventScreencast(client);
+eventScreencast(client);
 
 /**
  * Task 4: Documentation Review

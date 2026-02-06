@@ -74,4 +74,5 @@ export const eventScreencast = async (client: Computer) => {
   await computer.hotkey(["enter"]);
   await computer.wait(1);
   await computer.screenshot();
+  await computer.terminate();
 };

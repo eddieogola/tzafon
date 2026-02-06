@@ -2,16 +2,15 @@
   "name": "ts",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
     "dev": "tsx main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.28.2",
   "dependencies": {
-    "@tzafon/computer": "^1.21.1",
+    "@tzafon/computer": "^1.21.2",
     "dotenv": "^17.2.3",
     "eventsource": "^4.1.0",
     "tsx": "^4.21.0"
