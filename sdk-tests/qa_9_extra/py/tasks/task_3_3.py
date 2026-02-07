@@ -19,8 +19,8 @@ def get_event_screencast_info(computer_id: str):
                     # Parse SSE data
                     data = line.decode('utf-8')
                     if data.startswith('data:'):
-                        frame_data = data[5:].strip()
-                        json_data = json.loads(frame_data)
+                        frame_json = data[5:].strip()
+                        json_data = json.loads(frame_json)
                         image_bytes = base64.b64decode(json_data['image_data'])
                         os.makedirs("frames", exist_ok=True)
                         with open(f"frames/frame_{frame_count}.jpeg", "wb") as f:

@@ -87,7 +87,7 @@ Task 3: Streaming & Session Management [~60 min]
 3.3 Event Screencast (Optional/Advanced)
 """
 
-# event_screencast(client)
+event_screencast(client)
 
 """
 Task 4: Documentation Review

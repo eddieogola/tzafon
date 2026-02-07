@@ -1,8 +1,16 @@
 import requests
 import os
 import threading
+import re
 
 from tzafon import Computer
+client = Computer()
+
+# ANSI escape codes for colors and styles
+RESET = '\033[0m'
+BOLD = '\033[1m'
+RED = '\033[31m'
+GREEN = '\033[32m'
 
 
 def get_event_stream_info(computer_id: str):
@@ -13,7 +21,13 @@ def get_event_stream_info(computer_id: str):
         with requests.get(url, headers=headers, stream=True) as response:
             for line in response.iter_lines():
                 if line:
-                    print(line.decode("utf-8"))
+                    decoded = line.decode("utf-8")
+                    # Extract and color-code image_url in red
+                    match = re.search(r'"image_url":"([^"]+)"', decoded)
+                    if match:
+                        image_url = match.group(1)
+                        decoded = decoded.replace(image_url, f"{RED}{image_url}{RESET}")
+                    print(f"{BOLD}Event Stream:{RESET} {decoded}")
     except Exception as e:
         print(f"Stream error: {e}")
 
@@ -35,4 +49,8 @@ def event_streaming(client: Computer):
         computer.hotkey("enter")
         computer.wait(1)
         result = computer.screenshot()
-        print(computer.get_screenshot_url(result))
+        print(f"{BOLD}Computer Image URL:{RESET} {GREEN}{computer.get_screenshot_url(result)}{RESET}")
+
+
+if __name__ == "__main__":
+    event_streaming(client)
