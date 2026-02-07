@@ -10,9 +10,7 @@ export const checkModifierKeysShift = async (client: Computer) => {
     },
   });
 
-  await computer.navigate("https://www.keyboardtester.com/");
-  await computer.wait(3);
-  await computer.click(800, 380);
+  await computer.navigate("https://www.keyboardtester.com/tester.html");
   await computer.wait(3);
   await computer.execute({
     type: "key_down",
@@ -40,13 +38,11 @@ export const checkModifierKeysControl = async (client: Computer) => {
     },
   });
 
-  await computer.navigate("https://www.keyboardtester.com/");
-  await computer.wait(3);
-  await computer.click(800, 380);
+  await computer.navigate("https://www.keyboardtester.com/tester.html");
   await computer.wait(3);
   await computer.execute({
     type: "key_down",
-    key: "Control",
+    key: "Ctrl",
   });
   const result = await computer.screenshot();
   console.log(`Control DOWN: ${result.result?.screenshot_url}`);
@@ -54,7 +50,7 @@ export const checkModifierKeysControl = async (client: Computer) => {
   // Release
   await computer.execute({
     type: "key_up",
-    key: "Control",
+    key: "Ctrl",
   });
   const result2 = await computer.screenshot();
   console.log(`Control UP: ${result2.result?.screenshot_url}`);

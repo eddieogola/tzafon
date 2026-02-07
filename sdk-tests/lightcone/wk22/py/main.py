@@ -42,7 +42,7 @@ Task 1: Regression Testing
 # check_modifier_keys_alt(client)
 
 # *** Test B: mouse_down / mouse_up ***
-check_mouse_down_up(client)
+# check_mouse_down_up(client)
 
 
 """
