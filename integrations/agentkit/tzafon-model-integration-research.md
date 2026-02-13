@@ -188,15 +188,14 @@ export const responseParser = (output) => openaiResponseParser(output);
 
 ---
 
-## 4. Recommended Integration Pattern: DeepSeek
+## 4. ~~Recommended Integration Pattern: DeepSeek~~ → Actual: Grok Pattern
 
-**Tzafon should follow the DeepSeek pattern** because:
+**Originally planned** to follow the DeepSeek pattern (reuse `"openai-chat"` format). However, testing revealed that **Tzafon rejects `tools`/`tool_choice` with HTTP 400**, requiring a custom adapter.
 
-1. Tzafon is fully OpenAI-compatible (same endpoint, same auth pattern, same request/response format)
-2. No custom adapter behavior needed (unlike Grok which disables strict mode)
-3. Auth uses the same `Authorization: Bearer` header as OpenAI
-4. Minimizes changes — no modifications to `AiAdapter.Format` type or adapter registry
-5. DeepSeek is already proven to work in `@inngest/ai` v0.1.6
+**Actual pattern: Grok** — custom `"tzafon"` format with a dedicated adapter that:
+1. Wraps OpenAI request/response parsers
+2. Strips `tools` and `tool_choice` from the request body
+3. Uses `Authorization: Bearer` auth (same as OpenAI)
 
 ---
 
@@ -277,11 +276,14 @@ __exportStar(require("./tzafon.js"), exports);
 // or: export * from "./tzafon.js";
 ```
 
-#### What does NOT change in `@inngest/ai`
+#### ~~What does NOT change in `@inngest/ai`~~ — Updated: These DO change
 
-- `adapter.d.ts` — No new format (reuses `"openai-chat"`)
-- `adapters/` — No new adapter type
-- `adapters/index.d.ts` — No changes
+After discovering Tzafon rejects `tools`, the integration was changed to follow the Grok pattern:
+
+- `adapter.ts` — **Changed**: Add `"tzafon"` to `Format` union and `AiAdapters` map
+- `adapters/tzafon.ts` — **New**: `TzafonAiAdapter` interface (extends `AiAdapter`, format `"tzafon"`, reuses OpenAI I/O types)
+- `adapters/index.ts` — **Changed**: Export `TzafonAiAdapter`
+- PR: [inngest/inngest-js#1309](https://github.com/inngest/inngest-js/pull/1309)
 
 ### Layer 2: `@inngest/agent-kit` Package Changes (This Repo)
 
@@ -295,11 +297,14 @@ export { anthropic, gemini, openai, grok } from "@inngest/ai";
 export { anthropic, gemini, openai, grok, tzafon } from "@inngest/ai";
 ```
 
-#### No other code changes needed
+#### ~~No other code changes needed~~ — Updated: Adapter required
 
-- `src/adapters/index.ts` — No changes (uses `"openai-chat"` format)
-- `src/adapters/tzafon.ts` — Not needed (uses OpenAI adapter)
-- `src/model.ts` — No changes (auth handled by `"openai-chat"` format handler)
+After discovering Tzafon rejects `tools`, additional changes are needed:
+
+- `src/adapters/tzafon.ts` — **New**: Custom adapter wrapping OpenAI parsers, strips `tools`/`tool_choice`
+- `src/adapters/index.ts` — **Changed**: Register Tzafon adapter
+- `src/model.ts` — **Changed**: Add `tzafon` format handler (`Authorization: Bearer` auth)
+- PR: [inngest/agent-kit#289](https://github.com/inngest/agent-kit/pull/289)
 
 #### Documentation changes
 
@@ -357,27 +362,9 @@ Since Tzafon doesn't support tool/function calling:
 - They **cannot invoke AgentKit tools**
 - Still useful for: text generation, simple routing, system prompts, conversational agents
 
-### Risk: Does Tzafon error on `tools` parameter?
+### ~~Risk: Does Tzafon error on `tools` parameter?~~ — Resolved
 
-The OpenAI request parser will include `tools` in the request body when an agent has tools configured. Two outcomes:
-
-1. **Tzafon ignores unknown parameters** → Works fine, agent just never calls tools
-2. **Tzafon returns an error** → Need a custom adapter to strip `tools` and `tool_choice` from requests
-
-**If we need to strip tools**, we'd follow the Grok pattern instead (custom format + adapter):
-
-```typescript
-// adapters/tzafon.ts
-export const requestParser = (model, messages, tools, tool_choice) => {
-    const request = openaiRequestParser(model, messages, tools, tool_choice);
-    delete request.tools;
-    delete request.tool_choice;
-    return request;
-};
-export const responseParser = openaiResponseParser;
-```
-
-**This needs testing before finalizing the approach.**
+**Tested and confirmed**: Tzafon **rejects** requests with `tools` parameter (HTTP 400). A custom adapter was implemented in `agent-kit` that strips `tools` and `tool_choice` from all requests to Tzafon, following the Grok pattern.
 
 ---
 
@@ -420,11 +407,12 @@ Environment variable: `TZAFON_API_KEY`
 
 | Aspect | Detail |
 |--------|--------|
-| Pattern to follow | **DeepSeek** (simplest OpenAI-compatible, no custom format) |
-| Format | `"openai-chat"` (reuse existing, no custom format needed) |
-| Custom adapter needed | No (unless `tools` param causes Tzafon errors) |
-| `@inngest/ai` changes | New model creator + env key + exports (~4 files) |
-| `agent-kit` changes | Re-export in `models.ts` + documentation (~4 files) |
+| Pattern followed | **Grok** (custom format + adapter that modifies requests) |
+| Format | `"tzafon"` (custom format, uses OpenAI I/O types) |
+| Custom adapter | Yes — strips `tools` and `tool_choice` from requests |
+| `@inngest/ai` changes | Model creator + adapter type + format registration + env key (~6 files) |
+| `@inngest/ai` PR | [inngest/inngest-js#1309](https://github.com/inngest/inngest-js/pull/1309) |
+| `agent-kit` changes | Re-export + adapter + adapter registration + format handler (~4 files) |
+| `agent-kit` PR | [inngest/agent-kit#289](https://github.com/inngest/agent-kit/pull/289) |
 | Key limitation | No tool/function calling support |
-| Effort | Small — ~8 files total across both packages |
-| Biggest risk | Unknown behavior when `tools` param is sent to Tzafon API |
+| Status | PRs submitted, `agent-kit` PR blocked on `@inngest/ai` PR merge |

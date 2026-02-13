@@ -4,7 +4,9 @@
   "description": "Tzafon AgentKit integration",
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "test:tzafon": "tsx src/test-tzafon-model.ts"
+    "test:tzafon": "tsx src/test-tzafon-model.ts",
+    "test:integration": "tsx src/test-tzafon-integration.ts",
+    "test:agentkit": "tsx src/test-tzafon-agentkit.ts"
   },
   "keywords": [],
   "author": "",
