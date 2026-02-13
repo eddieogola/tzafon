@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Tzafon AgentKit integration",
   "scripts": {
-    "dev": "tsx watch src/main.ts"
+    "dev": "tsx watch src/main.ts",
+    "test:tzafon": "tsx src/test-tzafon-model.ts"
   },
   "keywords": [],
   "author": "",
