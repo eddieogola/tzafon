@@ -23,17 +23,7 @@ const client: Computer = new Computer();
 // githubSearchForTzafon(client);
 // searchForSfAndDrag(client);
 // listTabsExecutionAction(client);
-multiTabOpen(client);
+// multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
 // persistentBrowserSession(client);
 // persistentDesktopSession(client);
-
-// async function runBrowser(id: number) {
-//   try {
-//     await githubSearchForTzafon(client);
-//   } catch (error) {
-//     console.error(`Browser ${id}: ${error}`);
-//   }
-// }
-
-// await Promise.all(Array.from({ length: 100 }, (_, i) => runBrowser(i)));
