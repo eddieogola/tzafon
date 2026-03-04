@@ -1,5 +1,5 @@
 import Computer from "@tzafon/computer";
-import { handleScreenshotResult } from "./utils";
+import { handleScreenshotResult } from "./utils.js";
 
 export const drawLine = async (client: Computer) => {
   const computer = await client.create({ kind: "browser" });

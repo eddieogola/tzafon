@@ -1,5 +1,5 @@
-import Computer from "@tzafon/computer";
-import { handleBatchResult } from "./utils";
+import Computer from "tzafon";
+import { handleBatchResult } from "./utils.js";
 
 export const batchErrorHandling = async (client: Computer) => {
   const computer = await client.create({ kind: "browser" });
