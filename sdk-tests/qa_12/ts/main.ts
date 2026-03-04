@@ -26,4 +26,4 @@ const client: Computer = new Computer();
 // multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
 // persistentBrowserSession(client);
-// persistentDesktopSession(client);
+persistentDesktopSession(client);

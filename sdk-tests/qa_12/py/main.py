@@ -32,7 +32,7 @@ client = Computer(api_key=API_KEY)
 # list_tabs_direct_api(client)
 # multi_tab_open(client)
 # persistent_browser_session(client)
-# persistent_desktop_session(client)
+persistent_desktop_session(client)
 # test_desktop_session(client)
 
 

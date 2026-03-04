@@ -346,8 +346,7 @@ export const persistentDesktopSession = async (client: Computer) => {
   });
 
   // Install software, configure the environment
-  await computer.execute("sudo apt-get install -y nodejs");
-  await computer.execute("mkdir -p ~/project && cd ~/project && npm init -y");
+  await client.computers.exec.execute(computer.id, {command: "mkdir -p ~/Desktop/project"});
   await computer.wait(3);
 
   const result = await computer.screenshot();
@@ -363,7 +362,6 @@ export const persistentDesktopSession = async (client: Computer) => {
   });
 
   // nodejs is already installed, project directory exists
-  await restoredComputer.execute("cd ~/project && node --version");
   await restoredComputer.wait(2);
 
   const result2 = await restoredComputer.screenshot();

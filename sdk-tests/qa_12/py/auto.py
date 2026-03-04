@@ -304,8 +304,7 @@ def persistent_desktop_session(client: Computer):
     # Create a persistent desktop session and set it up
     with client.create(kind="desktop", persistent=True) as computer:
         # Install software, configure the environment
-        computer.execute("sudo apt-get install -y nodejs")
-        computer.execute("mkdir -p ~/project && cd ~/project && npm init -y")
+        client.computers.exec.execute_sync(id=computer.id,  command="mkdir -p ~/Desktop/project")
         computer.wait(3)
 
         result = computer.screenshot()
@@ -313,9 +312,13 @@ def persistent_desktop_session(client: Computer):
         print(f"Session ID (save this): {computer.id}")
 
     # Session ends - full VM snapshot is saved
-    with client.create(kind="desktop", environment_id=session_id) as computer:
+    # Restore the desktop environment later — all installed software and files will be intact:
+    with client.create(
+        kind="desktop",
+        environment_id=session_id
+    ) as computer:
         # nodejs is already installed, project directory exists
-        computer.execute("cd ~/project && node --version")
+        client.computers.exec.execute_sync(id=computer.id,  command="cd ~/Desktop/project && node --version")
         computer.wait(2)
 
         result = computer.screenshot()
