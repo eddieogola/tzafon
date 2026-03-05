@@ -106,7 +106,7 @@ export const bnbSearchForHomes = async (client: Computer) => {
 export const githubSearchForTzafon = async (client: Computer) => {
   const computer = await client.create({ kind: "browser" });
   try {
-    // await computer.setViewport(1920, 1080);
+    await computer.setViewport(1920, 1080);
     await computer.navigate("https://github.com");
     await computer.wait(1);
     await computer.click(1050, 20);

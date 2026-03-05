@@ -18,7 +18,7 @@ dotenv.config();
 const client: Computer = new Computer();
 
 // changeWikipediaLanguageAndRightClick(client);
-nyTimesScrollToBottom(client);
+// nyTimesScrollToBottom(client);
 // bnbSearchForHomes(client);
 // githubSearchForTzafon(client);
 // searchForSfAndDrag(client);
@@ -27,3 +27,13 @@ nyTimesScrollToBottom(client);
 // multiTabPlaywrightOnWikipedia(client);
 // persistentBrowserSession(client);
 // persistentDesktopSession(client);
+
+async function runBrowser(id: number) {
+  try {
+    await githubSearchForTzafon(client);
+  } catch (error) {
+    console.error(`Browser ${id}: ${error}`);
+  }
+}
+
+await Promise.all(Array.from({ length: 10 }, (_, i) => runBrowser(i)));
