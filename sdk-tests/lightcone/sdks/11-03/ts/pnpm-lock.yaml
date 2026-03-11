@@ -11,9 +11,6 @@ importers:
       '@tzafon/lightcone':
         specifier: ^0.5.2
         version: 0.5.2
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
     devDependencies:
       '@types/node':
         specifier: ^25.4.0
@@ -186,10 +183,6 @@ packages:
   '@tzafon/lightcone@0.5.2':
     resolution: {integrity: sha512-Q3lN/x7OUN3puGFGEzx8/yeTO/P30AM8K7JqfIKqk1tY+JI4iJT3qO5KQZvVdiBZduUVa5AZ3qqmG5Ta1XC4jg==}
 
-  dotenv@17.3.1:
-    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
-    engines: {node: '>=12'}
-
   esbuild@0.27.3:
     resolution: {integrity: sha512-8VwMnyGCONIs6cWue2IdpHxHnAjzxnw2Zr7MkVxB2vjmQ2ivqGFb4LEG3SMnv0Gb2F/G/2yA8zUaiL1gywDCCg==}
     engines: {node: '>=18'}
@@ -299,8 +292,6 @@ snapshots:
       undici-types: 7.18.2
 
   '@tzafon/lightcone@0.5.2': {}
-
-  dotenv@17.3.1: {}
 
   esbuild@0.27.3:
     optionalDependencies:

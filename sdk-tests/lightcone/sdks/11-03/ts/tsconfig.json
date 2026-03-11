@@ -1,19 +1,11 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-
     "strict": true,
   }
 }
