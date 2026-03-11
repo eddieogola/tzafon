@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 config({ path: resolve(import.meta.dirname, "../.env") });
 import Lightcone from "@tzafon/lightcone";
-import { createBrowserSession } from "./auto/getting-started/browserSession.js";
+import { createBrowserSession } from "./auto/getting-started/browserSession";
 
 const client = new Lightcone();
 
