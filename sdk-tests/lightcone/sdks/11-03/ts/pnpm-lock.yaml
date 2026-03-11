@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@tzafon/lightcone':
+        specifier: ^0.5.2
+        version: 0.5.2
+
+packages:
+
+  '@tzafon/lightcone@0.5.2':
+    resolution: {integrity: sha512-Q3lN/x7OUN3puGFGEzx8/yeTO/P30AM8K7JqfIKqk1tY+JI4iJT3qO5KQZvVdiBZduUVa5AZ3qqmG5Ta1XC4jg==}
+
+snapshots:
+
+  '@tzafon/lightcone@0.5.2': {}
