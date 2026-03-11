@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx main.ts"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +12,9 @@
   "packageManager": "pnpm@10.26.2",
   "dependencies": {
     "@tzafon/lightcone": "^0.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "tsx": "^4.21.0"
   }
 }
