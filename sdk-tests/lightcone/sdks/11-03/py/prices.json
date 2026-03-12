@@ -1,0 +1,57 @@
+[
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/50491f72-c3fd-4d88-aab7-8a5cba948c90.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T072911Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=0c3668d0e81e110bc4193ac2a06e172bc8e6854267d4f0748f4759b0bdb2e505",
+    "timestamp": "2026-03-12T10:29:12.382814"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/443570fc-f31e-4dca-b1d7-af49043c38f7.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073054Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=c5830461c6fbba68513aa11b866bee289dd59aced38e32cec108ffcb2ac6f8db",
+    "timestamp": "2026-03-12T10:30:54.518162"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/cc8ec965-8d7a-4e6f-9caa-0d9097d929af.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073135Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=a048ceeb8ed34f332bbcfbf227a2c2ef108a4a95f9852d71644480ebf9d0b477",
+    "timestamp": "2026-03-12T10:31:36.272034"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/c7c5b69c-1315-446c-8f26-c5d030e0f315.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073309Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=d0e37446753cc6d73e6c0a0a7c02c7852a75a8a45d62606d0761d05b4f8dfe64",
+    "timestamp": "2026-03-12T10:33:09.643995"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/5cb11276-45eb-4abb-80df-6d651a2f50cc.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073416Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=c3f0c92d2e0b370f2271317f35f1e5a78cde9ca89353d8d0dedafeb97d21ff40",
+    "timestamp": "2026-03-12T10:34:17.206101"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/9ab1eed0-a55d-42a8-90f4-6c4de2bfbc9a.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073652Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=b830f8acc844011e2d4874559d50c40398c94dfbcb7a9df010225cb8bb0b67bc",
+    "timestamp": "2026-03-12T10:36:52.468434"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/46e8504c-7ce7-404e-b4e1-d2ad054d3a02.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073902Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=ed6adef0586e8bb828e5fd1f7e9c4a5c8547418237a2095c43ed1541279a36a1",
+    "timestamp": "2026-03-12T10:39:02.607839"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/52986152-1e77-49bb-a8aa-4b75b2be7a26.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T073944Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=2f4e68e42163dfb8565d34b5114ab32d2b61319a055150db9af76f9990fa2db3",
+    "timestamp": "2026-03-12T10:39:45.296869"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/6db8a473-87f2-46f2-a697-c6712b910313.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T074544Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=b0276254f838517aabc3b0664cf668827662fa0078925f1010fbed9fd4492d7a",
+    "timestamp": "2026-03-12T10:45:44.423741"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/7115607a-0a25-470d-b658-c7f08edfcbed.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T074615Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=ec5ba3398f1b086ff194075d18b24877dd1c746c212bb2608f62142eaf6d7e8c",
+    "timestamp": "2026-03-12T10:46:16.269607"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/f240c8d3-400e-4c53-a181-915384349b3a.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T074640Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=7f72b115ef40634c65273b6b5dfde2b6bcd2e6bffb64bc9ce4b29889a857f59d",
+    "timestamp": "2026-03-12T10:46:41.347192"
+  }
+]
