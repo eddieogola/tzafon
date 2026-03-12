@@ -178,3 +178,11 @@ def use_persistent_session_for_faster_checks(client):
         print(
             f"\nExecution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )
+
+
+def build_price_tracker(client):
+    print(f"{Colors.YELLOW}*** Building Price Tracker ***{Colors.RESET}\n")
+    create_browser_and_visit_page(client)
+    extract_price_from_page(client)
+    save_prices_and_detect_changes(client)
+    use_persistent_session_for_faster_checks(client)

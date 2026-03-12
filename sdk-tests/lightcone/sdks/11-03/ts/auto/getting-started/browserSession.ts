@@ -2,7 +2,9 @@ import { ComputerSession } from "@tzafon/lightcone/lib/computer-session";
 import type { Lightcone } from "@tzafon/lightcone";
 import { Colors } from "@/utils/term";
 
-export async function createBrowserSession(client: Lightcone): Promise<void> {
+export default async function createBrowserSession(
+  client: Lightcone,
+): Promise<void> {
   const startTime = Date.now();
   console.log(
     `${Colors.YELLOW}*** Testing Creating Browser Session ***${Colors.RESET}\n`,
