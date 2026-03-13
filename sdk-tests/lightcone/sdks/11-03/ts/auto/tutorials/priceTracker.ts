@@ -58,7 +58,7 @@ async function createBrowserAndVisitPage(client: Lightcone): Promise<void> {
     await client.computers.delete(id);
     const endTime = Date.now();
     console.log(
-      `Execution time: ${Colors.YELLOW}${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
     );
   }
 }
@@ -95,7 +95,7 @@ async function extractPriceFromPage(client: Lightcone): Promise<void> {
     await client.computers.delete(id);
     const endTime = Date.now();
     console.log(
-      `Execution time: ${Colors.YELLOW}${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
     );
   }
 }
@@ -160,7 +160,7 @@ async function savePricesAndDetectChanges(client: Lightcone): Promise<void> {
     await client.computers.delete(id);
     const endTime = Date.now();
     console.log(
-      `\nExecution time: ${Colors.YELLOW}${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
     );
   }
 }
@@ -214,7 +214,7 @@ async function usePersistentSessionForFasterChecks(
   } finally {
     const endTime = Date.now();
     console.log(
-      `\nExecution time: ${Colors.YELLOW}${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
     );
   }
 }

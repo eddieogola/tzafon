@@ -73,5 +73,40 @@
     "price": 54.23,
     "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/ab75d25e-19de-438c-adef-fa170aa2b34b.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260312T083509Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cd5a45b243dbe89e952270f4fccd1f207c8e3a5d2c36c7b0adb22213d3a78073",
     "timestamp": "2026-03-12T11:35:10.033326"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/b7d74e72-6fe4-48d4-b44c-036edb03737e.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T063336Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cd60960de41dd264fa1fc93833693a3474845bcaaf083416b8652e3fcf488764",
+    "timestamp": "2026-03-13T09:33:37.339413"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/e07bbee8-a38e-4f62-bbe9-2a0629ac25ce.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T070336Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=9b95cc38e2d63e495ef2b5f00dfc494e3f3137b5cbf4b0c6afad065a32113dca",
+    "timestamp": "2026-03-13T10:03:36.968951"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/f0142f74-b81d-427c-889d-b4d1113e6333.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T070405Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=1c45b2abca802df23205a7054229a7a85904e9a2567aa4aab38dfc389a8f9106",
+    "timestamp": "2026-03-13T10:04:07.077200"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/9355c93d-7159-4886-a62f-6326565cd88a.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T070458Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=5647f7593470ba8dbbcd3cc8aa54e4ebc79c53d3a93db6c936d883314483c636",
+    "timestamp": "2026-03-13T10:04:59.068937"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/f251f26e-391b-4e7c-bd68-f0c79b7e1b9c.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T070557Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=0555453bb466ca115994b7f9055c80bfef81cb0f900139652c1ba248ca7ebe33",
+    "timestamp": "2026-03-13T10:05:57.823005"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/aa7974e3-e721-4c52-96cc-2064ca4f077e.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T070958Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=ceda9bd350c2effd3eae3e7174d7bb756cc04c50ffcd28a6ad8db0ebf248b21b",
+    "timestamp": "2026-03-13T10:09:59.366895"
+  },
+  {
+    "price": 54.23,
+    "screenshot": "https://tzafon.bfdaa40341bacfd7f1d2406516a73cfc.r2.cloudflarestorage.com/b7587071-399e-4517-9b1a-26da1692941e.jpeg?x-id=GetObject&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=a00f705d3aee856cc938199dfe57187a%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T071526Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=354ede4aef45f1480e4fd1039428272cc3bdd9cd69b5388515042b49ed6a7775",
+    "timestamp": "2026-03-13T10:15:26.503197"
   }
 ]

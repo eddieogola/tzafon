@@ -23,15 +23,13 @@ def create_browser_session(client):
 
             result = computer.screenshot()
             print(
-                f"Screenshot URL:{Colors.BLUE}{computer.get_screenshot_url(result)}{Colors.RESET}"
+                f"Screenshot URL: {Colors.BLUE}{computer.get_screenshot_url(result)}{Colors.RESET}"
             )
-            print(
-                f"\n{Colors.GREEN}Browser session created successfully!{Colors.RESET}"
-            )
+
     except Exception as e:
         print(f"\n{Colors.RED}Error creating browser session: {e}{Colors.RESET}\n")
     finally:
         end_time = time()
         print(
-            f"Execution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )

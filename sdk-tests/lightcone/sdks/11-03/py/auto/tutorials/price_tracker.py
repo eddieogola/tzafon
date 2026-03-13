@@ -31,7 +31,7 @@ def create_browser_and_visit_page(client):
     finally:
         end_time = time()
         print(
-            f"Execution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )
 
 
@@ -59,7 +59,7 @@ def extract_price_from_page(client):
     finally:
         end_time = time()
         print(
-            f"Execution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )
 
 
@@ -136,7 +136,7 @@ def save_prices_and_detect_changes(client):
     finally:
         end_time = time()
         print(
-            f"\nExecution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )
 
 
@@ -176,7 +176,7 @@ def use_persistent_session_for_faster_checks(client):
     finally:
         end_time = time()
         print(
-            f"\nExecution time: {Colors.YELLOW}{end_time - start_time:.2f} seconds{Colors.RESET}\n"
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
         )
 
 

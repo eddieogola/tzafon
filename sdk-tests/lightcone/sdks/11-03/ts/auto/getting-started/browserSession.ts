@@ -7,7 +7,7 @@ export default async function createBrowserSession(
 ): Promise<void> {
   const startTime = Date.now();
   console.log(
-    `${Colors.YELLOW}*** Testing Creating Browser Session ***${Colors.RESET}\n`,
+    `${Colors.YELLOW}*** Creating Browser Session ***${Colors.RESET}\n`,
   );
   console.log(
     `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/quickstart/#3-create-a-browser-and-take-a-screenshot${Colors.RESET}\n`,
@@ -28,9 +28,6 @@ export default async function createBrowserSession(
     console.log(
       `Screenshot URL: ${Colors.BLUE}${screenshotUrl}${Colors.RESET}`,
     );
-    console.log(
-      `\n${Colors.GREEN}Browser session created successfully!${Colors.RESET}`,
-    );
   } catch (e) {
     console.log(
       `\n${Colors.RED}Error creating browser session: ${e}${Colors.RESET}\n`,
@@ -41,6 +38,6 @@ export default async function createBrowserSession(
 
   const endTime = Date.now();
   console.log(
-    `Execution time: ${Colors.YELLOW}${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+    `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
   );
 }
