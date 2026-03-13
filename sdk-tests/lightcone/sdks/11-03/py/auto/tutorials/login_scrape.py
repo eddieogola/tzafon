@@ -53,10 +53,6 @@ def fill_login_form(client):
             # Submit
             computer.click(85, 305)  # Login button
             computer.wait(2)
-            result = computer.screenshot()
-            print(
-                f"After clicking login button: {Colors.BLUE}{computer.get_screenshot_url(result)}{Colors.RESET}"
-            )
 
             # Verify login succeeded
             result = computer.screenshot()
