@@ -6,6 +6,7 @@ from auto.getting_started.browser_session import create_browser_session
 from auto.tutorials.price_tracker import build_price_tracker
 from auto.tutorials.login_scrape import scrape_behind_login
 from auto.tutorials.automate_form import automate_form_with_ai
+from auto.core_concepts.computers import computers
 
 
 load_dotenv()
@@ -21,13 +22,20 @@ Getting Started
 https://docs.lightcone.ai/guides/quickstart/
 
 """
-# create_browser_session(client)
+create_browser_session(client)
 
 """
 Tutorials
 https://docs.lightcone.ai/tutorials/build-a-price-tracker/
 
 """
-# build_price_tracker(client)
-# scrape_behind_login(client)
+build_price_tracker(client)
+scrape_behind_login(client)
 automate_form_with_ai(client)
+
+"""
+Core Concepts
+https://docs.lightcone.ai/guides/computers/
+
+"""
+computers(client)

@@ -3,6 +3,7 @@ import createBrowserSession from "@/auto/getting-started/browserSession";
 import buildPriceTracker from "@/auto/tutorials/priceTracker";
 import scrapeBehinLogin from "@/auto/tutorials/loginScrape";
 import automateFormWithAi from "@/auto/tutorials/automateForm";
+import computers from "@/auto/core-concepts/computers";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
@@ -15,13 +16,20 @@ const client = new Lightcone({
  * https://docs.lightcone.ai/guides/quickstart/
  */
 
-// createBrowserSession(client);
+createBrowserSession(client);
 
 /*
  * Tutorials
  * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
  */
 
-// buildPriceTracker(client);
-// scrapeBehinLogin(client);
+buildPriceTracker(client);
+scrapeBehinLogin(client);
 automateFormWithAi(client);
+
+/*
+ * Core Concepts
+ * https://docs.lightcone.ai/guides/computers/
+ */
+
+computers(client);
