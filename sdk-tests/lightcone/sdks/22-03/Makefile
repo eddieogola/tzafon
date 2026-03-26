@@ -1,4 +1,4 @@
-.PHONY: all install install-ts install-py test test-ts test-py clean
+.PHONY: all install install-ts install-py test test-ts test-py check-env clean
 
 # Colors
 CYAN    := \033[1;36m
@@ -21,15 +21,19 @@ install-ts:
 install-py:
 	cd py && uv sync
 
+# Ensure .env exists before running tests
+check-env:
+	@test -f .env || (printf "$(YELLOW)✘ .env file not found. Copy .env.example and fill in your API key:\n  cp .env.example .env$(RESET)\n" && exit 1)
+
 # Run Python SDK tests first, then TypeScript SDK tests
-test: test-py test-ts
+test: check-env test-py test-ts
 	@echo ""
 	@printf "$(GREEN)✔ All SDK tests completed.$(RESET)\n"
 
 test-ts:
 	@echo ""
 	@printf "$(CYAN)$(BOLD)══════════════════════════════════════════════$(RESET)\n"
-	@printf "$(CYAN)$(BOLD)  TypeScript SDK$(RESET)$(DIM) v$$(cd ts && node -p "require('@tzafon/lightcone/package.json').version" 2>/dev/null || echo 'unknown')$(RESET)\n"
+	@printf "$(CYAN)$(BOLD)  TypeScript SDK$(RESET)$(DIM) v$$(cd ts && node -p "JSON.parse(require('fs').readFileSync('node_modules/@tzafon/lightcone/package.json','utf8')).version" 2>/dev/null || echo 'unknown')$(RESET)\n"
 	@printf "$(CYAN)$(BOLD)══════════════════════════════════════════════$(RESET)\n"
 	@echo ""
 	cd ts && pnpm dev
