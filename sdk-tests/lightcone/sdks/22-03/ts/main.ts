@@ -3,8 +3,9 @@ import createBrowserSession from "@/auto/getting-started/browserSession";
 import buildPriceTracker from "@/auto/tutorials/priceTracker";
 import scrapeBehinLogin from "@/auto/tutorials/loginScrape";
 import automateFormWithAi from "@/auto/tutorials/automateForm";
-import computers from "@/auto/core-concepts/computers";
-import operateAComputer from "@/auto/core-concepts/operate";
+import computers from "@/auto/environments/computers";
+import operateAComputer from "@/auto/environments/operate";
+import executeShell from "@/auto/environments/executeShell";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
@@ -40,4 +41,11 @@ const client = new Lightcone({
  * https://docs.lightcone.ai/guides/operate-a-computer/
  */
 
-operateAComputer(client);
+// operateAComputer(client);
+
+/*
+ * Environments
+ * https://docs.lightcone.ai/guides/shell-commands/
+ */
+
+executeShell(client);

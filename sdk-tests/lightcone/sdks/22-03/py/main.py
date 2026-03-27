@@ -6,8 +6,9 @@ from auto.getting_started.browser_session import create_browser_session
 from auto.tutorials.price_tracker import build_price_tracker
 from auto.tutorials.login_scrape import scrape_behind_login
 from auto.tutorials.automate_form import automate_form_with_ai
-from auto.core_concepts.computers import computers
-from auto.core_concepts.operate import operate_a_computer
+from auto.environments.computers import computers
+from auto.environments.operate import operate_a_computer
+from auto.environments.execute_shell import execute_shell
 
 
 load_dotenv()
@@ -46,4 +47,11 @@ Core Concepts
 https://docs.lightcone.ai/guides/operate-a-computer/
 
 """
-operate_a_computer(client)
+# operate_a_computer(client)
+
+"""
+Environments
+https://docs.lightcone.ai/guides/shell-commands/
+
+"""
+execute_shell(client)
