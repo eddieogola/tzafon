@@ -158,9 +158,67 @@ def target_specific_tab_for_actions(client):
         )
 
 
+def compare_two_pages(client):
+    try:
+        start_time = time()
+        print(f"{Colors.YELLOW}*** Example: Compare Two Pages ***{Colors.RESET}\n")
+        print(
+            f"Reference: {Colors.BLUE}https://docs.lightcone.ai/guides/browser-tabs/#example-compare-two-pages{Colors.RESET}\n"
+        )
+        with client.computer.create(kind="browser") as computer:
+            # Open first page
+            computer.navigate(
+                "https://en.wikipedia.org/wiki/Python_(programming_language)"
+            )
+            print(f"{Colors.YELLOW}Opened first page (Python){Colors.RESET}")
+
+            # Open second page in a new tab
+            client.computers.tabs.create(
+                computer.id,
+                url="https://en.wikipedia.org/wiki/JavaScript",
+            )
+            print(f"{Colors.YELLOW}Opened second page (JavaScript){Colors.RESET}")
+            computer.wait(2)
+
+            # Screenshot the second tab (now active)
+            second_shot = computer.screenshot()
+            print(
+                f"Tab 2 screenshot: {Colors.BLUE}{computer.get_screenshot_url(second_shot)}{Colors.RESET}"
+            )
+
+            # List tabs and switch back to first
+            tabs_result = client.computers.tabs.list(computer.id)
+            tabs = tabs_result.result or []
+            print(f"Open tabs: {Colors.BLUE}{tabs}{Colors.RESET}")
+
+            python_tab = next(
+                (
+                    tab
+                    for tab in tabs
+                    if getattr(tab, "url", "") and "Python" in getattr(tab, "url", "")
+                ),
+                None,
+            )
+            if python_tab and getattr(python_tab, "id", None):
+                client.computers.tabs.switch(python_tab.id, id=computer.id)
+                first_shot = computer.screenshot()
+                print(
+                    f"Tab 1 screenshot: {Colors.BLUE}{computer.get_screenshot_url(first_shot)}{Colors.RESET}"
+                )
+
+    except Exception as e:
+        print(f"\n{Colors.RED}Error comparing two pages: {e}{Colors.RESET}\n")
+    finally:
+        end_time = time()
+        print(
+            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
+        )
+
+
 def manage_browser_tabs(client):
     print(f"{Colors.YELLOW}*** Environments: Manage Browser Tabs ***{Colors.RESET}\n")
     list_open_tabs(client)
     open_and_switch_tabs(client)
     close_tab(client)
     target_specific_tab_for_actions(client)
+    compare_two_pages(client)

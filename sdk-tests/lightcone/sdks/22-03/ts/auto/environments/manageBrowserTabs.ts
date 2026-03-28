@@ -173,6 +173,71 @@ async function targetSpecificTabForActions(client: Lightcone): Promise<void> {
   }
 }
 
+async function compareTwoPages(client: Lightcone): Promise<void> {
+  const startTime = Date.now();
+  console.log(
+    `${Colors.YELLOW}*** Example: Compare Two Pages ***${Colors.RESET}\n`,
+  );
+  console.log(
+    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/browser-tabs/#example-compare-two-pages${Colors.RESET}\n`,
+  );
+
+  const computer = await client.computers.create({ kind: "browser" });
+  const id = computer.id!;
+
+  try {
+    // Open first page
+    await client.computers.navigate(id, {
+      url: "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    });
+    console.log(`${Colors.YELLOW}Opened first page (Python)${Colors.RESET}`);
+
+    // Open second page in a new tab
+    await client.computers.tabs.create(id, {
+      url: "https://en.wikipedia.org/wiki/JavaScript",
+    });
+    console.log(
+      `${Colors.YELLOW}Opened second page (JavaScript)${Colors.RESET}`,
+    );
+    await new Promise((r) => setTimeout(r, 2000));
+
+    // Screenshot the second tab (now active)
+    const secondShot = await client.computers.screenshot(id);
+    console.log(
+      `Tab 2 screenshot: ${Colors.BLUE}${secondShot.result?.screenshot_url}${Colors.RESET}`,
+    );
+
+    // List tabs and switch back to first
+    const tabsResult = await client.computers.tabs.list(id);
+    const tabs = (tabsResult.result?.tabs ?? []) as Array<{
+      tab_id?: string;
+      url?: string;
+    }>;
+    console.log(
+      `Open tabs: ${Colors.BLUE}${JSON.stringify(tabs)}${Colors.RESET}`,
+    );
+
+    const pythonTab = tabs.find((t) => t.url?.includes("Python"));
+    if (pythonTab?.tab_id) {
+      await client.computers.tabs.switch(pythonTab.tab_id, { id });
+      const firstShot = await client.computers.screenshot(id);
+      console.log(
+        `Tab 1 screenshot: ${Colors.BLUE}${firstShot.result?.screenshot_url}${Colors.RESET}`,
+      );
+    }
+  } catch (e) {
+    console.log(
+      `\n${Colors.RED}Error comparing two pages: ${e}${Colors.RESET}\n`,
+    );
+  } finally {
+    await client.computers.delete(id);
+    const endTime = Date.now();
+    console.log(
+      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
+    );
+  }
+}
+
 export default async function manageBrowserTabs(
   client: Lightcone,
 ): Promise<void> {
@@ -183,4 +248,5 @@ export default async function manageBrowserTabs(
   await openAndSwitchTabs(client);
   await closeTab(client);
   await targetSpecificTabForActions(client);
+  await compareTwoPages(client);
 }
