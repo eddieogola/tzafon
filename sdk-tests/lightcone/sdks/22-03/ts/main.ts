@@ -6,6 +6,8 @@ import automateFormWithAi from "@/auto/tutorials/automateForm";
 import computers from "@/auto/environments/computers";
 import operateAComputer from "@/auto/environments/operate";
 import executeShell from "@/auto/environments/executeShell";
+import manageBrowserTabs from "@/auto/environments/manageBrowserTabs";
+import lightconeOs from "@/auto/environments/lightconeOs";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
@@ -37,7 +39,7 @@ const client = new Lightcone({
 // computers(client);
 
 /*
- * Core Concepts
+ * Environments
  * https://docs.lightcone.ai/guides/operate-a-computer/
  */
 
@@ -48,4 +50,18 @@ const client = new Lightcone({
  * https://docs.lightcone.ai/guides/shell-commands/
  */
 
-executeShell(client);
+// executeShell(client);
+
+/*
+ * Environments
+ * https://docs.lightcone.ai/guides/browser-tabs/
+ */
+
+manageBrowserTabs(client);
+
+/*
+ * Environments
+ * https://docs.lightcone.ai/guides/lightcone-os/
+ */
+
+// lightconeOs(client);

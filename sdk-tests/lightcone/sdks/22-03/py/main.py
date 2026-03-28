@@ -9,6 +9,8 @@ from auto.tutorials.automate_form import automate_form_with_ai
 from auto.environments.computers import computers
 from auto.environments.operate import operate_a_computer
 from auto.environments.execute_shell import execute_shell
+from auto.environments.manage_browser_tabs import manage_browser_tabs
+from auto.environments.lightcone_os import lightcone_os
 
 
 load_dotenv()
@@ -55,3 +57,17 @@ https://docs.lightcone.ai/guides/shell-commands/
 
 """
 execute_shell(client)
+
+"""
+Environments
+https://docs.lightcone.ai/guides/browser-tabs/
+
+"""
+# manage_browser_tabs(client)
+
+"""
+Environments
+https://docs.lightcone.ai/guides/lightcone-os/
+
+"""
+# lightcone_os(client)
