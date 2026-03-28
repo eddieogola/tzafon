@@ -8,6 +8,9 @@ import operateAComputer from "@/auto/environments/operate";
 import executeShell from "@/auto/environments/executeShell";
 import manageBrowserTabs from "@/auto/environments/manageBrowserTabs";
 import lightconeOs from "@/auto/environments/lightconeOs";
+import softwareTesting from "@/auto/use_cases/softwareTesting";
+import legacySoftware from "@/auto/use_cases/legacySoftware";
+import crossAppWorkflows from "@/auto/use_cases/crossAppWorkflows";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
@@ -64,4 +67,25 @@ const client = new Lightcone({
  * https://docs.lightcone.ai/guides/lightcone-os/
  */
 
-lightconeOs(client);
+// lightconeOs(client);
+
+/*
+ * Use Cases
+ * https://docs.lightcone.ai/use-cases/software-testing/
+ */
+
+softwareTesting(client);
+
+/*
+ * Use Cases
+ * https://docs.lightcone.ai/use-cases/legacy-software/
+ */
+
+// legacySoftware(client);
+
+/*
+ * Use Cases
+ * https://docs.lightcone.ai/use-cases/cross-app-workflows/
+ */
+
+// crossAppWorkflows(client);

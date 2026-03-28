@@ -11,6 +11,9 @@ from auto.environments.operate import operate_a_computer
 from auto.environments.execute_shell import execute_shell
 from auto.environments.manage_browser_tabs import manage_browser_tabs
 from auto.environments.lightcone_os import lightcone_os
+from auto.use_cases.software_testing import software_testing
+from auto.use_cases.legacy_software import legacy_software
+from auto.use_cases.cross_app_workflows import cross_app_workflows
 
 
 load_dotenv()
@@ -70,4 +73,25 @@ Environments
 https://docs.lightcone.ai/guides/lightcone-os/
 
 """
-lightcone_os(client)
+# lightcone_os(client)
+
+"""
+Use Cases
+https://docs.lightcone.ai/use-cases/software-testing/
+
+"""
+software_testing(client)
+
+"""
+Use Cases
+https://docs.lightcone.ai/use-cases/legacy-software/
+
+"""
+# legacy_software(client)
+
+"""
+Use Cases
+https://docs.lightcone.ai/use-cases/cross-app-workflows/
+
+"""
+# cross_app_workflows(client)
