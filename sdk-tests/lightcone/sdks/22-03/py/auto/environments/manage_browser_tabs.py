@@ -42,19 +42,20 @@ def open_and_switch_tabs(client):
             computer.wait(1)
 
             tabs_result = client.computers.tabs.list(computer.id)
-            tabs = tabs_result.result or []
+            tabs = tabs_result.result.get("tabs", [])
             print(f"Open tabs: {Colors.BLUE}{tabs}{Colors.RESET}")
 
             first_tab = next(
                 (
                     tab
                     for tab in tabs
-                    if getattr(tab, "url", "") and "Python" in getattr(tab, "url", "")
+                    if tab.get("url", "") and "Python" in tab.get("url", "")
                 ),
                 None,
             )
-            if first_tab and getattr(first_tab, "id", None):
-                client.computers.tabs.switch(first_tab.id, id=computer.id)
+
+            if first_tab and first_tab.get("tab_id"):
+                client.computers.tabs.switch(first_tab["tab_id"], id=computer.id)
                 shot = computer.screenshot()
                 print(
                     f"Switched tab screenshot: {Colors.BLUE}{computer.get_screenshot_url(shot)}{Colors.RESET}"
@@ -82,19 +83,18 @@ def close_tab(client):
             computer.wait(1)
 
             tabs_result = client.computers.tabs.list(computer.id)
-            tabs = tabs_result.result or []
+            tabs = tabs_result.result.get("tabs", [])
             closable = next(
                 (
                     tab
                     for tab in tabs
-                    if not getattr(tab, "is_main_tab", False)
-                    and getattr(tab, "id", None)
+                    if not tab.get("is_main", False) and tab.get("tab_id")
                 ),
                 None,
             )
 
             if closable:
-                client.computers.tabs.delete(closable.id, id=computer.id)
+                client.computers.tabs.delete(closable["tab_id"], id=computer.id)
                 print(f"{Colors.GREEN}Closed non-main tab{Colors.RESET}")
             else:
                 print(f"{Colors.YELLOW}No non-main tab found to close{Colors.RESET}")
@@ -121,20 +121,19 @@ def target_specific_tab_for_actions(client):
             computer.wait(1)
 
             tabs_result = client.computers.tabs.list(computer.id)
-            tabs = tabs_result.result or []
+            tabs = tabs_result.result.get("tabs", [])
             background_tab = next(
                 (
                     tab
                     for tab in tabs
-                    if getattr(tab, "url", "")
-                    and "example.org" in getattr(tab, "url", "")
+                    if tab.get("url", "") and "example.org" in tab.get("url", "")
                 ),
                 None,
             )
 
-            if background_tab and getattr(background_tab, "id", None):
+            if background_tab and background_tab.get("tab_id"):
                 shot = client.computers.screenshot(
-                    computer.id, tab_id=background_tab.id
+                    computer.id, tab_id=background_tab["tab_id"]
                 )
                 print(
                     f"Background tab screenshot: {Colors.BLUE}{shot.result.get('screenshot_url')}{Colors.RESET}"
@@ -143,7 +142,7 @@ def target_specific_tab_for_actions(client):
                 client.computers.type(
                     computer.id,
                     text="hello from background tab",
-                    tab_id=background_tab.id,
+                    tab_id=background_tab["tab_id"],
                 )
                 print(
                     f"{Colors.GREEN}Typed into background tab using tab_id{Colors.RESET}"
@@ -195,12 +194,12 @@ def compare_two_pages(client):
                 (
                     tab
                     for tab in tabs
-                    if getattr(tab, "url", "") and "Python" in getattr(tab, "url", "")
+                    if tab.get("url", "") and "Python" in tab.get("url", "")
                 ),
                 None,
             )
-            if python_tab and getattr(python_tab, "id", None):
-                client.computers.tabs.switch(python_tab.id, id=computer.id)
+            if python_tab and python_tab.get("tab_id"):
+                client.computers.tabs.switch(python_tab["tab_id"], id=computer.id)
                 first_shot = computer.screenshot()
                 print(
                     f"Tab 1 screenshot: {Colors.BLUE}{computer.get_screenshot_url(first_shot)}{Colors.RESET}"

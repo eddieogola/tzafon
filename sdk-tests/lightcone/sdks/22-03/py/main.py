@@ -56,14 +56,14 @@ Environments
 https://docs.lightcone.ai/guides/shell-commands/
 
 """
-execute_shell(client)
+# execute_shell(client)
 
 """
 Environments
 https://docs.lightcone.ai/guides/browser-tabs/
 
 """
-# manage_browser_tabs(client)
+manage_browser_tabs(client)
 
 """
 Environments
