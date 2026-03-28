@@ -57,11 +57,11 @@ const client = new Lightcone({
  * https://docs.lightcone.ai/guides/browser-tabs/
  */
 
-manageBrowserTabs(client);
+// manageBrowserTabs(client);
 
 /*
  * Environments
  * https://docs.lightcone.ai/guides/lightcone-os/
  */
 
-// lightconeOs(client);
+lightconeOs(client);

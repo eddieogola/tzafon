@@ -63,11 +63,11 @@ Environments
 https://docs.lightcone.ai/guides/browser-tabs/
 
 """
-manage_browser_tabs(client)
+# manage_browser_tabs(client)
 
 """
 Environments
 https://docs.lightcone.ai/guides/lightcone-os/
 
 """
-# lightcone_os(client)
+lightcone_os(client)

@@ -187,7 +187,7 @@ def compare_two_pages(client):
 
             # List tabs and switch back to first
             tabs_result = client.computers.tabs.list(computer.id)
-            tabs = tabs_result.result or []
+            tabs = tabs_result.result.get("tabs", [])
             print(f"Open tabs: {Colors.BLUE}{tabs}{Colors.RESET}")
 
             python_tab = next(
