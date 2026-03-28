@@ -14,6 +14,12 @@ from auto.environments.lightcone_os import lightcone_os
 from auto.use_cases.software_testing import software_testing
 from auto.use_cases.legacy_software import legacy_software
 from auto.use_cases.cross_app_workflows import cross_app_workflows
+from auto.using_northstar.tasks import tasks_guide
+from auto.using_northstar.run_a_task import run_a_task_guide
+from auto.using_northstar.responses_api import responses_api_guide
+from auto.using_northstar.cua_protocol import cua_protocol_guide
+from auto.using_northstar.coordinates import coordinates_guide
+from auto.using_northstar.chat_completions import chat_completions_guide
 
 
 load_dotenv()
@@ -95,3 +101,45 @@ https://docs.lightcone.ai/use-cases/cross-app-workflows/
 
 """
 # cross_app_workflows(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/tasks/
+
+"""
+# tasks_guide(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/run-a-task/
+
+"""
+# run_a_task_guide(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/responses-api/
+
+"""
+# responses_api_guide(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/cua-protocol/
+
+"""
+# cua_protocol_guide(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/coordinates/
+
+"""
+# coordinates_guide(client)
+
+"""
+Using Northstar
+https://docs.lightcone.ai/guides/chat-completions/
+
+"""
+# chat_completions_guide(client)

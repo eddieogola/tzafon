@@ -11,12 +11,40 @@ import lightconeOs from "@/auto/environments/lightconeOs";
 import softwareTesting from "@/auto/use_cases/softwareTesting";
 import legacySoftware from "@/auto/use_cases/legacySoftware";
 import crossAppWorkflows from "@/auto/use_cases/crossAppWorkflows";
+import tasksGuide from "@/auto/using-northstar/tasks";
+import runATaskGuide from "@/auto/using-northstar/runATask";
+import responsesApiGuide from "@/auto/using-northstar/responsesApi";
+import cuaProtocolGuide from "@/auto/using-northstar/cuaProtocol";
+import coordinatesGuide from "@/auto/using-northstar/coordinates";
+import chatCompletionsGuide from "@/auto/using-northstar/chatCompletions";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
   timeout: 30000, // milliseconds
   maxRetries: 3,
 });
+
+const availableExamples = {
+  createBrowserSession,
+  buildPriceTracker,
+  scrapeBehinLogin,
+  automateFormWithAi,
+  computers,
+  operateAComputer,
+  executeShell,
+  manageBrowserTabs,
+  lightconeOs,
+  softwareTesting,
+  legacySoftware,
+  crossAppWorkflows,
+  tasksGuide,
+  runATaskGuide,
+  responsesApiGuide,
+  cuaProtocolGuide,
+  coordinatesGuide,
+  chatCompletionsGuide,
+};
+void availableExamples;
 
 /*
  * Getting Started
@@ -89,3 +117,45 @@ softwareTesting(client);
  */
 
 // crossAppWorkflows(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/tasks/
+ */
+
+// tasksGuide(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/run-a-task/
+ */
+
+// runATaskGuide(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/responses-api/
+ */
+
+// responsesApiGuide(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/cua-protocol/
+ */
+
+// cuaProtocolGuide(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/coordinates/
+ */
+
+// coordinatesGuide(client);
+
+/*
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/chat-completions/
+ */
+
+// chatCompletionsGuide(client);
