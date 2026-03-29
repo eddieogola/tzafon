@@ -16,7 +16,6 @@ def document_loader(client):  # noqa: ARG001
 
         loader = TzafonLoader(
             urls=["https://example.com", "https://example.com/about"],
-            kind="browser",
         )
 
         documents = loader.load()

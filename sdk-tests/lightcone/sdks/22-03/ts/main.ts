@@ -112,7 +112,7 @@ void availableExamples;
  * https://docs.lightcone.ai/use-cases/software-testing/
  */
 
-softwareTesting(client);
+// softwareTesting(client);
 
 /*
  * Use Cases
@@ -175,7 +175,7 @@ softwareTesting(client);
  * https://docs.lightcone.ai/integrations/langchain/
  */
 
-// langchainIntegration(client);
+langchainIntegration(client);
 
 /*
  * Integrations
