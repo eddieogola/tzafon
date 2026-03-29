@@ -85,7 +85,7 @@ def github_search_for_tzafon(client: Computer):
         computer.navigate("https://github.com")
         computer.wait(1)
         # computer.click(1500, 20) # 1080p
-        computer.click(1050, 20) # 720p
+        computer.click(1050, 20)  # 720p
         computer.wait(1)
         computer.type("org:tzafon")
         computer.wait(1)
@@ -97,7 +97,9 @@ def github_search_for_tzafon(client: Computer):
 
 
 def search_for_sf_and_drag(client: Computer):
-    with client.create(kind="browser",) as computer:
+    with client.create(
+        kind="browser",
+    ) as computer:
         computer.set_viewport(1920, 1080)
         computer.navigate("https://www.openstreetmap.org/")
         computer.wait(1)
