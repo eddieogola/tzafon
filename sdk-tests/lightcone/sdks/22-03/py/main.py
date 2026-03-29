@@ -86,7 +86,7 @@ Use Cases
 https://docs.lightcone.ai/use-cases/software-testing/
 
 """
-software_testing(client)
+# software_testing(client)
 
 """
 Use Cases
@@ -121,7 +121,7 @@ Using Northstar
 https://docs.lightcone.ai/guides/responses-api/
 
 """
-# responses_api_guide(client)
+responses_api_guide(client)
 
 """
 Using Northstar
