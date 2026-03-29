@@ -154,7 +154,7 @@ Integrations
 https://docs.lightcone.ai/integrations/langchain/
 
 """
-langchain_integration(client)
+# langchain_integration(client)
 
 """
 Integrations
@@ -168,7 +168,7 @@ Integrations
 https://docs.lightcone.ai/integrations/browser-use/
 
 """
-# browser_use_integration(client)
+browser_use_integration(client)
 
 """
 Integrations

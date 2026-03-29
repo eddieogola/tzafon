@@ -19,7 +19,7 @@ install-ts:
 	cd ts && pnpm install
 
 install-py:
-	cd py && uv sync
+	cd py && uv sync && uv run playwright install chromium
 
 # Ensure .env exists before running tests
 check-env:

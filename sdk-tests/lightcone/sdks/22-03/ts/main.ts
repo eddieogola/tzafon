@@ -175,7 +175,7 @@ void availableExamples;
  * https://docs.lightcone.ai/integrations/langchain/
  */
 
-langchainIntegration(client);
+// langchainIntegration(client);
 
 /*
  * Integrations
