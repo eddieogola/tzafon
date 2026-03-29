@@ -20,6 +20,11 @@ from auto.using_northstar.responses_api import responses_api_guide
 from auto.using_northstar.cua_protocol import cua_protocol_guide
 from auto.using_northstar.coordinates import coordinates_guide
 from auto.using_northstar.chat_completions import chat_completions_guide
+from auto.integrations.langchain import langchain_integration
+from auto.integrations.crewai import crewai_integration
+from auto.integrations.browser_use import browser_use_integration
+from auto.integrations.playwright import playwright_integration
+from auto.integrations.kernel import kernel_integration
 
 
 load_dotenv()
@@ -121,7 +126,7 @@ Using Northstar
 https://docs.lightcone.ai/guides/responses-api/
 
 """
-responses_api_guide(client)
+# responses_api_guide(client)
 
 """
 Using Northstar
@@ -143,3 +148,38 @@ https://docs.lightcone.ai/guides/chat-completions/
 
 """
 # chat_completions_guide(client)
+
+"""
+Integrations
+https://docs.lightcone.ai/integrations/langchain/
+
+"""
+langchain_integration(client)
+
+"""
+Integrations
+https://docs.lightcone.ai/integrations/crewai/
+
+"""
+# crewai_integration(client)
+
+"""
+Integrations
+https://docs.lightcone.ai/integrations/browser-use/
+
+"""
+# browser_use_integration(client)
+
+"""
+Integrations
+https://docs.lightcone.ai/integrations/playwright/
+
+"""
+# playwright_integration(client)
+
+"""
+Integrations
+https://docs.lightcone.ai/integrations/kernel/
+
+"""
+# kernel_integration(client)

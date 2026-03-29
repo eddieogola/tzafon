@@ -17,6 +17,11 @@ import responsesApiGuide from "@/auto/using-northstar/responsesApi";
 import cuaProtocolGuide from "@/auto/using-northstar/cuaProtocol";
 import coordinatesGuide from "@/auto/using-northstar/coordinates";
 import chatCompletionsGuide from "@/auto/using-northstar/chatCompletions";
+import langchainIntegration from "@/auto/integrations/langchain";
+import vercelAiIntegration from "@/auto/integrations/vercelAi";
+import playwrightIntegration from "@/auto/integrations/playwright";
+import mastraIntegration from "@/auto/integrations/mastra";
+import kernelIntegration from "@/auto/integrations/kernel";
 
 const client = new Lightcone({
   apiKey: process.env.LIGHTCONE_API_KEY!,
@@ -43,6 +48,11 @@ const availableExamples = {
   cuaProtocolGuide,
   coordinatesGuide,
   chatCompletionsGuide,
+  langchainIntegration,
+  vercelAiIntegration,
+  playwrightIntegration,
+  mastraIntegration,
+  kernelIntegration,
 };
 void availableExamples;
 
@@ -159,3 +169,38 @@ softwareTesting(client);
  */
 
 // chatCompletionsGuide(client);
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/langchain/
+ */
+
+// langchainIntegration(client);
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/vercel-ai/
+ */
+
+// vercelAiIntegration(client);
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/playwright/
+ */
+
+// playwrightIntegration(client);
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/mastra/
+ */
+
+// mastraIntegration(client);
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/kernel/
+ */
+
+// kernelIntegration(client);
