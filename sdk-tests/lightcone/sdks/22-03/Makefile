@@ -16,7 +16,7 @@ all: test
 install: install-ts install-py
 
 install-ts:
-	cd ts && pnpm install
+	cd ts && pnpm install && npx playwright install chromium
 
 install-py:
 	cd py && uv sync && uv run playwright install chromium

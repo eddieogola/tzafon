@@ -11,17 +11,25 @@ async def _browser_use_with_lightcone(client):
 
     # Build the full CDP URL from the relative endpoint path
     cdp_path = session.endpoints.get("cdp")
-    cdp_url = f"https://api.tzafon.ai{cdp_path}"
+    cdp_url = f"https://api.tzafon.ai{cdp_path}?token={os.getenv('TZAFON_API_KEY')}"
 
-    from browser_use import Agent
-    from langchain_openai import ChatOpenAI
+    from browser_use import (
+        Agent,
+        ChatOpenAI,
+        Controller,
+        BrowserSession,
+        BrowserProfile,
+    )
     from playwright.async_api import async_playwright
 
     # Connect Playwright to the Lightcone browser
     pw = await async_playwright().start()
-    browser = await pw.chromium.connect_over_cdp(
-        cdp_url,
-        headers={"Authorization": f"Bearer {os.environ['TZAFON_API_KEY']}"},
+
+    profile = BrowserProfile(keep_alive=True)
+    browser_session = BrowserSession(
+        browser_profile=profile,
+        keep_alive=True,
+        cdp_url=cdp_url,
     )
 
     # Use Lightcone's own model via its OpenAI-compatible API
@@ -30,12 +38,14 @@ async def _browser_use_with_lightcone(client):
         base_url="https://api.tzafon.ai/v1",
         api_key=os.environ["TZAFON_API_KEY"],
     )
+    controller = Controller()
 
     # Create a Browser-Use agent on the remote browser
     agent = Agent(
         task="Search for 'machine learning' on Wikipedia and summarize the first paragraph",
         llm=llm,
-        browser=browser,
+        browser_session=browser_session,
+        controller=controller,
     )
 
     result = await agent.run()

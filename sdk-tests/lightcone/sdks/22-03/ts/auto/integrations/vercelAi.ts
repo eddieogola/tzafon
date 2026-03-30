@@ -10,13 +10,11 @@ async function vercelAiToolCalling(client: Lightcone): Promise<void> {
     `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/vercel-ai/#example${Colors.RESET}\n`,
   );
   try {
-    // @ts-ignore — optional peer dependency, install with: npm install ai @ai-sdk/openai
     const { generateText, tool } = await import("ai");
-    // @ts-ignore
     const { createOpenAI } = await import("@ai-sdk/openai");
 
     const tzafon = createOpenAI({
-      baseURL: "https://api.tzafon.ai/v1",
+      baseURL: "http://localhost:1234/v1/",
       apiKey: process.env.TZAFON_API_KEY!,
     });
 

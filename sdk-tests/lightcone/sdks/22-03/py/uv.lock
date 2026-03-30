@@ -1451,6 +1451,23 @@ wheels = [
 ]
 
 [[package]]
+name = "kernel"
+version = "0.44.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "distro" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/76/29/88ceee5f7f62d05e7ffc829740f3b844c4e87a247d529ff5801a787712a7/kernel-0.44.0.tar.gz", hash = "sha256:3468a2251d04ed6015319ae6673fab14dfe70062fdbf30bc273092010da81d96", size = 202193, upload-time = "2026-03-20T19:36:12.271Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2b/4a/4844efcd2aac3bc9a607ce2367e64e95b6b7de6b51b081709764ef96fb2f/kernel-0.44.0-py3-none-any.whl", hash = "sha256:ab3f19da3a8085cb81b51ab8501e88efa95820bb5068b00cf93667e4451ea7d5", size = 235818, upload-time = "2026-03-20T19:36:10.902Z" },
+]
+
+[[package]]
 name = "kubernetes"
 version = "35.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2561,6 +2578,7 @@ dependencies = [
     { name = "browser-use" },
     { name = "crewai" },
     { name = "dotenv" },
+    { name = "kernel" },
     { name = "langchain-openai" },
     { name = "langchain-tzafon" },
     { name = "playwright" },
@@ -2572,6 +2590,7 @@ requires-dist = [
     { name = "browser-use", specifier = ">=0.11.13" },
     { name = "crewai", specifier = ">=1.6.1" },
     { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "kernel", specifier = ">=0.44.0" },
     { name = "langchain-openai", specifier = ">=1.1.12" },
     { name = "langchain-tzafon", specifier = ">=1.1.1" },
     { name = "playwright", specifier = ">=1.58.0" },
