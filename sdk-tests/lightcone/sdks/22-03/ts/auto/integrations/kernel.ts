@@ -19,6 +19,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
   try {
     // @ts-ignore — optional peer dependency, install with: npm install @onkernel/sdk
     const Kernel = (await import("@onkernel/sdk")).default;
+
     const kernel = new Kernel();
 
     // Create a Kernel browser session
