@@ -91,9 +91,8 @@ Integrations
 https://docs.lightcone.ai/integrations/playwright/
 
 """
-playwright_integration(client)
+# playwright_integration(client)
 
-# These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
 
 """
 Use Cases
@@ -177,7 +176,7 @@ Integrations
 https://docs.lightcone.ai/integrations/browser-use/
 
 """
-browser_use_integration(client)
+# browser_use_integration(client)
 
 
 """
@@ -185,4 +184,4 @@ Integrations
 https://docs.lightcone.ai/integrations/kernel/
 
 """
-# kernel_integration(client)
+kernel_integration(client)

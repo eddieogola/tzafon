@@ -20,17 +20,19 @@ def kernel_cua_loop(client):
             f"Reference: {Colors.BLUE}https://docs.lightcone.ai/integrations/kernel/#the-cua-loop{Colors.RESET}\n"
         )
 
-        import kernel
+        from kernel import Kernel
+
+        kernel = Kernel()
 
         # Create a Kernel browser session
         session = kernel.browsers.create(
-            stealth_mode=True,
+            stealth=True,
             viewport={"width": 1280, "height": 800},
         )
 
         # Take initial screenshot
-        png_bytes = kernel.browsers.computer.capture_screenshot(session.id)
-        screenshot_b64 = base64.b64encode(png_bytes).decode()
+        png_resp = kernel.browsers.computer.capture_screenshot(session.session_id)
+        screenshot_b64 = base64.b64encode(png_resp.read()).decode()
 
         # First request to Northstar
         response = client.responses.create(
@@ -69,38 +71,48 @@ def kernel_cua_loop(client):
 
             # Execute the action on Kernel's browser
             if action.type == "click":
-                kernel.browsers.computer.click_mouse(session.id, action.x, action.y)
+                kernel.browsers.computer.click_mouse(
+                    id=session.session_id, x=action.x, y=action.y
+                )
+
             elif action.type == "double_click":
                 kernel.browsers.computer.click_mouse(
-                    session.id, action.x, action.y, num_clicks=2
+                    id=session.session_id, x=action.x, y=action.y, num_clicks=2
                 )
+
             elif action.type == "type":
-                kernel.browsers.computer.type_text(session.id, action.text)
+                kernel.browsers.computer.type_text(
+                    id=session.session_id, text=action.text
+                )
+
             elif action.type in ("key", "keypress"):
-                kernel.browsers.computer.press_key(session.id, action.keys)
+                kernel.browsers.computer.press_key(
+                    id=session.session_id, keys=action.keys
+                )
+
             elif action.type == "scroll":
                 kernel.browsers.computer.scroll(
-                    session.id,
-                    action.x or 640,
-                    action.y or 400,
+                    id=session.session_id,
+                    x=action.x or 640,
+                    y=action.y or 400,
                     delta_x=0,
                     delta_y=action.scroll_y or 0,
                 )
             elif action.type == "drag":
                 kernel.browsers.computer.drag_mouse(
-                    session.id,
+                    id=session.session_id,
                     path=[[action.x, action.y], [action.end_x, action.end_y]],
                 )
             elif action.type == "navigate":
-                kernel.browsers.computer.playwright_execute(
-                    session.id,
+                kernel.browsers.playwright.execute(
+                    id=session.session_id,
                     code=f'page.goto("{action.url}")',
                 )
 
             # Screenshot and continue
             time_module.sleep(1)
-            png_bytes = kernel.browsers.computer.capture_screenshot(session.id)
-            screenshot_b64 = base64.b64encode(png_bytes).decode()
+            png_resp = kernel.browsers.computer.capture_screenshot(session.session_id)
+            screenshot_b64 = base64.b64encode(png_resp.read()).decode()
 
             response = client.responses.create(
                 model="tzafon.northstar-cua-fast",
@@ -119,7 +131,7 @@ def kernel_cua_loop(client):
                 tools=[TOOL],
             )
 
-        kernel.browsers.delete(session.id)
+        kernel.browsers.delete_by_id(session.session_id)
 
     except Exception as e:
         print(f"\n{Colors.RED}Error in kernel CUA loop: {e}{Colors.RESET}\n")
