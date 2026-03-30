@@ -14,7 +14,7 @@ async function vercelAiToolCalling(client: Lightcone): Promise<void> {
     const { createOpenAI } = await import("@ai-sdk/openai");
 
     const tzafon = createOpenAI({
-      baseURL: "http://localhost:1234/v1/",
+      baseURL: "https://api.tzafon.ai/v1",
       apiKey: process.env.TZAFON_API_KEY!,
     });
 
@@ -40,7 +40,7 @@ async function vercelAiToolCalling(client: Lightcone): Promise<void> {
       },
       prompt: "Visit https://news.ycombinator.com and describe what you see",
     });
-
+    console.log(result);
     console.log(result.text);
   } catch (e) {
     console.error(

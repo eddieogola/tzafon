@@ -107,6 +107,15 @@ void availableExamples;
 
 // lightconeOs(client);
 
+// These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
+
+/*
+ * Integrations
+ * https://docs.lightcone.ai/integrations/playwright/
+ */
+
+// playwrightIntegration(client);
+
 /*
  * Use Cases
  * https://docs.lightcone.ai/use-cases/software-testing/
@@ -186,17 +195,10 @@ void availableExamples;
 
 /*
  * Integrations
- * https://docs.lightcone.ai/integrations/playwright/
- */
-
-// playwrightIntegration(client);
-
-/*
- * Integrations
  * https://docs.lightcone.ai/integrations/mastra/
  */
 
-// mastraIntegration(client);
+mastraIntegration(client);
 
 /*
  * Integrations

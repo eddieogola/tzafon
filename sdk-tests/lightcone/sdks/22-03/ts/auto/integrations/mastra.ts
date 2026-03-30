@@ -10,9 +10,7 @@ async function mastraAgentWithBrowserTool(client: Lightcone): Promise<void> {
     `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/mastra/#example${Colors.RESET}\n`,
   );
   try {
-    // @ts-ignore — optional peer dependency, install with: npm install mastra @ai-sdk/openai
-    const { Agent } = await import("mastra");
-    // @ts-ignore
+    const { Agent } = await import("@mastra/core/agent");
     const { createOpenAI } = await import("@ai-sdk/openai");
 
     const tzafon = createOpenAI({
@@ -39,6 +37,7 @@ async function mastraAgentWithBrowserTool(client: Lightcone): Promise<void> {
     };
 
     const agent = new Agent({
+      id: "web-researcher",
       name: "Web Researcher",
       instructions: "You are a helpful assistant that can browse the web.",
       model: tzafon("tzafon.northstar-cua-fast"),

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.48",
+    "@mastra/core": "^1.17.0",
     "@tzafon/lightcone": "^0.8.0",
     "ai": "^6.0.141"
   }
