@@ -32,8 +32,9 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       session.session_id,
     );
 
-    const screenshotB64 = pngBuffer.toString("base64");
-    console.log(JSON.stringify(screenshotB64));
+    const screenshotB64 = Buffer.from(await pngBuffer.arrayBuffer()).toString(
+      "base64",
+    );
 
     // First request to Northstar
     let response = await client.responses.create({
@@ -69,42 +70,36 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       // Execute the action on Kernel's browser
       switch (action.type) {
         case "click":
-          await kernel.browsers.computer.clickMouse(
-            session.session_id,
-            action.x!,
-            action.y!,
-          );
+          await kernel.browsers.computer.clickMouse(session.session_id, {
+            x: action.x!,
+            y: action.y!,
+          });
           break;
         case "double_click":
-          await kernel.browsers.computer.clickMouse(
-            session.session_id,
-            action.x!,
-            action.y!,
-            {
-              numClicks: 2,
-            },
-          );
+          await kernel.browsers.computer.clickMouse(session.session_id, {
+            x: action.x!,
+            y: action.y!,
+            num_clicks: 2,
+          });
           break;
         case "type":
-          await kernel.browsers.computer.typeText(
-            session.session_id,
-            action.text!,
-          );
+          await kernel.browsers.computer.typeText(session.session_id, {
+            text: action.text!,
+          });
           break;
         case "key":
         case "keypress":
-          await kernel.browsers.computer.pressKey(
-            session.session_id,
-            action.keys!,
-          );
+          await kernel.browsers.computer.pressKey(session.session_id, {
+            keys: action.keys!,
+          });
           break;
         case "scroll":
-          await kernel.browsers.computer.scroll(
-            session.session_id,
-            action.x ?? 640,
-            action.y ?? 400,
-            { deltaX: 0, deltaY: action.scroll_y ?? 0 },
-          );
+          await kernel.browsers.computer.scroll(session.session_id, {
+            x: action.x ?? 640,
+            y: action.y ?? 400,
+            delta_x: 0,
+            delta_y: action.scroll_y ?? 0,
+          });
           break;
         case "drag":
           await kernel.browsers.computer.dragMouse(session.session_id, {
@@ -112,6 +107,11 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
               [action.x!, action.y!],
               [action.end_x!, action.end_y!],
             ],
+          });
+          break;
+        case "navigate":
+          await kernel.browsers.playwright.execute(session.session_id, {
+            code: `await page.goto('${action.url}');`,
           });
           break;
         default:
@@ -123,7 +123,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       const newPng = await kernel.browsers.computer.captureScreenshot(
         session.session_id,
       );
-      const newB64 = newPng.toString("base64");
+      const newB64 = Buffer.from(await newPng.arrayBuffer()).toString("base64");
 
       response = await client.responses.create({
         model: "tzafon.northstar-cua-fast",
