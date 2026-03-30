@@ -23,15 +23,17 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
 
     // Create a Kernel browser session
     const session = await kernel.browsers.create({
-      stealthMode: true,
+      stealth: true,
       viewport: { width: 1280, height: 800 },
     });
 
     // Take initial screenshot
     const pngBuffer = await kernel.browsers.computer.captureScreenshot(
-      session.id,
+      session.session_id,
     );
+
     const screenshotB64 = pngBuffer.toString("base64");
+    console.log(JSON.stringify(screenshotB64));
 
     // First request to Northstar
     let response = await client.responses.create({
@@ -68,14 +70,14 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       switch (action.type) {
         case "click":
           await kernel.browsers.computer.clickMouse(
-            session.id,
+            session.session_id,
             action.x!,
             action.y!,
           );
           break;
         case "double_click":
           await kernel.browsers.computer.clickMouse(
-            session.id,
+            session.session_id,
             action.x!,
             action.y!,
             {
@@ -84,22 +86,28 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
           );
           break;
         case "type":
-          await kernel.browsers.computer.typeText(session.id, action.text!);
+          await kernel.browsers.computer.typeText(
+            session.session_id,
+            action.text!,
+          );
           break;
         case "key":
         case "keypress":
-          await kernel.browsers.computer.pressKey(session.id, action.keys!);
+          await kernel.browsers.computer.pressKey(
+            session.session_id,
+            action.keys!,
+          );
           break;
         case "scroll":
           await kernel.browsers.computer.scroll(
-            session.id,
+            session.session_id,
             action.x ?? 640,
             action.y ?? 400,
             { deltaX: 0, deltaY: action.scroll_y ?? 0 },
           );
           break;
         case "drag":
-          await kernel.browsers.computer.dragMouse(session.id, {
+          await kernel.browsers.computer.dragMouse(session.session_id, {
             path: [
               [action.x!, action.y!],
               [action.end_x!, action.end_y!],
@@ -113,7 +121,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       // Screenshot and continue
       await new Promise((r) => setTimeout(r, 1000));
       const newPng = await kernel.browsers.computer.captureScreenshot(
-        session.id,
+        session.session_id,
       );
       const newB64 = newPng.toString("base64");
 
@@ -136,7 +144,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       void step; // suppress unused variable warning
     }
 
-    await kernel.browsers.delete(session.id);
+    await kernel.browsers.deleteByID(session.session_id);
   } catch (e) {
     console.error(
       `\n${Colors.RED}Error in kernel CUA loop: ${e}${Colors.RESET}\n`,

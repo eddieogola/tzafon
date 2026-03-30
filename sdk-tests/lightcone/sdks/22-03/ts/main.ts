@@ -198,11 +198,11 @@ void availableExamples;
  * https://docs.lightcone.ai/integrations/mastra/
  */
 
-mastraIntegration(client);
+// mastraIntegration(client);
 
 /*
  * Integrations
  * https://docs.lightcone.ai/integrations/kernel/
  */
 
-// kernelIntegration(client);
+kernelIntegration(client);
