@@ -20,6 +20,7 @@
     "@mastra/core": "^1.17.0",
     "@onkernel/sdk": "^0.44.0",
     "@tzafon/lightcone": "^0.8.0",
-    "ai": "^6.0.141"
+    "ai": "^6.0.141",
+    "playwright": "^1.58.2"
   }
 }
