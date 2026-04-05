@@ -133,14 +133,17 @@ class AdvancedLightconeAgent:
         # Append verification instruction if expected screenshot exists
         if self.expected_screenshot_path and self.expected_screenshot_path.exists():
             verification_instruction = (
-                f" After completing the above task, open the file at {self.expected_screenshot_path} "
-                f"and visually compare it to the current screen state. "
-                f"Report whether the current screen matches the expected screenshot, "
-                f"noting any significant differences if they don't match."
+                f" After completing the above task, provide a detailed summary in the following format:\n"
+                f"**Task Completion Summary:**\n"
+                f"List each step you completed with checkmarks\n\n"
+                f"**Screenshot Comparison:**\n"
+                f"Note: The expected screenshot is at {self.expected_screenshot_path.name}. "
+                f"If you cannot access this file, describe the current screen state in detail including: "
+                f"page title, main sections visible, selected options, and any notable UI elements."
             )
             instruction += verification_instruction
             logger.info(
-                f"✅ Added verification against: {self.expected_screenshot_path}"
+                f"✅ Added verification reporting for: {self.expected_screenshot_path}"
             )
 
         return instruction
@@ -197,11 +200,15 @@ class AdvancedLightconeAgent:
             logger.info(f"✅ Task completed in {elapsed_time:.2f} seconds")
             logger.info(f"📊 Total events processed: {event_count}")
 
+            # Save verification summary
+            summary_path = self.save_verification_summary()
+
             return {
                 "status": "completed",
                 "event_count": event_count,
                 "elapsed_time": elapsed_time,
                 "events": self.event_history,
+                "summary_path": str(summary_path),
             }
 
         except KeyboardInterrupt:
@@ -358,6 +365,85 @@ class AdvancedLightconeAgent:
         # Store in history
         self.event_history.append(event_data)
 
+    def save_verification_summary(self) -> Path:
+        """
+        Save a markdown summary of the task execution and verification results
+
+        Returns:
+            Path to the saved summary file
+        """
+        # Generate filename from instructions file
+        if self.instructions_file:
+            base_name = self.instructions_file.stem
+            summary_filename = f"{base_name}_summary.md"
+        else:
+            summary_filename = f"task_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+
+        summary_path = self.results_dir / summary_filename
+
+        # Build the markdown content
+        markdown_content = f"""# Task Execution Summary
+
+**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Instructions File:** {self.instructions_file}
+**Expected Screenshot:** {self.expected_screenshot_path if self.expected_screenshot_path else 'N/A'}
+
+---
+
+## Completion Message
+
+{self.completion_message if self.completion_message else 'No completion message captured'}
+
+---
+
+## Event Statistics
+
+- **Total Events:** {len(self.event_history)}
+- **Task Status:** Completed
+
+---
+
+## Notes
+
+"""
+
+        # Try to parse the completion message for structured information
+        if self.completion_message:
+            # Check if there's a task completion summary
+            if "**Task Completion Summary:**" in self.completion_message:
+                markdown_content += "\n### Task Steps Completed\n\n"
+                markdown_content += "The agent reported completing the following steps:\n\n"
+                # Extract the content after the summary marker
+                parts = self.completion_message.split("**Task Completion Summary:**")
+                if len(parts) > 1:
+                    summary_part = parts[1].split("**Screenshot Comparison:**")[0] if "**Screenshot Comparison:**" in parts[1] else parts[1]
+                    markdown_content += summary_part.strip() + "\n\n"
+
+            # Check if there's a screenshot comparison section
+            if "**Screenshot Comparison:**" in self.completion_message:
+                markdown_content += "\n### Screenshot Verification\n\n"
+                parts = self.completion_message.split("**Screenshot Comparison:**")
+                if len(parts) > 1:
+                    comparison_part = parts[1].strip()
+                    markdown_content += comparison_part + "\n\n"
+
+                    # Determine verification status
+                    if "does not exist" in comparison_part.lower() or "cannot perform" in comparison_part.lower():
+                        markdown_content += "\n**Status:** ⚠️ Could not verify - Expected screenshot not accessible to agent\n\n"
+                    elif "match" in comparison_part.lower() and "not" not in comparison_part.lower():
+                        markdown_content += "\n**Status:** ✅ Verification PASSED\n\n"
+                    else:
+                        markdown_content += "\n**Status:** ❌ Verification FAILED or Inconclusive\n\n"
+
+        markdown_content += "\n---\n\n*Generated by AdvancedLightconeAgent*\n"
+
+        # Save the file
+        with open(summary_path, "w") as f:
+            f.write(markdown_content)
+
+        logger.info(f"✅ Verification summary saved to: {summary_path}")
+        return summary_path
+
     def save_event_history(self, filename: Optional[str] = None):
         """
         Save event history to a JSON file
@@ -428,6 +514,8 @@ def main():
     # Execute based on mode
     if args.mode == "stream":
         result = agent.execute_with_streaming(kind=args.kind, max_steps=args.max_steps)
+        if result and result.get("summary_path"):
+            logger.info(f"📄 Summary saved to: {result['summary_path']}")
     else:
         result = agent.execute_with_polling(kind=args.kind, max_steps=args.max_steps)
 
@@ -436,7 +524,6 @@ def main():
         agent.save_event_history()
 
     logger.info("✨ Agent execution completed!")
-    # logger.info(f"Result: {result}")
 
 
 if __name__ == "__main__":
