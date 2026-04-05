@@ -24,12 +24,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configure logging
+Path("logs").mkdir(exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(
-            f'lightcone_agent_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+            f'logs/lightcone_agent_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
         ),
         logging.StreamHandler(),
     ],
