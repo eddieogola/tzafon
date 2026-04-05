@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "lightcone": {
+      "command": "npx",
+      "args": ["@tzafon/mcp-server"],
+      "env": {
+        "TZAFON_API_KEY": "sk_S8dHcHu2NMI2MtATI07NA4zxNvvtjLFP"
+      }
+    }
+  }
+}
