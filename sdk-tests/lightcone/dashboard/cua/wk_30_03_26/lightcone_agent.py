@@ -95,6 +95,9 @@ class LightconeAgent:
             ):
                 event_count += 1
                 self._process_event(event, event_count)
+                if event.get("type") == "completed":
+                    print(f"  ✅ {event.get('result')}")
+                    break
 
         except KeyboardInterrupt:
             print("\n⚠️  Task interrupted by user")
@@ -114,40 +117,43 @@ class LightconeAgent:
         print(f"\n[Event {event_number}]")
 
         # Check if event has a type attribute
-        if hasattr(event, "type"):
-            event_type = event.type
+        if event.get("type"):
+            event_type = event.get("type")
             print(f"  Type: {event_type}")
 
             # Handle different event types
-            if event_type == "action":
-                if hasattr(event, "action"):
-                    action = event.action
-                    print(f"  🎯 Action: {action.get('type', 'unknown')}")
-                    if "details" in action:
-                        print(f"  📝 Details: {action['details']}")
+            if event_type == "started":
+                if event.get("computer_id"):
+                    print(
+                        f"  🚀 Task started with computer ID: {event.get('computer_id')}"
+                    )
 
             elif event_type == "thinking":
-                if hasattr(event, "thinking"):
-                    print(f"  💬 Message: {event.thinking}")
+                if event.get("content"):
+                    print(f"  💬 Message: {event.get('content')}")
 
-            elif event_type == "status":
-                if hasattr(event, "status"):
-                    status = event.status
+            elif event_type == "progress_update":
+                if event.get("state"):
+                    status = event.get("state")
                     print(f"  ⚡ Status: {status}")
 
-            elif event_type == "completion":
-                if hasattr(event, "exit_code"):
-                    print(f"  ✅ Completed with exit code: {event.exit_code}")
+            elif event_type == "screenshot":
+                if event.get("image"):
+                    print(f"  🖼 Screenshot URL: {event.get('image')}")
+
+            elif event_type == "executed":
+                if event.get("action"):
+                    print(f"  🖥 Executed action: {event.get('action')}")
 
             elif event_type == "error":
-                if hasattr(event, "error"):
-                    print(f"  ❌ Error: {event.error}")
+                if event.get("error"):
+                    print(f"  ❌ Error: {event.get('error')}")
+            elif event_type == "completed":
+                pass
             else:
                 raise ValueError(f"Unknown event type: {event_type}")
-
-        # Fallback: print the entire event if structure is unknown
         else:
-            print(f"  {event}")
+            raise ValueError(f"No type in event: {event}")
 
     def execute_task_async(
         self,
