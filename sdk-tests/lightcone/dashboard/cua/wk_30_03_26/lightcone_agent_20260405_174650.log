@@ -1,0 +1,2 @@
+2026-04-05 17:46:51,013 - advanced_agent - INFO - Reading instructions from: home.md
+2026-04-05 17:46:51,013 - advanced_agent - INFO - Parsed instruction: Go to https://lightcone.ai/dashboard, login with email: edwineogola@gmail.com password: If firefox shows a save login popup, click on the key icon that is on the address bar to the right of the lock icon Click on the Completions card
