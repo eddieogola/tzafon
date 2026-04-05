@@ -17,16 +17,22 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from tzafon import Lightcone
+from dotenv import load_dotenv
 
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(f'lightcone_agent_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
-        logging.StreamHandler()
-    ]
+        logging.FileHandler(
+            f'lightcone_agent_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+        ),
+        logging.StreamHandler(),
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -38,9 +44,9 @@ class AdvancedLightconeAgent:
 
     def __init__(
         self,
-        instructions_file: str = "home.md",
+        instructions_file: str = "home_completions.md",
         save_screenshots: bool = False,
-        screenshot_dir: str = "screenshots"
+        screenshot_dir: str = "screenshots",
     ):
         """
         Initialize the advanced Lightcone agent
@@ -70,26 +76,28 @@ class AdvancedLightconeAgent:
         """
         if not self.instructions_file.exists():
             logger.error(f"Instructions file not found: {self.instructions_file}")
-            raise FileNotFoundError(f"Instructions file not found: {self.instructions_file}")
+            raise FileNotFoundError(
+                f"Instructions file not found: {self.instructions_file}"
+            )
 
         logger.info(f"Reading instructions from: {self.instructions_file}")
 
-        with open(self.instructions_file, 'r') as f:
+        with open(self.instructions_file, "r") as f:
             content = f.read()
 
         # Parse the markdown content
-        lines = content.strip().split('\n')
+        lines = content.strip().split("\n")
         instructions = []
 
         for line in lines:
             line = line.strip()
-            if line and not line.startswith('#'):
+            if line and not line.startswith("#"):
                 # Remove line numbers if present
-                if '→' in line:
-                    line = line.split('→', 1)[1].strip()
+                if "→" in line:
+                    line = line.split("→", 1)[1].strip()
                 instructions.append(line)
 
-        instruction = ' '.join(instructions)
+        instruction = " ".join(instructions)
         logger.info(f"Parsed instruction: {instruction}")
 
         return instruction
@@ -100,7 +108,7 @@ class AdvancedLightconeAgent:
         kind: str = "desktop",
         model: str = "tzafon.northstar-cua-fast",
         max_steps: int = 50,
-        temperature: float = 0.2
+        temperature: float = 0.2,
     ):
         """
         Execute a task with streaming and comprehensive event logging
@@ -133,10 +141,12 @@ class AdvancedLightconeAgent:
                 kind=kind,
                 model=model,
                 max_steps=max_steps,
-                temperature=temperature
+                temperature=temperature,
             ):
                 event_count += 1
                 self._process_and_log_event(event, event_count)
+                if event.get("type") == "completed":
+                    break
 
             elapsed_time = time.time() - start_time
             logger.info(f"✅ Task completed in {elapsed_time:.2f} seconds")
@@ -146,7 +156,7 @@ class AdvancedLightconeAgent:
                 "status": "completed",
                 "event_count": event_count,
                 "elapsed_time": elapsed_time,
-                "events": self.event_history
+                "events": self.event_history,
             }
 
         except KeyboardInterrupt:
@@ -162,7 +172,7 @@ class AdvancedLightconeAgent:
         kind: str = "desktop",
         model: str = "tzafon.northstar-cua-fast",
         max_steps: int = 50,
-        poll_interval: int = 2
+        poll_interval: int = 2,
     ):
         """
         Execute a task asynchronously with status polling
@@ -207,14 +217,14 @@ class AdvancedLightconeAgent:
                     logger.info(f"🏁 Task finished with status: {status.status}")
                     logger.info(f"⏱️  Elapsed time: {elapsed_time:.2f} seconds")
 
-                    if hasattr(status, 'exit_code'):
+                    if hasattr(status, "exit_code"):
                         logger.info(f"Exit code: {status.exit_code}")
 
                     return {
                         "status": status.status,
                         "task_id": task.task_id,
                         "polls": poll_count,
-                        "elapsed_time": elapsed_time
+                        "elapsed_time": elapsed_time,
                     }
 
                 time.sleep(poll_interval)
@@ -276,7 +286,7 @@ class AdvancedLightconeAgent:
         event_data = {
             "event_number": event_number,
             "timestamp": datetime.now().isoformat(),
-            "raw_event": str(event)
+            "raw_event": str(event),
         }
 
         # Log to console
@@ -286,7 +296,7 @@ class AdvancedLightconeAgent:
 
         try:
             # Try to extract structured information
-            if hasattr(event, '__dict__'):
+            if hasattr(event, "__dict__"):
                 event_dict = event.__dict__
                 event_data.update(event_dict)
 
@@ -315,7 +325,7 @@ class AdvancedLightconeAgent:
         filepath = Path(filename)
         logger.info(f"Saving event history to: {filepath}")
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(self.event_history, f, indent=2, default=str)
 
         logger.info(f"✅ Event history saved ({len(self.event_history)} events)")
@@ -330,36 +340,31 @@ def main():
     )
     parser.add_argument(
         "--file",
-        default="home.md",
-        help="Instructions file (default: home.md)"
+        default="home_completions.md",
+        help="Instructions file (default: home_completions.md)",
     )
     parser.add_argument(
         "--mode",
         choices=["stream", "poll"],
         default="stream",
-        help="Execution mode (default: stream)"
+        help="Execution mode (default: stream)",
     )
     parser.add_argument(
-        "--max-steps",
-        type=int,
-        default=50,
-        help="Maximum steps (default: 50)"
+        "--max-steps", type=int, default=50, help="Maximum steps (default: 50)"
     )
     parser.add_argument(
         "--kind",
         choices=["desktop", "browser"],
         default="desktop",
-        help="Environment type (default: desktop)"
+        help="Environment type (default: desktop)",
     )
     parser.add_argument(
         "--save-screenshots",
         action="store_true",
-        help="Save screenshots during execution"
+        help="Save screenshots during execution",
     )
     parser.add_argument(
-        "--save-events",
-        action="store_true",
-        help="Save event history to JSON file"
+        "--save-events", action="store_true", help="Save event history to JSON file"
     )
 
     args = parser.parse_args()
@@ -371,21 +376,14 @@ def main():
 
     # Initialize agent
     agent = AdvancedLightconeAgent(
-        instructions_file=args.file,
-        save_screenshots=args.save_screenshots
+        instructions_file=args.file, save_screenshots=args.save_screenshots
     )
 
     # Execute based on mode
     if args.mode == "stream":
-        result = agent.execute_with_streaming(
-            kind=args.kind,
-            max_steps=args.max_steps
-        )
+        result = agent.execute_with_streaming(kind=args.kind, max_steps=args.max_steps)
     else:
-        result = agent.execute_with_polling(
-            kind=args.kind,
-            max_steps=args.max_steps
-        )
+        result = agent.execute_with_polling(kind=args.kind, max_steps=args.max_steps)
 
     # Save event history if requested
     if args.save_events:
