@@ -27,6 +27,30 @@ class LightconeAgent:
         """
         self.instructions_file = Path(instructions_file)
         self.client = Lightcone()
+        self.expected_screenshot_path: Optional[Path] = None
+
+        # Derive expected screenshot path from instructions file
+        self._set_expected_screenshot_path()
+
+    def _set_expected_screenshot_path(self):
+        """
+        Derive the expected screenshot path from the instructions file
+        Pattern: instructions/home_completions.md -> expected/home_completions.png
+        """
+        if self.instructions_file:
+            # Get the base name without extension
+            base_name = self.instructions_file.stem
+            # Construct expected screenshot path
+            self.expected_screenshot_path = (
+                self.instructions_file.parent.parent / "expected" / f"{base_name}.png"
+            )
+            print(f"Expected screenshot: {self.expected_screenshot_path}")
+            if self.expected_screenshot_path.exists():
+                print("✅ Expected screenshot found")
+            else:
+                print(
+                    f"⚠️  Expected screenshot not found at: {self.expected_screenshot_path}"
+                )
 
     def read_instructions(self) -> str:
         """
@@ -58,6 +82,18 @@ class LightconeAgent:
 
         # Combine into a single instruction string
         instruction = " ".join(instructions)
+
+        # Append verification instruction if expected screenshot exists
+        if self.expected_screenshot_path and self.expected_screenshot_path.exists():
+            verification_instruction = (
+                f" After completing the above task, open the file at {self.expected_screenshot_path} "
+                f"and visually compare it to the current screen state. "
+                f"Report whether the current screen matches the expected screenshot, "
+                f"noting any significant differences if they don't match."
+            )
+            instruction += verification_instruction
+            print(f"✅ Added verification against: {self.expected_screenshot_path}")
+
         return instruction
 
     def execute_task_streaming(

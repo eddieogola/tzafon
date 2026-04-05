@@ -65,10 +65,37 @@ class AdvancedLightconeAgent:
         self.screenshot_dir = Path(screenshot_dir)
         self.current_task_id: Optional[str] = None
         self.event_history: List[Dict[str, Any]] = []
+        self.expected_screenshot_path: Optional[Path] = None
+        self.completion_message: Optional[str] = None
+        self.results_dir = Path("results")
+        self.results_dir.mkdir(exist_ok=True)
+
+        # Derive expected screenshot path from instructions file
+        self._set_expected_screenshot_path()
 
         if self.save_screenshots:
             self.screenshot_dir.mkdir(exist_ok=True)
             logger.info(f"Screenshots will be saved to: {self.screenshot_dir}")
+
+    def _set_expected_screenshot_path(self):
+        """
+        Derive the expected screenshot path from the instructions file
+        Pattern: instructions/home_completions.md -> expected/home_completions.png
+        """
+        if self.instructions_file:
+            # Get the base name without extension
+            base_name = self.instructions_file.stem
+            # Construct expected screenshot path
+            self.expected_screenshot_path = (
+                self.instructions_file.parent.parent / "expected" / f"{base_name}.png"
+            )
+            logger.info(f"Expected screenshot path: {self.expected_screenshot_path}")
+            if self.expected_screenshot_path.exists():
+                logger.info("✅ Expected screenshot found")
+            else:
+                logger.warning(
+                    f"⚠️  Expected screenshot not found at: {self.expected_screenshot_path}"
+                )
 
     def read_instructions(self) -> str:
         """
@@ -102,6 +129,19 @@ class AdvancedLightconeAgent:
 
         instruction = " ".join(instructions)
         logger.info(f"Parsed instruction: {instruction}")
+
+        # Append verification instruction if expected screenshot exists
+        if self.expected_screenshot_path and self.expected_screenshot_path.exists():
+            verification_instruction = (
+                f" After completing the above task, open the file at {self.expected_screenshot_path} "
+                f"and visually compare it to the current screen state. "
+                f"Report whether the current screen matches the expected screenshot, "
+                f"noting any significant differences if they don't match."
+            )
+            instruction += verification_instruction
+            logger.info(
+                f"✅ Added verification against: {self.expected_screenshot_path}"
+            )
 
         return instruction
 
@@ -149,6 +189,8 @@ class AdvancedLightconeAgent:
                 event_count += 1
                 self._process_and_log_event(event, event_count)
                 if event.get("type") == "completed":
+                    # Capture the completion message
+                    self.completion_message = event.get("result", "")
                     break
 
             elapsed_time = time.time() - start_time
@@ -305,6 +347,7 @@ class AdvancedLightconeAgent:
 
                 for key, value in event_dict.items():
                     logger.info(f"  {key}: {value}")
+
             else:
                 logger.info(f"  Event: {event}")
 
@@ -393,7 +436,7 @@ def main():
         agent.save_event_history()
 
     logger.info("✨ Agent execution completed!")
-    logger.info(f"Result: {result}")
+    # logger.info(f"Result: {result}")
 
 
 if __name__ == "__main__":
