@@ -37,6 +37,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+DEFAULT_INSTRUCTIONS_FILE = "instructions/home_completions.md"
+
 
 class AdvancedLightconeAgent:
     """
@@ -45,7 +47,7 @@ class AdvancedLightconeAgent:
 
     def __init__(
         self,
-        instructions_file: str = "home_completions.md",
+        instructions_file: str = DEFAULT_INSTRUCTIONS_FILE,
         save_screenshots: bool = False,
         screenshot_dir: str = "screenshots",
     ):
@@ -341,8 +343,8 @@ def main():
     )
     parser.add_argument(
         "--file",
-        default="home_completions.md",
-        help="Instructions file (default: home_completions.md)",
+        default=DEFAULT_INSTRUCTIONS_FILE,
+        help=f"Instructions file (default: {DEFAULT_INSTRUCTIONS_FILE})",
     )
     parser.add_argument(
         "--mode",

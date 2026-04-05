@@ -231,7 +231,7 @@ def main():
         sys.exit(1)
 
     # Initialize agent
-    agent = LightconeAgent("home_completions.md")
+    agent = LightconeAgent("instructions/home_completions.md")
 
     # Execute task with streaming (recommended for real-time feedback)
     print("\n🔴 Executing task with STREAMING mode...\n")
