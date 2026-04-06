@@ -21,8 +21,7 @@ from tzafon import Lightcone
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -48,24 +47,26 @@ class UITestCase:
     def read_instructions(self) -> str:
         """Read and parse test instructions from markdown file"""
         if not self.instructions_file.exists():
-            raise FileNotFoundError(f"Instructions file not found: {self.instructions_file}")
+            raise FileNotFoundError(
+                f"Instructions file not found: {self.instructions_file}"
+            )
 
-        with open(self.instructions_file, 'r') as f:
+        with open(self.instructions_file, "r") as f:
             content = f.read()
 
         # Parse markdown content
-        lines = content.strip().split('\n')
+        lines = content.strip().split("\n")
         instructions = []
 
         for line in lines:
             line = line.strip()
-            if line and not line.startswith('#'):
+            if line and not line.startswith("#"):
                 # Remove line numbers if present
-                if '→' in line:
-                    line = line.split('→', 1)[1].strip()
+                if "→" in line:
+                    line = line.split("→", 1)[1].strip()
                 instructions.append(line)
 
-        return ' '.join(instructions)
+        return " ".join(instructions)
 
 
 class UITestExecutor:
@@ -83,10 +84,7 @@ class UITestExecutor:
         self.screenshots_dir.mkdir(exist_ok=True)
 
     def execute_test(
-        self,
-        test_case: UITestCase,
-        max_steps: int = 50,
-        save_screenshot: bool = True
+        self, test_case: UITestCase, max_steps: int = 50, save_screenshot: bool = True
     ) -> Dict[str, Any]:
         """
         Execute a test case and capture the result
@@ -106,14 +104,16 @@ class UITestExecutor:
         logger.info(f"Instructions: {instruction}")
 
         # Add screenshot capture instruction
-        full_instruction = f"{instruction}\n\nThen take a screenshot of the current page and save it."
+        full_instruction = (
+            f"{instruction}\n\nThen take a screenshot of the current page and save it."
+        )
 
         result = {
             "test_name": test_case.name,
             "status": "unknown",
             "timestamp": datetime.now().isoformat(),
             "instruction": instruction,
-            "events": []
+            "events": [],
         }
 
         try:
@@ -157,9 +157,10 @@ class UITestComparator:
         if use_vision_api:
             try:
                 from openai import OpenAI
+
                 self.client = OpenAI(
                     api_key=os.getenv("TZAFON_API_KEY"),
-                    base_url="https://api.tzafon.ai/v1"
+                    base_url="https://api.tzafon.ai/v1",
                 )
                 logger.info("Vision API client initialized")
             except Exception as e:
@@ -168,8 +169,8 @@ class UITestComparator:
 
     def encode_image(self, image_path: Path) -> str:
         """Encode image to base64"""
-        with open(image_path, 'rb') as f:
-            return base64.b64encode(f.read()).decode('utf-8')
+        with open(image_path, "rb") as f:
+            return base64.b64encode(f.read()).decode("utf-8")
 
     def analyze_screenshot(self, image_path: Path, test_name: str) -> Dict[str, Any]:
         """
@@ -189,7 +190,8 @@ class UITestComparator:
 
         # Try to use predefined test definition first
         try:
-            from test_definitions import get_test_definition
+            from server.test_definitions import get_test_definition
+
             # Extract test name without suffixes
             base_test_name = test_name.replace("_expected", "").replace("_actual", "")
             analysis = get_test_definition(base_test_name)
@@ -203,16 +205,20 @@ class UITestComparator:
             return self._analyze_with_vision_api(image_path, test_name)
 
         # Fallback to basic analysis
-        logger.warning("No vision API or test definition available, using basic analysis")
+        logger.warning(
+            "No vision API or test definition available, using basic analysis"
+        )
         return {
             "page": "Unknown",
             "elements": [],
             "text_content": [],
             "layout": "Analysis not available - please define test expectations in test_definitions.py",
-            "status": "no_analysis"
+            "status": "no_analysis",
         }
 
-    def _analyze_with_vision_api(self, image_path: Path, test_name: str) -> Dict[str, Any]:
+    def _analyze_with_vision_api(
+        self, image_path: Path, test_name: str
+    ) -> Dict[str, Any]:
         """
         Analyze screenshot using vision API
 
@@ -260,12 +266,12 @@ Be thorough and list ALL visible UI elements, their states, and text content."""
                                 "type": "image_url",
                                 "image_url": {
                                     "url": f"data:image/png;base64,{image_base64}"
-                                }
-                            }
-                        ]
+                                },
+                            },
+                        ],
                     }
                 ],
-                max_tokens=1000
+                max_tokens=1000,
             )
 
             # Parse JSON response
@@ -281,23 +287,17 @@ Be thorough and list ALL visible UI elements, their states, and text content."""
                     "page": "Unknown",
                     "elements": [],
                     "text_content": [],
-                    "raw_analysis": analysis_text
+                    "raw_analysis": analysis_text,
                 }
 
             return analysis
 
         except Exception as e:
             logger.error(f"Vision API analysis failed: {e}", exc_info=True)
-            return {
-                "status": "error",
-                "message": str(e)
-            }
+            return {"status": "error", "message": str(e)}
 
     def compare_screenshots(
-        self,
-        expected_path: Path,
-        actual_path: Optional[Path],
-        test_name: str
+        self, expected_path: Path, actual_path: Optional[Path], test_name: str
     ) -> Dict[str, Any]:
         """
         Compare expected vs actual screenshots using AI vision
@@ -313,10 +313,7 @@ Be thorough and list ALL visible UI elements, their states, and text content."""
         logger.info(f"Comparing screenshots for test: {test_name}")
 
         if not expected_path.exists():
-            return {
-                "status": "error",
-                "message": "Expected screenshot not found"
-            }
+            return {"status": "error", "message": "Expected screenshot not found"}
 
         comparison = {
             "test_name": test_name,
@@ -327,22 +324,23 @@ Be thorough and list ALL visible UI elements, their states, and text content."""
 
         # Analyze expected screenshot
         logger.info("Analyzing expected screenshot...")
-        expected_analysis = self.analyze_screenshot(expected_path, f"{test_name}_expected")
+        expected_analysis = self.analyze_screenshot(
+            expected_path, f"{test_name}_expected"
+        )
 
         comparison["expected_analysis"] = expected_analysis
 
         # If we have actual screenshot, analyze and compare
         if actual_path and actual_path.exists():
             logger.info("Analyzing actual screenshot...")
-            actual_analysis = self.analyze_screenshot(actual_path, f"{test_name}_actual")
+            actual_analysis = self.analyze_screenshot(
+                actual_path, f"{test_name}_actual"
+            )
             comparison["actual_analysis"] = actual_analysis
 
             # Use AI to compare both screenshots
             comparison["comparison"] = self._ai_compare(
-                expected_path,
-                actual_path,
-                expected_analysis,
-                actual_analysis
+                expected_path, actual_path, expected_analysis, actual_analysis
             )
         else:
             logger.warning("No actual screenshot available for comparison")
@@ -358,7 +356,7 @@ Be thorough and list ALL visible UI elements, their states, and text content."""
         expected_path: Path,
         actual_path: Path,
         expected_analysis: Dict,
-        actual_analysis: Dict
+        actual_analysis: Dict,
     ) -> Dict[str, Any]:
         """
         Use AI to compare two screenshots
@@ -416,20 +414,20 @@ Actual: {json.dumps(actual_analysis, indent=2)}
                                 "type": "image_url",
                                 "image_url": {
                                     "url": f"data:image/png;base64,{expected_base64}",
-                                    "detail": "high"
-                                }
+                                    "detail": "high",
+                                },
                             },
                             {
                                 "type": "image_url",
                                 "image_url": {
                                     "url": f"data:image/png;base64,{actual_base64}",
-                                    "detail": "high"
-                                }
-                            }
-                        ]
+                                    "detail": "high",
+                                },
+                            },
+                        ],
                     }
                 ],
-                max_tokens=1500
+                max_tokens=1500,
             )
 
             comparison_text = response.choices[0].message.content
@@ -439,19 +437,13 @@ Actual: {json.dumps(actual_analysis, indent=2)}
             try:
                 comparison = json.loads(comparison_text)
             except json.JSONDecodeError:
-                comparison = {
-                    "match": False,
-                    "raw_comparison": comparison_text
-                }
+                comparison = {"match": False, "raw_comparison": comparison_text}
 
             return comparison
 
         except Exception as e:
             logger.error(f"AI comparison failed: {e}", exc_info=True)
-            return {
-                "match": False,
-                "error": str(e)
-            }
+            return {"match": False, "error": str(e)}
 
 
 class TestReportGenerator:
@@ -471,7 +463,7 @@ class TestReportGenerator:
         self,
         test_name: str,
         execution_result: Dict[str, Any],
-        comparison_result: Dict[str, Any]
+        comparison_result: Dict[str, Any],
     ) -> Path:
         """
         Generate a test report with checkboxes
@@ -493,16 +485,22 @@ class TestReportGenerator:
         report = []
         report.append(f"# Test Report: {test_name}")
         report.append(f"\n**Date**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        report.append(f"\n**Test Status**: {execution_result.get('status', 'unknown').upper()}")
+        report.append(
+            f"\n**Test Status**: {execution_result.get('status', 'unknown').upper()}"
+        )
         report.append("\n---\n")
 
         # Test execution details
         report.append("## Test Execution")
-        report.append(f"\n- **Instructions File**: `{execution_result.get('instruction', 'N/A')[:100]}...`")
-        report.append(f"- **Events Processed**: {execution_result.get('event_count', 0)}")
+        report.append(
+            f"\n- **Instructions File**: `{execution_result.get('instruction', 'N/A')[:100]}...`"
+        )
+        report.append(
+            f"- **Events Processed**: {execution_result.get('event_count', 0)}"
+        )
         report.append(f"- **Status**: {execution_result.get('status', 'unknown')}")
 
-        if execution_result.get('error'):
+        if execution_result.get("error"):
             report.append(f"\n⚠️ **Error**: {execution_result['error']}")
 
         report.append("\n---\n")
@@ -510,25 +508,25 @@ class TestReportGenerator:
         # Screenshot comparison
         report.append("## UI Verification Checklist\n")
 
-        analysis = comparison_result.get('analysis', {})
+        analysis = comparison_result.get("analysis", {})
 
         # Page verification
-        if 'page' in analysis:
+        if "page" in analysis:
             report.append(f"### Page: {analysis['page']}\n")
 
         # UI Elements verification
-        if 'elements' in analysis:
+        if "elements" in analysis:
             report.append("### UI Elements\n")
-            for element in analysis['elements']:
+            for element in analysis["elements"]:
                 checkbox = "☐"  # Unchecked by default
-                name = element.get('name', 'Unknown')
+                name = element.get("name", "Unknown")
 
                 details = []
-                if 'value' in element:
+                if "value" in element:
                     details.append(f"Value: `{element['value']}`")
-                if 'selected' in element:
+                if "selected" in element:
                     details.append(f"Selected: {element['selected']}")
-                if 'visible' in element:
+                if "visible" in element:
                     details.append(f"Visible: {element['visible']}")
 
                 detail_str = " - " + ", ".join(details) if details else ""
@@ -536,9 +534,9 @@ class TestReportGenerator:
             report.append("")
 
         # Expected text content
-        if 'expected_text' in analysis:
+        if "expected_text" in analysis:
             report.append("### Expected Text Content\n")
-            for text in analysis['expected_text']:
+            for text in analysis["expected_text"]:
                 report.append(f"- ☐ `{text}`")
             report.append("")
 
@@ -546,10 +544,12 @@ class TestReportGenerator:
         report.append("---\n")
         report.append("## Screenshots\n")
 
-        if comparison_result.get('expected_screenshot'):
-            report.append(f"**Expected**: `{comparison_result['expected_screenshot']}`\n")
+        if comparison_result.get("expected_screenshot"):
+            report.append(
+                f"**Expected**: `{comparison_result['expected_screenshot']}`\n"
+            )
 
-        if comparison_result.get('actual_screenshot'):
+        if comparison_result.get("actual_screenshot"):
             report.append(f"**Actual**: `{comparison_result['actual_screenshot']}`\n")
         else:
             report.append("**Actual**: Not captured yet\n")
@@ -568,16 +568,13 @@ class TestReportGenerator:
         report.append("\n<!-- Add any observations or issues here -->\n")
 
         # Write report to file
-        with open(report_file, 'w') as f:
-            f.write('\n'.join(report))
+        with open(report_file, "w") as f:
+            f.write("\n".join(report))
 
         logger.info(f"Report generated successfully: {report_file}")
         return report_file
 
-    def generate_summary_report(
-        self,
-        test_results: List[Dict[str, Any]]
-    ) -> Path:
+    def generate_summary_report(self, test_results: List[Dict[str, Any]]) -> Path:
         """
         Generate a summary report for multiple tests
 
@@ -596,8 +593,8 @@ class TestReportGenerator:
         report.append(f"**Total Tests**: {len(test_results)}\n")
 
         # Count statuses
-        passed = sum(1 for r in test_results if r.get('status') == 'completed')
-        failed = sum(1 for r in test_results if r.get('status') == 'failed')
+        passed = sum(1 for r in test_results if r.get("status") == "completed")
+        failed = sum(1 for r in test_results if r.get("status") == "failed")
 
         report.append(f"- ✅ Passed: {passed}")
         report.append(f"- ❌ Failed: {failed}")
@@ -606,12 +603,14 @@ class TestReportGenerator:
         # Individual test results
         report.append("## Test Results\n")
         for result in test_results:
-            status_icon = "✅" if result.get('status') == 'completed' else "❌"
-            test_name = result.get('test_name', 'Unknown')
-            report.append(f"{status_icon} **{test_name}** - {result.get('status', 'unknown')}")
+            status_icon = "✅" if result.get("status") == "completed" else "❌"
+            test_name = result.get("test_name", "Unknown")
+            report.append(
+                f"{status_icon} **{test_name}** - {result.get('status', 'unknown')}"
+            )
 
-        with open(summary_file, 'w') as f:
-            f.write('\n'.join(report))
+        with open(summary_file, "w") as f:
+            f.write("\n".join(report))
 
         return summary_file
 
@@ -620,9 +619,7 @@ class UITestFramework:
     """Main test framework orchestrator"""
 
     def __init__(
-        self,
-        results_dir: str = "results",
-        screenshots_dir: str = "actual_screenshots"
+        self, results_dir: str = "results", screenshots_dir: str = "actual_screenshots"
     ):
         """
         Initialize the UI test framework
@@ -636,11 +633,7 @@ class UITestFramework:
         self.reporter = TestReportGenerator(results_dir)
         self.test_results: List[Dict[str, Any]] = []
 
-    def run_test(
-        self,
-        test_case: UITestCase,
-        max_steps: int = 50
-    ) -> Dict[str, Any]:
+    def run_test(self, test_case: UITestCase, max_steps: int = 50) -> Dict[str, Any]:
         """
         Run a single test case end-to-end
 
@@ -660,25 +653,21 @@ class UITestFramework:
 
         # Compare screenshots
         comparison_result = self.comparator.compare_screenshots(
-            test_case.expected_screenshot,
-            test_case.actual_screenshot,
-            test_case.name
+            test_case.expected_screenshot, test_case.actual_screenshot, test_case.name
         )
 
         # Generate report
         report_path = self.reporter.generate_report(
-            test_case.name,
-            execution_result,
-            comparison_result
+            test_case.name, execution_result, comparison_result
         )
 
         # Combine results
         result = {
             "test_name": test_case.name,
-            "status": execution_result.get('status'),
+            "status": execution_result.get("status"),
             "execution": execution_result,
             "comparison": comparison_result,
-            "report": str(report_path)
+            "report": str(report_path),
         }
 
         self.test_results.append(result)
@@ -689,9 +678,7 @@ class UITestFramework:
         return result
 
     def run_test_suite(
-        self,
-        test_cases: List[UITestCase],
-        max_steps: int = 50
+        self, test_cases: List[UITestCase], max_steps: int = 50
     ) -> List[Dict[str, Any]]:
         """
         Run multiple test cases
@@ -723,25 +710,18 @@ def main():
         description="UI Testing Framework for Lightcone Dashboard"
     )
     parser.add_argument(
-        "--test-file",
-        default="home_completions.md",
-        help="Test instructions file"
+        "--test-file", default="home_completions.md", help="Test instructions file"
     )
     parser.add_argument(
         "--expected",
         default="expected/home_completions.png",
-        help="Expected screenshot"
+        help="Expected screenshot",
     )
     parser.add_argument(
-        "--test-name",
-        default="home_completions",
-        help="Test case name"
+        "--test-name", default="home_completions", help="Test case name"
     )
     parser.add_argument(
-        "--max-steps",
-        type=int,
-        default=50,
-        help="Maximum steps for test execution"
+        "--max-steps", type=int, default=50, help="Maximum steps for test execution"
     )
 
     args = parser.parse_args()
@@ -755,7 +735,7 @@ def main():
     test_case = UITestCase(
         name=args.test_name,
         instructions_file=args.test_file,
-        expected_screenshot=args.expected
+        expected_screenshot=args.expected,
     )
 
     # Run test
@@ -768,9 +748,10 @@ def main():
     logger.info(f"Report: {result['report']}")
     logger.info("=" * 80)
 
-    return 0 if result['status'] == 'completed' else 1
+    return 0 if result["status"] == "completed" else 1
 
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(main())

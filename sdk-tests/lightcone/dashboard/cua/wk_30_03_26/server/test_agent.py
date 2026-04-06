@@ -16,8 +16,8 @@ def load_env():
         with open(env_file) as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith('#') and '=' in line:
-                    key, value = line.split('=', 1)
+                if line and not line.startswith("#") and "=" in line:
+                    key, value = line.split("=", 1)
                     os.environ[key] = value
 
 
@@ -44,7 +44,10 @@ def check_prerequisites():
     # Check if tzafon is installed
     try:
         import tzafon
-        print(f"✅ Tzafon SDK installed (version: {tzafon.__version__ if hasattr(tzafon, '__version__') else 'unknown'})")
+
+        print(
+            f"✅ Tzafon SDK installed (version: {tzafon.__version__ if hasattr(tzafon, '__version__') else 'unknown'})"
+        )
     except ImportError:
         print("❌ Tzafon SDK not installed")
         print("   Run: uv sync")
@@ -61,7 +64,7 @@ def test_basic_agent():
     print("=" * 80)
 
     try:
-        from lightcone_agent import LightconeAgent
+        from server.lightcone_agent import LightconeAgent
 
         # Create agent instance
         agent = LightconeAgent("home.md")
@@ -77,6 +80,7 @@ def test_basic_agent():
     except Exception as e:
         print(f"\n❌ Basic agent test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -88,7 +92,7 @@ def test_advanced_agent():
     print("=" * 80)
 
     try:
-        from advanced_agent import AdvancedLightconeAgent
+        from server.advanced_agent import AdvancedLightconeAgent
 
         # Create agent instance
         agent = AdvancedLightconeAgent("home.md", save_screenshots=False)
@@ -104,6 +108,7 @@ def test_advanced_agent():
     except Exception as e:
         print(f"\n❌ Advanced agent test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -125,17 +130,17 @@ Click on the Completions card
     expected_keywords = ["lightcone.ai/dashboard", "login", "email", "Completions"]
 
     # Test parsing logic
-    lines = test_content.strip().split('\n')
+    lines = test_content.strip().split("\n")
     instructions = []
 
     for line in lines:
         line = line.strip()
-        if line and not line.startswith('#'):
-            if '→' in line:
-                line = line.split('→', 1)[1].strip()
+        if line and not line.startswith("#"):
+            if "→" in line:
+                line = line.split("→", 1)[1].strip()
             instructions.append(line)
 
-    parsed = ' '.join(instructions)
+    parsed = " ".join(instructions)
 
     print(f"\n📝 Original content length: {len(test_content)} chars")
     print(f"📝 Parsed instruction length: {len(parsed)} chars")
@@ -174,7 +179,7 @@ def run_live_test():
 
     try:
         print("\n🚀 Running live test...")
-        from lightcone_agent import LightconeAgent
+        from server.lightcone_agent import LightconeAgent
 
         agent = LightconeAgent("home.md")
 
@@ -191,6 +196,7 @@ def run_live_test():
     except Exception as e:
         print(f"\n❌ Live test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -235,7 +241,11 @@ def main():
         print("\n" + "=" * 80)
         print("Optional: Live API Test")
         print("=" * 80)
-        response = input("\nWould you like to run a live test with the actual API? (yes/no): ").strip().lower()
+        response = (
+            input("\nWould you like to run a live test with the actual API? (yes/no): ")
+            .strip()
+            .lower()
+        )
 
         if response == "yes":
             run_live_test()

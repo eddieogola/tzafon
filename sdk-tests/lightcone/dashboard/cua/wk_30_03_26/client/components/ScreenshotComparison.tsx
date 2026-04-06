@@ -208,7 +208,7 @@ export function ScreenshotComparison({
             <div className="col-span-1 lg:col-span-2">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800">
-                  No actual screenshot available for comparison. This may be expected if the task hasn't generated a final screenshot yet.
+                  No actual screenshot available for comparison. This may be expected if the task hasn&apos;t generated a final screenshot yet.
                 </p>
               </div>
             </div>

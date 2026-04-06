@@ -1,12 +1,12 @@
 "use client";
 
-import { Users, TrendingUp, CurrencyDollar, Activity, ArrowUpRight, Clock, CheckCircle } from "@phosphor-icons/react";
+import { Users, TrendUp, CurrencyDollar, ChartLine, ArrowUpRight, Clock, CheckCircle } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const spring = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 100,
   damping: 20,
 };
@@ -29,7 +29,7 @@ export default function DashboardPage() {
       >
         <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Welcome back! Here's what's happening today.
+          Welcome back! Here&apos;s what&apos;s happening today.
         </p>
       </motion.div>
 
@@ -90,7 +90,7 @@ export default function DashboardPage() {
             value="573"
             change="-2.1% from last hour"
             changeType="negative"
-            icon={Activity}
+            icon={ChartLine}
             iconColor="text-orange-600"
             delay={0.2}
           />
@@ -103,7 +103,7 @@ export default function DashboardPage() {
             value="+23.5%"
             change="+4.3% from last month"
             changeType="positive"
-            icon={TrendingUp}
+            icon={TrendUp}
             iconColor="text-emerald-600"
             delay={0.25}
           />
@@ -133,7 +133,7 @@ export default function DashboardPage() {
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                     className="rounded-xl bg-blue-500/10 p-2"
                   >
-                    <TrendingUp className="h-5 w-5 text-blue-600" weight="bold" />
+                    <TrendUp className="h-5 w-5 text-blue-600" weight="bold" />
                   </motion.div>
                 </div>
               </CardHeader>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
           </motion.div>
         </div>
 
-        {/* Narrow Activity Feed */}
+        {/* Narrow ChartLine Feed */}
         <div className="md:col-span-5 lg:col-span-4">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -170,7 +170,7 @@ export default function DashboardPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl">Recent Activity</CardTitle>
+                    <CardTitle className="text-xl">Recent ChartLine</CardTitle>
                     <CardDescription className="mt-1">
                       Your latest transactions and events
                     </CardDescription>
