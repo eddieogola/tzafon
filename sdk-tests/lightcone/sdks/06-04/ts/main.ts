@@ -1,5 +1,5 @@
 import Lightcone from "@tzafon/lightcone";
-import createBrowserSession from "@/auto/getting-started/browserSession";
+import quickstartGuide from "@/auto/getting-started/quickstart";
 import buildPriceTracker from "@/auto/tutorials/priceTracker";
 import scrapeBehinLogin from "@/auto/tutorials/loginScrape";
 import automateFormWithAi from "@/auto/tutorials/automateForm";
@@ -30,7 +30,7 @@ const client = new Lightcone({
 });
 
 const availableExamples = {
-  createBrowserSession,
+  quickstartGuide,
   buildPriceTracker,
   scrapeBehinLogin,
   automateFormWithAi,
@@ -61,7 +61,7 @@ void availableExamples;
  * https://docs.lightcone.ai/guides/quickstart/
  */
 
-createBrowserSession(client);
+quickstartGuide(client);
 
 /*
  * Tutorials

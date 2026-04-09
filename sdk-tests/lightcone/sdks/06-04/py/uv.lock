@@ -2594,7 +2594,7 @@ requires-dist = [
     { name = "langchain-openai", specifier = ">=1.1.12" },
     { name = "langchain-tzafon", specifier = ">=1.1.1" },
     { name = "playwright", specifier = ">=1.58.0" },
-    { name = "tzafon", specifier = ">=2.34.0" },
+    { name = "tzafon", specifier = ">=2.35.0" },
 ]
 
 [[package]]
@@ -6273,7 +6273,7 @@ wheels = [
 
 [[package]]
 name = "tzafon"
-version = "2.34.1"
+version = "2.35.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -6283,9 +6283,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/84/02/27fd7c964488c66acf64fb19eae4faf14e7d00264ef130819d1bf5b95a5a/tzafon-2.34.1.tar.gz", hash = "sha256:38e5f5a520eafd830de6db01ebe1758db630cbb502d2f9a8adfbc8f381827476", size = 278079, upload-time = "2026-04-01T08:10:39.908Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/60/25/0d5b8ac3b9878d62d55cee1909d12c4f300f737e7fd547475052c835a6fd/tzafon-2.35.0.tar.gz", hash = "sha256:348232414a1741cc498e728342f78a334fcf26c838f44da5fdf785c29d1c0190", size = 281491, upload-time = "2026-04-08T20:57:24.473Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/22/3b/cabc6e59c64237b6102ca807affd04375b9120e3bfa6ad6325853627f491/tzafon-2.34.1-py3-none-any.whl", hash = "sha256:53057f34bb19ee5b1a28427e7c91fa25972f1cd2af8ddd847f7e576102b00d2a", size = 157361, upload-time = "2026-04-01T08:10:38.425Z" },
+    { url = "https://files.pythonhosted.org/packages/62/11/1ada17efb56db5b38a52e02d54e671ca862c25619a2558bfffa2a1a51830/tzafon-2.35.0-py3-none-any.whl", hash = "sha256:24ae206e3db5f0f2086a7ef77f953c8395954faf3c64830eeb0b29bd3ade0a2c", size = 170002, upload-time = "2026-04-08T20:57:26.608Z" },
 ]
 
 [[package]]
