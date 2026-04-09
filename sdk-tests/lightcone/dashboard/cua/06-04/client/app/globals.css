@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Premium Neutral Base - Zinc/Slate with subtle warmth */
+    --background: 250 250 250;
+    --foreground: 24 24 27;
+
+    /* Single Accent Color - Refined Blue */
+    --accent: 59 130 246;
+    --accent-foreground: 248 250 252;
+
+    /* Neutral Grays (NO pure black) */
+    --muted: 244 244 245;
+    --muted-foreground: 113 113 122;
+
+    --card: 255 255 255;
+    --card-foreground: 24 24 27;
+
+    --border: 228 228 231;
+    --input: 228 228 231;
+
+    /* Soft shadows for premium feel */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+
+    /* Gradient borders */
+    --gradient-border: linear-gradient(135deg, rgb(var(--accent) / 0.1), rgb(var(--accent) / 0.05));
+
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.18);
+  }
+
+  .dark {
+    --background: 24 24 27;
+    --foreground: 250 250 250;
+
+    --accent: 59 130 246;
+    --accent-foreground: 24 24 27;
+
+    --muted: 39 39 42;
+    --muted-foreground: 161 161 170;
+
+    --card: 39 39 42;
+    --card-foreground: 250 250 250;
+
+    --border: 63 63 70;
+    --input: 63 63 70;
+
+    --glass-bg: rgba(39, 39, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Premium glassmorphism utility */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Subtle gradient border */
+  .gradient-border {
+    position: relative;
+    background: var(--gradient-border);
+    border-radius: 0.75rem;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: white;
+    border-radius: calc(0.75rem - 1px);
+    z-index: -1;
+  }
+
+  /* Premium shadow utilities */
+  .shadow-premium {
+    box-shadow: 0 2px 8px -2px rgb(0 0 0 / 0.08), 0 4px 16px -4px rgb(0 0 0 / 0.04);
+  }
+
+  .shadow-premium-lg {
+    box-shadow: 0 8px 24px -8px rgb(0 0 0 / 0.08), 0 16px 48px -16px rgb(0 0 0 / 0.04);
+  }
+
+  /* Soft focus ring */
+  .focus-premium {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20 focus-visible:ring-offset-2;
+  }
+}
+
+/* Premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--muted-foreground) / 0.2);
+  border-radius: 5px;
+  border: 2px solid rgb(var(--background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--muted-foreground) / 0.3);
+}
+
+/* Perpetual animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgb(var(--accent) / 0.03), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
