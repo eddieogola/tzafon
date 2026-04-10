@@ -68,8 +68,8 @@ quickstartGuide(client);
  * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
  */
 
-buildPriceTracker(client);
-scrapeBehinLogin(client);
+// buildPriceTracker(client);
+// scrapeBehinLogin(client);
 // automateFormWithAi(client);
 
 /*
@@ -77,18 +77,18 @@ scrapeBehinLogin(client);
  * https://docs.lightcone.ai/guides/computers/
  */
 
-computers(client);
-operateAComputer(client);
-executeShell(client);
-manageBrowserTabs(client);
-lightconeOs(client);
+// computers(client);
+// operateAComputer(client);
+// executeShell(client);
+// manageBrowserTabs(client);
+// lightconeOs(client);
 
 /*
  * Integrations
  * https://docs.lightcone.ai/integrations/playwright/
  */
 
-playwrightIntegration(client);
+// playwrightIntegration(client);
 
 // These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
 

@@ -142,6 +142,6 @@ export default async function quickstartGuide(
   client: Lightcone,
 ): Promise<void> {
   await quickstart(client);
-  // await goDeeper(client);
-  // await alreadyUsingOpenAI();
+  await goDeeper(client);
+  await alreadyUsingOpenAI();
 }

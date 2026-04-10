@@ -21,6 +21,7 @@
     "@onkernel/sdk": "^0.44.0",
     "@tzafon/lightcone": "^0.8.0",
     "ai": "^6.0.141",
+    "openai": "^6.34.0",
     "playwright": "^1.58.2"
   }
 }

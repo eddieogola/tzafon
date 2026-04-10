@@ -80,11 +80,10 @@ def go_deeper(client):
             # Execute it, take a new screenshot, send it back —
             # see the CUA loop guide for the full pattern.
             for item in response.output or []:
-                if item.type == "computer_call":
-                    action = item.action
-                    print(f"Action type : {action.type}")
+                if isinstance(item, dict) and item.get("type") == "computer_call":
+                    action = item.get("action")
                     print(
-                        f"Coordinates : ({getattr(action, 'x', None)}, {getattr(action, 'y', None)})"
+                        f"Coordinates : ({action.get('x', None)}, {action.get('y', None)})"
                     )
                 elif item.type == "message":
                     for block in item.content or []:
@@ -132,6 +131,6 @@ def already_using_openai():
 
 
 def quickstart_guide(client):
-    quickstart(client)
-    # go_deeper(client)
-    # already_using_openai()
+    # quickstart(client)
+    go_deeper(client)
+    already_using_openai()
