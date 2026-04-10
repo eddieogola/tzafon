@@ -3,6 +3,7 @@ import os
 from tzafon import Lightcone
 from dotenv import load_dotenv
 from auto.getting_started.quickstart import quickstart_guide
+from auto.getting_started.authentication import authentication_guide
 from auto.tutorials.price_tracker import build_price_tracker
 from auto.tutorials.login_scrape import scrape_behind_login
 from auto.tutorials.automate_form import automate_form_with_ai
@@ -40,7 +41,14 @@ Getting Started
 https://docs.lightcone.ai/guides/quickstart/
 
 """
-quickstart_guide(client)
+# quickstart_guide(client)
+
+"""
+Authentication
+https://docs.lightcone.ai/guides/authentication/
+
+"""
+# authentication_guide()
 
 """
 Tutorials
