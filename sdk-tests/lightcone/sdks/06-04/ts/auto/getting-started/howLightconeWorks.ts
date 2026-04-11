@@ -151,7 +151,7 @@ export default async function howLightconeWorksGuide(
   client: Lightcone,
 ): Promise<void> {
   //   await tasksFullyManaged(client);
-  await responsesApiLoop(client);
-  //   await computersApiDirectControl(client);
-  //   await openaiCompatibleApi();
+  //   await responsesApiLoop(client);
+  await computersApiDirectControl(client);
+  await openaiCompatibleApi();
 }

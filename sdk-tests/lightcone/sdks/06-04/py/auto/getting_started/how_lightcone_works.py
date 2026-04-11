@@ -140,6 +140,6 @@ def openai_compatible_api():
 
 def how_lightcone_works_guide(client):
     # tasks_fully_managed(client)
-    responses_api_loop(client)
-    # computers_api_direct_control(client)
-    # openai_compatible_api()
+    # responses_api_loop(client)
+    computers_api_direct_control(client)
+    openai_compatible_api()
