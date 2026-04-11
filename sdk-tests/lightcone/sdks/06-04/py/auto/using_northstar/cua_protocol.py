@@ -80,7 +80,7 @@ def full_computer_use_loop(client):
                 tools=[TOOL],
             )
 
-            for _ in range(8):
+            while True:
                 computer_call = None
                 for item in response.output or []:
                     if isinstance(item, dict) and item.get("type") == "computer_call":

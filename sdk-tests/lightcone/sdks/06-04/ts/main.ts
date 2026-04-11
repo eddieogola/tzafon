@@ -77,8 +77,8 @@ void availableExamples;
 // tasksGuide(client);
 // runATaskGuide(client);
 // responsesApiGuide(client);
-// cuaProtocolGuide(client);
-coordinatesGuide(client);
+cuaProtocolGuide(client);
+// coordinatesGuide(client);
 // chatCompletionsGuide(client);
 
 /*
