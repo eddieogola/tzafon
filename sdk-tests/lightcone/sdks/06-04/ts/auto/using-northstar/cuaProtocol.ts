@@ -88,7 +88,7 @@ async function fullComputerUseLoop(client: Lightcone): Promise<void> {
               type: "input_text",
               text: "Open the terminal and run 'uname -a'",
             },
-            { type: "input_image", image_url: initialUrl },
+            { type: "input_image", image_url: initialUrl, detail: "auto" },
           ],
         },
       ],
@@ -135,7 +135,7 @@ async function fullComputerUseLoop(client: Lightcone): Promise<void> {
           {
             type: "computer_call_output",
             call_id: computerCall.call_id,
-            output: { type: "input_image", image_url: newUrl },
+            output: { type: "input_image", image_url: newUrl, detail: "auto" },
           },
         ],
         tools: [TOOL],

@@ -12,25 +12,38 @@ TOOL = {
 
 
 def execute_action(computer, action):
-    if action.type == "click" and getattr(action, "button", "left") == "right":
-        computer.right_click(action.x, action.y)
-    elif action.type == "click":
-        computer.click(action.x, action.y)
-    elif action.type == "double_click":
-        computer.double_click(action.x, action.y)
-    elif action.type == "type":
+    action_type = action.get("type")
+    if action_type == "click" and getattr(action, "button", "left") == "right":
+        computer.right_click(action.get("x", None), action.get("y", None))
+    elif action_type == "click":
+        computer.click(action.get("x", None), action.get("y", None))
+    elif action_type == "double_click":
+        computer.double_click(action.get("x", None), action.get("y", None))
+    elif action_type == "type":
         computer.type(action.text)
-    elif action.type in ("key", "keypress"):
-        computer.hotkey(*action.keys)
-    elif action.type == "scroll":
-        computer.scroll(0, action.scroll_y or 0, action.x or 640, action.y or 400)
-    elif action.type == "hscroll":
-        computer.scroll(action.scroll_x or 0, 0, action.x or 640, action.y or 400)
-    elif action.type == "drag":
-        computer.drag(action.x, action.y, action.end_x, action.end_y)
-    elif action.type == "navigate":
+    elif action_type in ("key", "keypress"):
+        computer.hotkey(*action.get("keys", []))
+    elif action_type == "scroll":
+        computer.scroll(
+            0,
+            action.scroll_y or 0,
+            action.get("x", None) or 640,
+            action.get("y", None) or 400,
+        )
+    elif action_type == "hscroll":
+        computer.scroll(
+            action.scroll_x or 0,
+            0,
+            action.get("x", None) or 640,
+            action.get("y", None) or 400,
+        )
+    elif action_type == "drag":
+        computer.drag(
+            action.get("x", None), action.get("y", None), action.end_x, action.end_y
+        )
+    elif action_type == "navigate":
         computer.navigate(action.url)
-    elif action.type == "wait":
+    elif action_type == "wait":
         computer.wait(1)
 
 
@@ -70,7 +83,7 @@ def full_computer_use_loop(client):
             for _ in range(8):
                 computer_call = None
                 for item in response.output or []:
-                    if item.type == "computer_call":
+                    if isinstance(item, dict) and item.get("type") == "computer_call":
                         computer_call = item
                     elif item.type == "message":
                         for block in item.content or []:
@@ -81,12 +94,12 @@ def full_computer_use_loop(client):
                     print("Done.")
                     break
 
-                action = computer_call.action
-                if action.type in ("terminate", "done", "answer"):
-                    print(f"Terminal action: {action.type}")
+                action = computer_call.get("action", {})
+                print(f"Executing: {action.get('type')}")
+                if action.get("type") in ("terminate", "done", "answer"):
+                    print(f"Terminal action: {action.get('type')}")
                     break
 
-                print(f"Executing: {action.type}")
                 execute_action(computer, action)
                 computer.wait(1)
 
@@ -99,7 +112,7 @@ def full_computer_use_loop(client):
                     input=[
                         {
                             "type": "computer_call_output",
-                            "call_id": computer_call.call_id,
+                            "call_id": computer_call.get("call_id"),
                             "output": {
                                 "type": "input_image",
                                 "image_url": screenshot_url,
