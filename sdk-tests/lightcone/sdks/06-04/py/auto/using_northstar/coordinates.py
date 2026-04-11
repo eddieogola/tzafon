@@ -70,10 +70,10 @@ def responses_api_scaled_coordinates(client):
             )
 
             for item in response.output or []:
-                if item.type == "computer_call":
-                    computer.click(item.action.x, item.action.y)
+                if isinstance(item, dict) and item.get("type") == "computer_call":
+                    computer.click(item["action"]["x"], item["action"]["y"])
                     print(
-                        f"Clicked scaled pixel coordinates: ({item.action.x}, {item.action.y})"
+                        f"Clicked scaled pixel coordinates: ({item['action']['x']}, {item['action']['y']})"
                     )
                     break
 

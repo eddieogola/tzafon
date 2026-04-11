@@ -61,7 +61,7 @@ async function responsesApiScaledCoordinates(client: Lightcone): Promise<void> {
           role: "user",
           content: [
             { type: "input_text", text: "Click the search button" },
-            { type: "input_image", image_url: screenshotUrl },
+            { type: "input_image", image_url: screenshotUrl, detail: "auto" },
           ],
         },
       ],

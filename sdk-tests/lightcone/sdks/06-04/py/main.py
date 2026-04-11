@@ -54,8 +54,8 @@ https://docs.lightcone.ai/guides/tasks/
 # tasks_guide(client)
 # run_a_task_guide(client)
 # responses_api_guide(client)
-cua_protocol_guide(client)
-# coordinates_guide(client)
+# cua_protocol_guide(client)
+coordinates_guide(client)
 # chat_completions_guide(client)
 
 """
