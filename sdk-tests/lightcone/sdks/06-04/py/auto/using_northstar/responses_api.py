@@ -28,13 +28,12 @@ def create_and_process_response(client):
         )
 
         for item in response.output or []:
-            if item.type == "computer_call":
-                action = item.action
-                print(f"Action: {action.type}")
-                print(
-                    f"Coordinates: ({getattr(action, 'x', None)}, {getattr(action, 'y', None)})"
-                )
-                print(f"Text: {getattr(action, 'text', None)}")
+            if isinstance(item, dict) and item.get("type") == "computer_call":
+                action = item.get("action", {})
+                print(f"Action : {action}")
+                print(f"Action: {action.get('type')}")
+                print(f"Keys: {', '.join(action.get('keys', []))}")
+
             elif item.type == "message":
                 for block in item.content or []:
                     if hasattr(block, "text") and block.text:
@@ -130,4 +129,4 @@ def multi_turn_with_previous_response_id(client):
 def responses_api_guide(client):
     print(f"{Colors.YELLOW}*** Using Northstar: Responses API ***{Colors.RESET}\n")
     create_and_process_response(client)
-    multi_turn_with_previous_response_id(client)
+    # multi_turn_with_previous_response_id(client)

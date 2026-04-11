@@ -43,20 +43,20 @@ https://docs.lightcone.ai/guides/quickstart/
 
 """
 # quickstart_guide(client)
-
-"""
-Authentication
-https://docs.lightcone.ai/guides/authentication/
-
-"""
 # authentication_guide()
+# how_lightcone_works_guide(client)
 
 """
-How Lightcone Works
-https://docs.lightcone.ai/guides/how-lightcone-works/
+Using Northstar
+https://docs.lightcone.ai/guides/tasks/
 
 """
-how_lightcone_works_guide(client)
+# tasks_guide(client)
+# run_a_task_guide(client)
+responses_api_guide(client)
+# cua_protocol_guide(client)
+# coordinates_guide(client)
+# chat_completions_guide(client)
 
 """
 Tutorials
@@ -97,17 +97,6 @@ https://docs.lightcone.ai/use-cases/software-testing/
 # legacy_software(client)
 # cross_app_workflows(client)
 
-"""
-Using Northstar
-https://docs.lightcone.ai/guides/tasks/
-
-"""
-# tasks_guide(client)
-# run_a_task_guide(client)
-# responses_api_guide(client)
-# cua_protocol_guide(client)
-# coordinates_guide(client)
-# chat_completions_guide(client)
 
 """
 Integrations

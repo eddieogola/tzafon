@@ -66,20 +66,20 @@ void availableExamples;
  */
 
 // quickstartGuide(client);
-
-/*
- * Authentication
- * https://docs.lightcone.ai/guides/authentication/
- */
-
 // authenticationGuide();
+// howLightconeWorksGuide(client);
 
 /*
- * How Lightcone Works
- * https://docs.lightcone.ai/guides/how-lightcone-works/
+ * Using Northstar
+ * https://docs.lightcone.ai/guides/tasks/
  */
 
-howLightconeWorksGuide(client);
+// tasksGuide(client);
+// runATaskGuide(client);
+responsesApiGuide(client);
+// cuaProtocolGuide(client);
+// coordinatesGuide(client);
+// chatCompletionsGuide(client);
 
 /*
  * Tutorials
@@ -118,18 +118,6 @@ howLightconeWorksGuide(client);
 // softwareTesting(client);
 // legacySoftware(client);
 // crossAppWorkflows(client);
-
-/*
- * Using Northstar
- * https://docs.lightcone.ai/guides/tasks/
- */
-
-// tasksGuide(client);
-// runATaskGuide(client);
-// responsesApiGuide(client);
-// cuaProtocolGuide(client);
-// coordinatesGuide(client);
-// chatCompletionsGuide(client);
 
 /*
  * Integrations

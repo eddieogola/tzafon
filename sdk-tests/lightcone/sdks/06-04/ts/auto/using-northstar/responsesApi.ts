@@ -37,8 +37,7 @@ async function createAndProcessResponse(client: Lightcone): Promise<void> {
     for (const item of response.output ?? []) {
       if (item.type === "computer_call") {
         console.log(`Action: ${item.action?.type}`);
-        console.log(`Coordinates: (${item.action?.x}, ${item.action?.y})`);
-        console.log(`Text: ${item.action?.text}`);
+        console.log(`Keys: ${item.action?.keys?.join(", ")}`);
       } else if (item.type === "message") {
         for (const block of item.content ?? []) {
           if (block?.text) {
@@ -137,5 +136,5 @@ export default async function responsesApiGuide(
     `${Colors.YELLOW}*** Using Northstar: Responses API ***${Colors.RESET}\n`,
   );
   await createAndProcessResponse(client);
-  await multiTurnWithPreviousResponseId(client);
+  // await multiTurnWithPreviousResponseId(client);
 }
