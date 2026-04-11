@@ -128,5 +128,5 @@ def multi_turn_with_previous_response_id(client):
 
 def responses_api_guide(client):
     print(f"{Colors.YELLOW}*** Using Northstar: Responses API ***{Colors.RESET}\n")
-    create_and_process_response(client)
-    # multi_turn_with_previous_response_id(client)
+    # create_and_process_response(client)
+    multi_turn_with_previous_response_id(client)

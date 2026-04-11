@@ -135,6 +135,6 @@ export default async function responsesApiGuide(
   console.log(
     `${Colors.YELLOW}*** Using Northstar: Responses API ***${Colors.RESET}\n`,
   );
-  await createAndProcessResponse(client);
-  // await multiTurnWithPreviousResponseId(client);
+  // await createAndProcessResponse(client);
+  await multiTurnWithPreviousResponseId(client);
 }
