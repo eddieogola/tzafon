@@ -72,7 +72,6 @@ async function workingWithPageContext(client: Lightcone): Promise<void> {
     });
 
     const ctx = result.page_context;
-    console.log(result);
     console.log(`URL: ${Colors.BLUE}${ctx?.url}${Colors.RESET}`);
     console.log(`Title: ${Colors.YELLOW}${ctx?.title}${Colors.RESET}`);
     console.log(

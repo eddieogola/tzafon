@@ -67,7 +67,6 @@ def working_with_page_context(client):
             )
 
             ctx = result.page_context
-            print(result)
             print(f"URL: {Colors.BLUE}{ctx.url}{Colors.RESET}")
             print(f"Title: {Colors.YELLOW}{ctx.title}{Colors.RESET}")
             print(

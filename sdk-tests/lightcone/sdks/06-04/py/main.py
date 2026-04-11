@@ -64,7 +64,7 @@ https://docs.lightcone.ai/guides/computers/
 
 """
 # computers(client)
-operate_a_computer(client)
+# operate_a_computer(client)
 # execute_shell(client)
 # manage_browser_tabs(client)
 # lightcone_os(client)
