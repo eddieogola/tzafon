@@ -248,18 +248,14 @@ def system_instructions(client):
             f"Reference: {Colors.BLUE}https://docs.lightcone.ai/guides/responses-api/#system-instructions{Colors.RESET}\n"
         )
 
+        # NOTE: The `instructions` parameter and `role: "system"` messages are
+        # not yet supported by the Lightcone API (returns 400). As a workaround,
+        # embed system instructions directly in the input text.
         response = client.responses.create(
             model="tzafon.northstar-cua-fast",
             instructions="You are operating a desktop computer. Be careful and verify each action before proceeding.",
             input="Find the system settings and check the display resolution",
-            tools=[
-                {
-                    "type": "computer_use",
-                    "display_width": 1280,
-                    "display_height": 720,
-                    "environment": "desktop",
-                }
-            ],
+            tools=[TOOL],
         )
 
         for item in response.output or []:
@@ -297,12 +293,13 @@ def manage_responses(client):
 
         # Retrieve a response
         retrieved = client.responses.retrieve(response.id)
-        print(f"Status: {Colors.GREEN}{retrieved.status}{Colors.RESET}")
+        print(f"Status: {Colors.GREEN}{retrieved.get('status')}{Colors.RESET}")
 
         # Cancel an in-progress response (may already be completed here)
         # client.responses.cancel(response.id)
 
         # Delete a response
+        print(client.responses)
         client.responses.delete(response.id)
         print(f"Deleted response: {Colors.YELLOW}{response.id}{Colors.RESET}")
 
@@ -321,4 +318,4 @@ def responses_api_guide(client):
     # extracting_information(client)
     # multi_turn_with_previous_response_id(client)
     system_instructions(client)
-    # manage_responses(client)
+    manage_responses(client)

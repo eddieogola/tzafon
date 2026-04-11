@@ -371,6 +371,6 @@ export default async function responsesApiGuide(
   // await createAndProcessResponse(client);
   // await extractingInformation(client);
   // await multiTurnWithPreviousResponseId(client);
-  await systemInstructions(client);
-  // await manageResponses(client);
+  // await systemInstructions(client);
+  await manageResponses(client);
 }
