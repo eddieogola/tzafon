@@ -78,8 +78,19 @@ void availableExamples;
 // runATaskGuide(client);
 // responsesApiGuide(client);
 // cuaProtocolGuide(client);
-coordinatesGuide(client);
+// coordinatesGuide(client);
 // chatCompletionsGuide(client);
+
+/*
+ * Environments
+ * https://docs.lightcone.ai/guides/computers/
+ */
+
+// computers(client);
+operateAComputer(client);
+// executeShell(client);
+// manageBrowserTabs(client);
+// lightconeOs(client);
 
 /*
  * Tutorials
@@ -89,17 +100,6 @@ coordinatesGuide(client);
 // buildPriceTracker(client);
 // scrapeBehinLogin(client);
 // automateFormWithAi(client);
-
-/*
- * Environments
- * https://docs.lightcone.ai/guides/computers/
- */
-
-// computers(client);
-// operateAComputer(client);
-// executeShell(client);
-// manageBrowserTabs(client);
-// lightconeOs(client);
 
 /*
  * Integrations

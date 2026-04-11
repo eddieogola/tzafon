@@ -16,7 +16,7 @@ async function fullExample(client: Lightcone): Promise<void> {
   try {
     // Open a browser on the desktop
     await client.computers.exec.sync(id, {
-      command: `firefox ${URL} &`,
+      command: `nohup firefox ${URL} > /dev/null 2>&1 &`,
     });
     await new Promise((r) => setTimeout(r, 3000));
 
@@ -60,7 +60,7 @@ async function workingWithPageContext(client: Lightcone): Promise<void> {
 
   try {
     await client.computers.exec.sync(id, {
-      command: `firefox ${URL} &`,
+      command: `nohup firefox ${URL} > /dev/null 2>&1 &`,
     });
     await new Promise((r) => setTimeout(r, 3000));
 
@@ -72,6 +72,7 @@ async function workingWithPageContext(client: Lightcone): Promise<void> {
     });
 
     const ctx = result.page_context;
+    console.log(result);
     console.log(`URL: ${Colors.BLUE}${ctx?.url}${Colors.RESET}`);
     console.log(`Title: ${Colors.YELLOW}${ctx?.title}${Colors.RESET}`);
     console.log(
@@ -102,7 +103,7 @@ async function handlingWaits(client: Lightcone): Promise<void> {
 
   try {
     await client.computers.exec.sync(id, {
-      command: "firefox https://example.com &",
+      command: `nohup firefox https://example.com > /dev/null 2>&1 &`,
     });
     await new Promise((r) => setTimeout(r, 3000)); // Wait for the app to launch and page to load
 

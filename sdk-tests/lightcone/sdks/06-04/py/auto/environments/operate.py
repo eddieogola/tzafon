@@ -15,7 +15,9 @@ def full_example(client):
         )
         with client.computer.create(kind="desktop") as computer:
             # Open a browser on the desktop
-            client.computers.exec.sync(computer.id, command=f"firefox {URL} &")
+            client.computers.exec.sync(
+                computer.id, command=f"nohup firefox {URL} > /dev/null 2>&1 &"
+            )
             computer.wait(3)
 
             # Click the search box and type a query
@@ -51,7 +53,9 @@ def working_with_page_context(client):
             f"Reference: {Colors.BLUE}https://docs.lightcone.ai/guides/operate-a-computer/#working-with-page-context{Colors.RESET}\n"
         )
         with client.computer.create(kind="desktop") as computer:
-            client.computers.exec.sync(computer.id, command=f"firefox {URL} &")
+            client.computers.exec.sync(
+                computer.id, command=f"nohup firefox {URL} > /dev/null 2>&1 &"
+            )
             computer.wait(3)
 
             result = client.computers.execute(
@@ -63,6 +67,7 @@ def working_with_page_context(client):
             )
 
             ctx = result.page_context
+            print(result)
             print(f"URL: {Colors.BLUE}{ctx.url}{Colors.RESET}")
             print(f"Title: {Colors.YELLOW}{ctx.title}{Colors.RESET}")
             print(
@@ -92,7 +97,9 @@ def handling_waits(client):
             f"Reference: {Colors.BLUE}https://docs.lightcone.ai/guides/operate-a-computer/#handling-waits{Colors.RESET}\n"
         )
         with client.computer.create(kind="desktop") as computer:
-            client.computers.exec.sync(computer.id, command=f"firefox {URL} &")
+            client.computers.exec.sync(
+                computer.id, command=f"nohup firefox {URL} > /dev/null 2>&1 &"
+            )
             computer.wait(3)  # Wait for the app to launch and page to load
 
             computer.click(100, 200)

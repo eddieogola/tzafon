@@ -55,8 +55,19 @@ https://docs.lightcone.ai/guides/tasks/
 # run_a_task_guide(client)
 # responses_api_guide(client)
 # cua_protocol_guide(client)
-coordinates_guide(client)
+# coordinates_guide(client)
 # chat_completions_guide(client)
+
+"""
+Environments
+https://docs.lightcone.ai/guides/computers/
+
+"""
+# computers(client)
+operate_a_computer(client)
+# execute_shell(client)
+# manage_browser_tabs(client)
+# lightcone_os(client)
 
 """
 Tutorials
@@ -67,16 +78,6 @@ https://docs.lightcone.ai/tutorials/build-a-price-tracker/
 # scrape_behind_login(client)
 # automate_form_with_ai(client)
 
-"""
-Environments
-https://docs.lightcone.ai/guides/computers/
-
-"""
-# computers(client)
-# operate_a_computer(client)
-# execute_shell(client)
-# manage_browser_tabs(client)
-# lightcone_os(client)
 
 """
 Integrations
