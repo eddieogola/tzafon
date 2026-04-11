@@ -263,8 +263,8 @@ def system_instructions(client):
         )
 
         for item in response.output or []:
-            if item.type == "computer_call":
-                print(f"Action: {item.action.type}")
+            if isinstance(item, dict) and item.get("type") == "computer_call":
+                print(f"Action: {item.get('action', {}).get('type','')}")
             elif item.type == "message":
                 for block in item.content or []:
                     if hasattr(block, "text") and block.text:
@@ -319,6 +319,6 @@ def responses_api_guide(client):
     print(f"{Colors.YELLOW}*** Using Northstar: Responses API ***{Colors.RESET}\n")
     # create_and_process_response(client)
     # extracting_information(client)
-    multi_turn_with_previous_response_id(client)
-    # system_instructions(client)
+    # multi_turn_with_previous_response_id(client)
+    system_instructions(client)
     # manage_responses(client)
