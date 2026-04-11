@@ -86,7 +86,8 @@ def computers_api_direct_control(client):
 
         with client.computer.create(kind="desktop") as computer:
             client.computers.exec.sync(
-                computer.id, command="firefox https://example.com &"
+                computer.id,
+                command="nohup firefox https://example.com > /dev/null 2>&1 &",
             )
             computer.wait(3)
             computer.click(400, 300)
@@ -139,7 +140,7 @@ def openai_compatible_api():
 
 
 def how_lightcone_works_guide(client):
-    # tasks_fully_managed(client)
-    # responses_api_loop(client)
+    tasks_fully_managed(client)
+    responses_api_loop(client)
     computers_api_direct_control(client)
     openai_compatible_api()

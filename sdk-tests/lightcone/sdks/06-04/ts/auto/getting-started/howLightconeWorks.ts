@@ -91,7 +91,7 @@ async function computersApiDirectControl(client: Lightcone): Promise<void> {
 
   try {
     await client.computers.exec.sync(id, {
-      command: "firefox https://example.com &",
+      command: "nohup firefox https://example.com > /dev/null 2>&1 &",
     });
     await new Promise((r) => setTimeout(r, 3000));
     await client.computers.click(id, { x: 400, y: 300 });
@@ -150,8 +150,8 @@ async function openaiCompatibleApi(): Promise<void> {
 export default async function howLightconeWorksGuide(
   client: Lightcone,
 ): Promise<void> {
-  //   await tasksFullyManaged(client);
-  //   await responsesApiLoop(client);
+  await tasksFullyManaged(client);
+  await responsesApiLoop(client);
   await computersApiDirectControl(client);
   await openaiCompatibleApi();
 }
