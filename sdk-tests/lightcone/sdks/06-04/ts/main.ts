@@ -1,6 +1,7 @@
 import Lightcone from "@tzafon/lightcone";
 import quickstartGuide from "@/auto/getting-started/quickstart";
 import authenticationGuide from "@/auto/getting-started/authentication";
+import howLightconeWorksGuide from "@/auto/getting-started/howLightconeWorks";
 import buildPriceTracker from "@/auto/tutorials/priceTracker";
 import scrapeBehinLogin from "@/auto/tutorials/loginScrape";
 import automateFormWithAi from "@/auto/tutorials/automateForm";
@@ -33,6 +34,7 @@ const client = new Lightcone({
 const availableExamples = {
   quickstartGuide,
   authenticationGuide,
+  howLightconeWorksGuide,
   buildPriceTracker,
   scrapeBehinLogin,
   automateFormWithAi,
@@ -71,6 +73,13 @@ void availableExamples;
  */
 
 // authenticationGuide();
+
+/*
+ * How Lightcone Works
+ * https://docs.lightcone.ai/guides/how-lightcone-works/
+ */
+
+howLightconeWorksGuide(client);
 
 /*
  * Tutorials

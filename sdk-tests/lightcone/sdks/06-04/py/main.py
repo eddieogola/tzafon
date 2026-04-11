@@ -4,6 +4,7 @@ from tzafon import Lightcone
 from dotenv import load_dotenv
 from auto.getting_started.quickstart import quickstart_guide
 from auto.getting_started.authentication import authentication_guide
+from auto.getting_started.how_lightcone_works import how_lightcone_works_guide
 from auto.tutorials.price_tracker import build_price_tracker
 from auto.tutorials.login_scrape import scrape_behind_login
 from auto.tutorials.automate_form import automate_form_with_ai
@@ -49,6 +50,13 @@ https://docs.lightcone.ai/guides/authentication/
 
 """
 # authentication_guide()
+
+"""
+How Lightcone Works
+https://docs.lightcone.ai/guides/how-lightcone-works/
+
+"""
+how_lightcone_works_guide(client)
 
 """
 Tutorials
