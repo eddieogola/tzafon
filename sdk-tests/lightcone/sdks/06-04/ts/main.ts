@@ -88,7 +88,7 @@ void availableExamples;
 
 // computers(client);
 // operateAComputer(client);
-executeShell(client);
+// executeShell(client);
 // manageBrowserTabs(client);
 // lightconeOs(client);
 
