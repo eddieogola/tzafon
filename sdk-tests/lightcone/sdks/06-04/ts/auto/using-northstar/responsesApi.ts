@@ -214,8 +214,6 @@ async function multiTurnWithPreviousResponseId(
       tools: [TOOL],
     });
 
-    console.log(`Initial response status: ${response}`);
-
     const computerCall = (response.output ?? []).find(
       (item: any) => item.type === "computer_call",
     );
