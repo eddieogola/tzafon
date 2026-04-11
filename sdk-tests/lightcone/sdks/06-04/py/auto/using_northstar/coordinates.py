@@ -165,9 +165,11 @@ When clicking or interacting with elements:
             for choice in result.choices:
                 for tool_call in choice.message.tool_calls or []:
                     args = json.loads(tool_call.function.arguments)
-                    pixel_x = int(args["x"] / 1000 * VIEWPORT_WIDTH)
-                    pixel_y = int(args["y"] / 1000 * VIEWPORT_HEIGHT)
-                    print(f"Model coords: ({args['x']}, {args['y']})")
+                    x = int(str(args["x"]).split(",")[0])
+                    y = int(str(args["y"]).split(",")[0])
+                    pixel_x = int(x / 1000 * VIEWPORT_WIDTH)
+                    pixel_y = int(y / 1000 * VIEWPORT_HEIGHT)
+                    print(f"Model coords: ({x}, {y})")
                     print(f"Pixel coords:  ({pixel_x}, {pixel_y})")
 
     except Exception as e:

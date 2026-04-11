@@ -181,9 +181,11 @@ When clicking or interacting with elements:
     for (const choice of result.choices) {
       for (const toolCall of choice.message.tool_calls ?? []) {
         const args = JSON.parse((toolCall as any).function.arguments);
-        const pixelX = Math.floor((args.x / 1000) * VIEWPORT_WIDTH);
-        const pixelY = Math.floor((args.y / 1000) * VIEWPORT_HEIGHT);
-        console.log(`Model coords: (${args.x}, ${args.y})`);
+        const x = parseInt(String(args.x), 10);
+        const y = parseInt(String(args.y), 10);
+        const pixelX = Math.floor((x / 1000) * VIEWPORT_WIDTH);
+        const pixelY = Math.floor((y / 1000) * VIEWPORT_HEIGHT);
+        console.log(`Model coords: (${x}, ${y})`);
         console.log(`Pixel coords:  (${pixelX}, ${pixelY})`);
       }
     }
