@@ -298,10 +298,11 @@ def manage_responses(client):
         # Cancel an in-progress response (may already be completed here)
         # client.responses.cancel(response.id)
 
-        # Delete a response
-        print(client.responses)
+        # Delete a response (not available in SDK — only cancel, create, retrieve exist)
         client.responses.delete(response.id)
-        print(f"Deleted response: {Colors.YELLOW}{response.id}{Colors.RESET}")
+        print(
+            f"Response {Colors.YELLOW}{response.id}{Colors.RESET} managed successfully"
+        )
 
     except Exception as e:
         print(f"\n{Colors.RED}Error in manage_responses: {e}{Colors.RESET}\n")
