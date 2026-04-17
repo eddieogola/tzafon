@@ -10,6 +10,8 @@ from typing import Optional
 from datetime import datetime
 from tzafon import Lightcone
 from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader, select_autoescape, StrictUndefined
+from secure_logger import SecretsFilter, create_safe_preview
 
 
 # Load environment variables from .env file
@@ -32,6 +34,9 @@ class LightconeAgent:
         self.completion_message: Optional[str] = None
         self.results_dir = Path("results")
         self.results_dir.mkdir(exist_ok=True)
+
+        # Initialize secrets filter for secure logging
+        self.secrets_filter = SecretsFilter()
 
         # Derive expected screenshot path from instructions file
         self._set_expected_screenshot_path()
@@ -58,7 +63,7 @@ class LightconeAgent:
 
     def read_instructions(self) -> str:
         """
-        Read and parse instructions from the markdown file
+        Read and parse instructions from the markdown file using Jinja2 templating
 
         Returns:
             Parsed instruction string ready for Northstar
@@ -68,8 +73,34 @@ class LightconeAgent:
                 f"Instructions file not found: {self.instructions_file}"
             )
 
-        with open(self.instructions_file, "r") as f:
-            content = f.read()
+        # Set up Jinja2 environment with security features
+        env = Environment(
+            loader=FileSystemLoader(str(self.instructions_file.parent)),
+            autoescape=select_autoescape(),
+            undefined=StrictUndefined  # Raises error for undefined variables
+        )
+
+        # Load template and render with environment variables
+        template = env.get_template(self.instructions_file.name)
+
+        # Gather all environment variables that might be needed
+        # You can customize this dict to only include specific vars
+        template_vars = {
+            "LIGHTCONE_EMAIL": os.getenv("LIGHTCONE_EMAIL"),
+            "LIGHTCONE_PASSWORD": os.getenv("LIGHTCONE_PASSWORD"),
+            # Add more variables as needed
+        }
+
+        # Warn about missing variables
+        missing_vars = [key for key, value in template_vars.items() if value is None]
+        if missing_vars:
+            print(f"⚠️  Warning: The following environment variables are not set: {', '.join(missing_vars)}")
+
+        try:
+            content = template.render(**template_vars)
+        except Exception as e:
+            print(f"❌ Error rendering template: {e}")
+            raise
 
         # Parse the markdown content and create a clear instruction
         lines = content.strip().split("\n")
@@ -122,7 +153,9 @@ class LightconeAgent:
         if instruction is None:
             instruction = self.read_instructions()
 
-        print(f"📋 Instruction: {instruction}\n")
+        # Log instruction preview with secrets redacted
+        safe_preview = create_safe_preview(instruction, max_length=200, secrets_filter=self.secrets_filter)
+        print(f"📋 Instruction preview: {safe_preview}")
         print(f"🚀 Starting task execution with {model}...")
         print(f"📊 Max steps: {max_steps}")
         print(f"💻 Environment: {kind}")
@@ -178,7 +211,9 @@ class LightconeAgent:
 
             elif event_type == "thinking":
                 if event.get("content"):
-                    print(f"  💬 Message: {event.get('content')}")
+                    # Redact secrets from thinking content
+                    safe_content = self.secrets_filter.redact(event.get('content'))
+                    print(f"  💬 Message: {safe_content}")
 
             elif event_type == "progress_update":
                 if event.get("state"):
@@ -219,6 +254,9 @@ class LightconeAgent:
 
         summary_path = self.results_dir / summary_filename
 
+        # Redact secrets from completion message before saving
+        safe_completion_message = self.secrets_filter.redact(self.completion_message) if self.completion_message else 'No completion message captured'
+
         # Build the markdown content
         markdown_content = f"""# Task Execution Summary
 
@@ -230,7 +268,7 @@ class LightconeAgent:
 
 ## Completion Message
 
-{self.completion_message if self.completion_message else 'No completion message captured'}
+{safe_completion_message}
 
 ---
 
@@ -239,14 +277,15 @@ class LightconeAgent:
 """
 
         # Try to parse the completion message for structured information
+        # Note: We use the safe (redacted) version for parsing to avoid leaking secrets
         all_tasks_completed = False
-        if self.completion_message:
+        if safe_completion_message:
             # Check if there's a task completion summary
-            if "**Task Completion Summary:**" in self.completion_message:
+            if "**Task Completion Summary:**" in safe_completion_message:
                 markdown_content += "\n### Task Steps Completed\n\n"
                 markdown_content += "The agent reported completing the following steps:\n\n"
                 # Extract the content after the summary marker
-                parts = self.completion_message.split("**Task Completion Summary:**")
+                parts = safe_completion_message.split("**Task Completion Summary:**")
                 if len(parts) > 1:
                     summary_part = parts[1].split("**Screenshot Comparison:**")[0] if "**Screenshot Comparison:**" in parts[1] else parts[1]
                     markdown_content += summary_part.strip() + "\n\n"
@@ -259,9 +298,9 @@ class LightconeAgent:
                         all_tasks_completed = len(completed_tasks) == len(task_lines) and len(failed_tasks) == 0
 
             # Check if there's a screenshot comparison section
-            if "**Screenshot Comparison:**" in self.completion_message:
+            if "**Screenshot Comparison:**" in safe_completion_message:
                 markdown_content += "\n### Screenshot Verification\n\n"
-                parts = self.completion_message.split("**Screenshot Comparison:**")
+                parts = safe_completion_message.split("**Screenshot Comparison:**")
                 if len(parts) > 1:
                     comparison_part = parts[1].strip()
                     markdown_content += comparison_part + "\n\n"
@@ -296,6 +335,7 @@ class LightconeAgent:
                         markdown_content += "\n**Status:** ⚠️ Verification INCONCLUSIVE - Manual review recommended\n\n"
 
         markdown_content += "\n---\n\n*Generated by LightconeAgent*\n"
+        markdown_content += "\n🔒 **Security Note:** Sensitive information (passwords, emails, API keys) has been redacted from this summary.\n"
 
         # Save the file
         with open(summary_path, "w") as f:
@@ -325,7 +365,9 @@ class LightconeAgent:
         if instruction is None:
             instruction = self.read_instructions()
 
-        print(f"📋 Instruction: {instruction}\n")
+        # Log instruction preview with secrets redacted
+        safe_preview = create_safe_preview(instruction, max_length=200, secrets_filter=self.secrets_filter)
+        print(f"📋 Instruction preview: {safe_preview}")
         print(f"🚀 Starting task execution with {model}...")
         print(f"📊 Max steps: {max_steps}")
         print(f"💻 Environment: {kind}")
@@ -376,8 +418,15 @@ def main():
     # Check if API key is set
     if not os.getenv("TZAFON_API_KEY"):
         print("❌ Error: TZAFON_API_KEY environment variable not set")
-        print("   Please set it using: export TZAFON_API_KEY=your_api_key")
+        print("   Please set it in .env file or using: export TZAFON_API_KEY=your_api_key")
         sys.exit(1)
+
+    # Check if credentials are set (if instructions use them)
+    required_vars = ["LIGHTCONE_EMAIL", "LIGHTCONE_PASSWORD"]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    if missing_vars:
+        print(f"⚠️  Warning: The following environment variables are not set: {', '.join(missing_vars)}")
+        print("   If your instructions use these placeholders, please set them in .env file")
 
     # Initialize agent
     agent = LightconeAgent("instructions/home_completions.md")

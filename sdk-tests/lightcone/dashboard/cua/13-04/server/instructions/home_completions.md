@@ -1,5 +1,5 @@
-Go to https://lightcone.ai/dashboard, login with email: edwineogola@gmail.com
-password: 6EGmnXrkHd6nhKm
+Go to https://lightcone.ai/dashboard, login with email: {{ LIGHTCONE_EMAIL }}
+password: {{ LIGHTCONE_PASSWORD }}
 
 If firefox shows a save login popup, click on the key icon that is on the address bar to the right of the lock icon
 
