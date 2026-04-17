@@ -1,0 +1,23 @@
+import type { Metadata } from "next";
+import { GeistSans } from "geist/font";
+import { GeistMono } from "geist/font/mono";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Agent Verification Dashboard",
+  description: "Monitor and verify agent task execution with detailed insights",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="antialiased font-sans">
+        {children}
+      </body>
+    </html>
+  );
+}
