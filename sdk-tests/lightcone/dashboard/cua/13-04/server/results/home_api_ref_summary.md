@@ -1,20 +1,26 @@
 # Task Execution Summary
 
-**Date:** 2026-04-19 21:24:13
-**Instructions File:** instructions/home_api_ref.md
-**Expected Screenshot:** expected/home_api_ref.png
+**Date:** 2026-04-19 22:38:24
+**Instructions File:** instructions/home/home_api_ref.md
+**Expected Screenshot:** expected/home/home_api_ref.png
 
 ---
 
 ## Completion Message
 
-Completed: Navigated to Lightcone API Reference page (docs.lightcone.ai/api). Current state shows:
-- Page: API Reference for Lightcone
-- Libraries available: TypeScript 0.13.0 and Python 2.38.0
-- Installation commands shown: npm install @tzafon/lightcone and pip install tzafon
-- Left sidebar shows HTTP section with options: Overview, Agent, Tasks, Computers (List, Create, Retrieve, Delete, Batch, Change Proxy, Click, Debug, Double Click, Drag)
-- Search bar available (Ctrl K)
-- Navigation buttons: Northstar, Platform, Pricing, Login
+Page state: Lightcone API Reference page (docs.lightcone.ai/api)
+
+Completed steps:
+1. Navigated to Lightcone API documentation
+2. Viewed API Reference section showing:
+   - Libraries: TypeScript 0.13.0 (npm install @tzafon/lightcone) and Python 2.38.0 (pip install tzafon)
+   - API Overview section
+   - HTTP category with sub-items: Overview, Agent, Tasks, Computers (List, Create, Retrieve, Delete, Batch, Change Proxy, Click, Debug, Double Click, Drag)
+   - Navigation tabs: Guides, API Reference
+   - Top buttons: Northstar, Platform, Pricing, Login
+   - Search bar with "Search" placeholder and "Ctrl K" hint
+
+Current view shows the main API Reference page with library installation instructions and API overview section.
 
 ---
 
