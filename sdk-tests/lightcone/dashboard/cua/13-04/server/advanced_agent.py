@@ -85,15 +85,32 @@ class AdvancedLightconeAgent:
     def _set_expected_screenshot_path(self):
         """
         Derive the expected screenshot path from the instructions file
+        Pattern: instructions/home/home_api_ref.md -> expected/home/home_api_ref.png
         Pattern: instructions/home_completions.md -> expected/home_completions.png
         """
         if self.instructions_file:
             # Get the base name without extension
             base_name = self.instructions_file.stem
-            # Construct expected screenshot path
-            self.expected_screenshot_path = (
-                self.instructions_file.parent.parent / "expected" / f"{base_name}.png"
-            )
+
+            # Get the instructions base directory
+            instructions_dir = Path("instructions")
+
+            # Check if the file is in a subfolder of instructions/
+            try:
+                # Get relative path from instructions/ directory
+                relative_path = self.instructions_file.parent.relative_to(instructions_dir)
+
+                # If relative_path is ".", the file is directly in instructions/
+                if str(relative_path) == ".":
+                    # File is directly in instructions/ folder
+                    self.expected_screenshot_path = Path("expected") / f"{base_name}.png"
+                else:
+                    # File is in a subfolder like instructions/home/
+                    self.expected_screenshot_path = Path("expected") / relative_path / f"{base_name}.png"
+            except ValueError:
+                # File is not under instructions/ directory, use simple mapping
+                self.expected_screenshot_path = Path("expected") / f"{base_name}.png"
+
             logger.info(f"Expected screenshot path: {self.expected_screenshot_path}")
             if self.expected_screenshot_path.exists():
                 logger.info("✅ Expected screenshot found")
@@ -551,9 +568,14 @@ def main():
         description="Advanced Lightcone Agent for desktop automation"
     )
     parser.add_argument(
+        "--suite",
+        default=None,
+        help="Test suite subfolder to run (e.g., 'home', 'completions'). If not specified, runs all tests.",
+    )
+    parser.add_argument(
         "--file",
         default=None,
-        help=f"Single instructions file to process (default: process all files in instructions/)",
+        help="Single instruction file to process (relative to instructions/)",
     )
     parser.add_argument(
         "--mode",
@@ -594,29 +616,44 @@ def main():
         logger.warning("If your instructions use these placeholders, please set them in .env file")
 
     # Determine which files to process
+    instructions_dir = Path("instructions")
+    if not instructions_dir.exists():
+        logger.error(f"Instructions directory not found: {instructions_dir}")
+        sys.exit(1)
+
     if args.file:
         # Single file mode
-        instruction_files = [Path(args.file)]
-        logger.info(f"Processing single file: {args.file}")
-    else:
-        # Auto-discover all instruction files
-        instructions_dir = Path("instructions")
-        if not instructions_dir.exists():
-            logger.error(f"Instructions directory not found: {instructions_dir}")
+        instruction_file = instructions_dir / args.file
+        if not instruction_file.exists():
+            logger.error(f"Instruction file not found: {instruction_file}")
             sys.exit(1)
-
-        # Get all markdown files in the instructions directory
-        instruction_files = sorted(instructions_dir.glob("*.md"))
-
+        instruction_files = [instruction_file]
+        logger.info(f"Processing single file: {args.file}")
+    elif args.suite:
+        # Suite mode - process all files in a specific subfolder
+        suite_dir = instructions_dir / args.suite
+        if not suite_dir.exists():
+            logger.error(f"Test suite directory not found: {suite_dir}")
+            sys.exit(1)
+        instruction_files = sorted(suite_dir.glob("*.md"))
+        if not instruction_files:
+            logger.error(f"No instruction files found in {suite_dir}")
+            sys.exit(1)
+        logger.info(f"Running test suite: {args.suite}")
+    else:
+        # Auto-discover all instruction files recursively
+        instruction_files = sorted(instructions_dir.rglob("*.md"))
         if not instruction_files:
             logger.error(f"No instruction files found in {instructions_dir}")
             sys.exit(1)
+        logger.info("Auto-discovered all instruction files")
 
-        logger.info("=" * 80)
-        logger.info(f"Found {len(instruction_files)} instruction file(s) to process:")
-        for i, file in enumerate(instruction_files, 1):
-            logger.info(f"   {i}. {file.name}")
-        logger.info("=" * 80)
+    logger.info("=" * 80)
+    logger.info(f"Found {len(instruction_files)} instruction file(s) to process:")
+    for i, file in enumerate(instruction_files, 1):
+        relative_path = file.relative_to(instructions_dir)
+        logger.info(f"   {i}. {relative_path}")
+    logger.info("=" * 80)
 
     # Process each instruction file
     total_files = len(instruction_files)
@@ -624,8 +661,9 @@ def main():
     failed = 0
 
     for i, instruction_file in enumerate(instruction_files, 1):
+        relative_path = instruction_file.relative_to(instructions_dir)
         logger.info("\n" + "=" * 80)
-        logger.info(f"📝 Processing {i}/{total_files}: {instruction_file.name}")
+        logger.info(f"📝 Processing {i}/{total_files}: {relative_path}")
         logger.info("=" * 80)
 
         try:
@@ -647,11 +685,11 @@ def main():
             if args.save_events:
                 agent.save_event_history()
 
-            logger.info(f"✅ Completed: {instruction_file.name}")
+            logger.info(f"✅ Completed: {relative_path}")
             successful += 1
 
         except Exception as e:
-            logger.error(f"❌ Failed: {instruction_file.name}")
+            logger.error(f"❌ Failed: {relative_path}")
             logger.error(f"   Error: {e}", exc_info=True)
             failed += 1
             # Continue with next file instead of stopping

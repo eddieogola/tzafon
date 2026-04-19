@@ -44,15 +44,32 @@ class LightconeAgent:
     def _set_expected_screenshot_path(self):
         """
         Derive the expected screenshot path from the instructions file
+        Pattern: instructions/home/home_api_ref.md -> expected/home/home_api_ref.png
         Pattern: instructions/home_completions.md -> expected/home_completions.png
         """
         if self.instructions_file:
             # Get the base name without extension
             base_name = self.instructions_file.stem
-            # Construct expected screenshot path
-            self.expected_screenshot_path = (
-                self.instructions_file.parent.parent / "expected" / f"{base_name}.png"
-            )
+
+            # Get the instructions base directory
+            instructions_dir = Path("instructions")
+
+            # Check if the file is in a subfolder of instructions/
+            try:
+                # Get relative path from instructions/ directory
+                relative_path = self.instructions_file.parent.relative_to(instructions_dir)
+
+                # If relative_path is ".", the file is directly in instructions/
+                if str(relative_path) == ".":
+                    # File is directly in instructions/ folder
+                    self.expected_screenshot_path = Path("expected") / f"{base_name}.png"
+                else:
+                    # File is in a subfolder like instructions/home/
+                    self.expected_screenshot_path = Path("expected") / relative_path / f"{base_name}.png"
+            except ValueError:
+                # File is not under instructions/ directory, use simple mapping
+                self.expected_screenshot_path = Path("expected") / f"{base_name}.png"
+
             print(f"Expected screenshot: {self.expected_screenshot_path}")
             if self.expected_screenshot_path.exists():
                 print("✅ Expected screenshot found")
@@ -411,6 +428,22 @@ class LightconeAgent:
 
 def main():
     """Main entry point"""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Lightcone Agent - Desktop Automation")
+    parser.add_argument(
+        "--suite",
+        default=None,
+        help="Test suite subfolder to run (e.g., 'home', 'completions'). If not specified, runs all tests.",
+    )
+    parser.add_argument(
+        "--file",
+        default=None,
+        help="Single instruction file to process (relative to instructions/)",
+    )
+
+    args = parser.parse_args()
+
     print("=" * 80)
     print("🤖 Lightcone Agent - Desktop Automation")
     print("=" * 80)
@@ -428,29 +461,54 @@ def main():
         print(f"⚠️  Warning: The following environment variables are not set: {', '.join(missing_vars)}")
         print("   If your instructions use these placeholders, please set them in .env file")
 
-    # Find all instruction files in the instructions directory
+    # Determine which files to process
     instructions_dir = Path("instructions")
     if not instructions_dir.exists():
         print(f"❌ Error: Instructions directory not found: {instructions_dir}")
         sys.exit(1)
 
-    # Get all markdown files in the instructions directory
-    instruction_files = sorted(instructions_dir.glob("*.md"))
-
-    if not instruction_files:
-        print(f"❌ Error: No instruction files found in {instructions_dir}")
-        sys.exit(1)
+    if args.file:
+        # Single file mode
+        instruction_file = instructions_dir / args.file
+        if not instruction_file.exists():
+            print(f"❌ Error: Instruction file not found: {instruction_file}")
+            sys.exit(1)
+        instruction_files = [instruction_file]
+        print(f"\n📄 Processing single file: {args.file}")
+    elif args.suite:
+        # Suite mode - process all files in a specific subfolder
+        suite_dir = instructions_dir / args.suite
+        if not suite_dir.exists():
+            print(f"❌ Error: Test suite directory not found: {suite_dir}")
+            sys.exit(1)
+        instruction_files = sorted(suite_dir.glob("*.md"))
+        if not instruction_files:
+            print(f"❌ Error: No instruction files found in {suite_dir}")
+            sys.exit(1)
+        print(f"\n📁 Running test suite: {args.suite}")
+    else:
+        # Auto-discover all instruction files recursively
+        instruction_files = sorted(instructions_dir.rglob("*.md"))
+        if not instruction_files:
+            print(f"❌ Error: No instruction files found in {instructions_dir}")
+            sys.exit(1)
+        print(f"\n🔍 Auto-discovered all instruction files")
 
     print(f"\n📋 Found {len(instruction_files)} instruction file(s) to process:")
     for i, file in enumerate(instruction_files, 1):
-        print(f"   {i}. {file.name}")
+        relative_path = file.relative_to(instructions_dir)
+        print(f"   {i}. {relative_path}")
     print()
 
     # Process each instruction file
     total_files = len(instruction_files)
+    successful = 0
+    failed = 0
+
     for i, instruction_file in enumerate(instruction_files, 1):
+        relative_path = instruction_file.relative_to(instructions_dir)
         print("\n" + "=" * 80)
-        print(f"📝 Processing {i}/{total_files}: {instruction_file.name}")
+        print(f"📝 Processing {i}/{total_files}: {relative_path}")
         print("=" * 80)
 
         # Initialize agent for this instruction file
@@ -460,15 +518,19 @@ def main():
         print("\n🔴 Executing task with STREAMING mode...\n")
         try:
             agent.execute_task_streaming()
-            print(f"\n✅ Completed: {instruction_file.name}")
+            print(f"\n✅ Completed: {relative_path}")
+            successful += 1
         except Exception as e:
-            print(f"\n❌ Failed: {instruction_file.name}")
+            print(f"\n❌ Failed: {relative_path}")
             print(f"   Error: {e}")
+            failed += 1
             # Continue with next file instead of stopping
             continue
 
     print("\n" + "=" * 80)
     print(f"✨ All {total_files} task(s) execution completed!")
+    print(f"   ✅ Successful: {successful}")
+    print(f"   ❌ Failed: {failed}")
     print("=" * 80)
 
 
