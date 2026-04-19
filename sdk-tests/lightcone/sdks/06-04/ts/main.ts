@@ -67,7 +67,7 @@ void availableExamples;
 
 // quickstartGuide(client);
 // authenticationGuide();
-// howLightconeWorksGuide(client);
+howLightconeWorksGuide(client);
 
 /*
  * Using Northstar

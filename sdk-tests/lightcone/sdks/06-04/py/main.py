@@ -44,7 +44,7 @@ https://docs.lightcone.ai/guides/quickstart/
 """
 # quickstart_guide(client)
 # authentication_guide()
-# how_lightcone_works_guide(client)
+how_lightcone_works_guide(client)
 
 """
 Using Northstar
