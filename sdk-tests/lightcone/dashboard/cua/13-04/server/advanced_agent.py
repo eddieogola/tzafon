@@ -18,6 +18,8 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 from tzafon import Lightcone
 from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader, select_autoescape, StrictUndefined
+from secure_logger import SecretsFilter, create_safe_preview
 
 
 # Load environment variables from .env file
@@ -70,6 +72,9 @@ class AdvancedLightconeAgent:
         self.results_dir = Path("results")
         self.results_dir.mkdir(exist_ok=True)
 
+        # Initialize secrets filter for secure logging
+        self.secrets_filter = SecretsFilter()
+
         # Derive expected screenshot path from instructions file
         self._set_expected_screenshot_path()
 
@@ -99,7 +104,7 @@ class AdvancedLightconeAgent:
 
     def read_instructions(self) -> str:
         """
-        Read and parse instructions from the markdown file
+        Read and parse instructions from the markdown file using Jinja2 templating
 
         Returns:
             Parsed instruction string ready for Northstar
@@ -112,8 +117,33 @@ class AdvancedLightconeAgent:
 
         logger.info(f"Reading instructions from: {self.instructions_file}")
 
-        with open(self.instructions_file, "r") as f:
-            content = f.read()
+        # Set up Jinja2 environment with security features
+        env = Environment(
+            loader=FileSystemLoader(str(self.instructions_file.parent)),
+            autoescape=select_autoescape(),
+            undefined=StrictUndefined  # Raises error for undefined variables
+        )
+
+        # Load template and render with environment variables
+        template = env.get_template(self.instructions_file.name)
+
+        # Gather all environment variables that might be needed
+        template_vars = {
+            "LIGHTCONE_EMAIL": os.getenv("LIGHTCONE_EMAIL"),
+            "LIGHTCONE_PASSWORD": os.getenv("LIGHTCONE_PASSWORD"),
+            # Add more variables as needed
+        }
+
+        # Warn about missing variables
+        missing_vars = [key for key, value in template_vars.items() if value is None]
+        if missing_vars:
+            logger.warning(f"The following environment variables are not set: {', '.join(missing_vars)}")
+
+        try:
+            content = template.render(**template_vars)
+        except Exception as e:
+            logger.error(f"Error rendering template: {e}")
+            raise
 
         # Parse the markdown content
         lines = content.strip().split("\n")
@@ -128,7 +158,10 @@ class AdvancedLightconeAgent:
                 instructions.append(line)
 
         instruction = " ".join(instructions)
-        logger.info(f"Parsed instruction: {instruction}")
+
+        # Log instruction preview with secrets redacted
+        safe_preview = create_safe_preview(instruction, max_length=200, secrets_filter=self.secrets_filter)
+        logger.info(f"Parsed instruction (preview): {safe_preview}")
 
         # Append verification instruction if expected screenshot exists
         if self.expected_screenshot_path and self.expected_screenshot_path.exists():
@@ -353,7 +386,12 @@ class AdvancedLightconeAgent:
                 event_data.update(event_dict)
 
                 for key, value in event_dict.items():
-                    logger.info(f"  {key}: {value}")
+                    # Redact secrets from content fields
+                    if key == "content" and isinstance(value, str):
+                        safe_value = self.secrets_filter.redact(value)
+                        logger.info(f"  {key}: {safe_value}")
+                    else:
+                        logger.info(f"  {key}: {value}")
 
             else:
                 logger.info(f"  Event: {event}")
@@ -383,6 +421,9 @@ class AdvancedLightconeAgent:
 
         summary_path = self.results_dir / summary_filename
 
+        # Redact secrets from completion message before saving
+        safe_completion_message = self.secrets_filter.redact(self.completion_message) if self.completion_message else 'No completion message captured'
+
         # Build the markdown content
         markdown_content = f"""# Task Execution Summary
 
@@ -394,7 +435,7 @@ class AdvancedLightconeAgent:
 
 ## Completion Message
 
-{self.completion_message if self.completion_message else 'No completion message captured'}
+{safe_completion_message}
 
 ---
 
@@ -410,15 +451,17 @@ class AdvancedLightconeAgent:
 """
 
         # Try to parse the completion message for structured information
-        if self.completion_message:
+        # Note: We use the safe (redacted) version for parsing to avoid leaking secrets
+        all_tasks_completed = False
+        if safe_completion_message:
             # Check if there's a task completion summary
-            if "**Task Completion Summary:**" in self.completion_message:
+            if "**Task Completion Summary:**" in safe_completion_message:
                 markdown_content += "\n### Task Steps Completed\n\n"
                 markdown_content += (
                     "The agent reported completing the following steps:\n\n"
                 )
                 # Extract the content after the summary marker
-                parts = self.completion_message.split("**Task Completion Summary:**")
+                parts = safe_completion_message.split("**Task Completion Summary:**")
                 if len(parts) > 1:
                     summary_part = (
                         parts[1].split("**Screenshot Comparison:**")[0]
@@ -427,31 +470,52 @@ class AdvancedLightconeAgent:
                     )
                     markdown_content += summary_part.strip() + "\n\n"
 
+                    # Check if all listed tasks have checkmarks (✅)
+                    task_lines = [line.strip() for line in summary_part.split('\n') if line.strip().startswith('-')]
+                    if task_lines:
+                        completed_tasks = [line for line in task_lines if '✅' in line]
+                        failed_tasks = [line for line in task_lines if '❌' in line]
+                        all_tasks_completed = len(completed_tasks) == len(task_lines) and len(failed_tasks) == 0
+
             # Check if there's a screenshot comparison section
-            if "**Screenshot Comparison:**" in self.completion_message:
+            if "**Screenshot Comparison:**" in safe_completion_message:
                 markdown_content += "\n### Screenshot Verification\n\n"
-                parts = self.completion_message.split("**Screenshot Comparison:**")
+                parts = safe_completion_message.split("**Screenshot Comparison:**")
                 if len(parts) > 1:
                     comparison_part = parts[1].strip()
                     markdown_content += comparison_part + "\n\n"
 
-                    # Determine verification status
-                    if (
-                        "does not exist" in comparison_part.lower()
-                        or "cannot perform" in comparison_part.lower()
-                    ):
+                    # Determine verification status based on multiple indicators
+                    comparison_lower = comparison_part.lower()
+
+                    # Check if agent couldn't access expected screenshot
+                    if "does not exist" in comparison_lower or "cannot access" in comparison_lower:
                         markdown_content += "\n**Status:** ⚠️ Could not verify - Expected screenshot not accessible to agent\n\n"
-                    elif (
-                        "match" in comparison_part.lower()
-                        and "not" not in comparison_part.lower()
-                    ):
+                    # Check for explicit failure indicators first
+                    elif any(phrase in comparison_lower for phrase in [
+                        "do not match",
+                        "does not match",
+                        "mismatch",
+                        "incorrect",
+                        "failed",
+                        "error"
+                    ]):
+                        markdown_content += "\n**Status:** ❌ Verification FAILED\n\n"
+                    # Check for positive indicators of success (including all tasks completed)
+                    elif all_tasks_completed or any(phrase in comparison_lower for phrase in [
+                        "match",
+                        "all required tasks have been completed successfully",
+                        "successfully completed",
+                        "completed successfully",
+                        "all tasks have been completed",
+                        "task completed successfully"
+                    ]):
                         markdown_content += "\n**Status:** ✅ Verification PASSED\n\n"
                     else:
-                        markdown_content += (
-                            "\n**Status:** ❌ Verification FAILED or Inconclusive\n\n"
-                        )
+                        markdown_content += "\n**Status:** ⚠️ Verification INCONCLUSIVE - Manual review recommended\n\n"
 
         markdown_content += "\n---\n\n*Generated by AdvancedLightconeAgent*\n"
+        markdown_content += "\n🔒 **Security Note:** Sensitive information (passwords, emails, API keys) has been redacted from this summary.\n"
 
         # Save the file
         with open(summary_path, "w") as f:
@@ -488,8 +552,8 @@ def main():
     )
     parser.add_argument(
         "--file",
-        default=DEFAULT_INSTRUCTIONS_FILE,
-        help=f"Instructions file (default: {DEFAULT_INSTRUCTIONS_FILE})",
+        default=None,
+        help=f"Single instructions file to process (default: process all files in instructions/)",
     )
     parser.add_argument(
         "--mode",
@@ -522,24 +586,82 @@ def main():
         logger.error("TZAFON_API_KEY environment variable not set")
         sys.exit(1)
 
-    # Initialize agent
-    agent = AdvancedLightconeAgent(
-        instructions_file=args.file, save_screenshots=args.save_screenshots
-    )
+    # Check if credentials are set
+    required_vars = ["LIGHTCONE_EMAIL", "LIGHTCONE_PASSWORD"]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    if missing_vars:
+        logger.warning(f"The following environment variables are not set: {', '.join(missing_vars)}")
+        logger.warning("If your instructions use these placeholders, please set them in .env file")
 
-    # Execute based on mode
-    if args.mode == "stream":
-        result = agent.execute_with_streaming(kind=args.kind, max_steps=args.max_steps)
-        if result and result.get("summary_path"):
-            logger.info(f"📄 Summary saved to: {result['summary_path']}")
+    # Determine which files to process
+    if args.file:
+        # Single file mode
+        instruction_files = [Path(args.file)]
+        logger.info(f"Processing single file: {args.file}")
     else:
-        result = agent.execute_with_polling(kind=args.kind, max_steps=args.max_steps)
+        # Auto-discover all instruction files
+        instructions_dir = Path("instructions")
+        if not instructions_dir.exists():
+            logger.error(f"Instructions directory not found: {instructions_dir}")
+            sys.exit(1)
 
-    # Save event history if requested
-    if args.save_events:
-        agent.save_event_history()
+        # Get all markdown files in the instructions directory
+        instruction_files = sorted(instructions_dir.glob("*.md"))
 
-    logger.info("✨ Agent execution completed!")
+        if not instruction_files:
+            logger.error(f"No instruction files found in {instructions_dir}")
+            sys.exit(1)
+
+        logger.info("=" * 80)
+        logger.info(f"Found {len(instruction_files)} instruction file(s) to process:")
+        for i, file in enumerate(instruction_files, 1):
+            logger.info(f"   {i}. {file.name}")
+        logger.info("=" * 80)
+
+    # Process each instruction file
+    total_files = len(instruction_files)
+    successful = 0
+    failed = 0
+
+    for i, instruction_file in enumerate(instruction_files, 1):
+        logger.info("\n" + "=" * 80)
+        logger.info(f"📝 Processing {i}/{total_files}: {instruction_file.name}")
+        logger.info("=" * 80)
+
+        try:
+            # Initialize agent for this instruction file
+            agent = AdvancedLightconeAgent(
+                instructions_file=str(instruction_file),
+                save_screenshots=args.save_screenshots
+            )
+
+            # Execute based on mode
+            if args.mode == "stream":
+                result = agent.execute_with_streaming(kind=args.kind, max_steps=args.max_steps)
+                if result and result.get("summary_path"):
+                    logger.info(f"📄 Summary saved to: {result['summary_path']}")
+            else:
+                result = agent.execute_with_polling(kind=args.kind, max_steps=args.max_steps)
+
+            # Save event history if requested
+            if args.save_events:
+                agent.save_event_history()
+
+            logger.info(f"✅ Completed: {instruction_file.name}")
+            successful += 1
+
+        except Exception as e:
+            logger.error(f"❌ Failed: {instruction_file.name}")
+            logger.error(f"   Error: {e}", exc_info=True)
+            failed += 1
+            # Continue with next file instead of stopping
+            continue
+
+    logger.info("\n" + "=" * 80)
+    logger.info(f"✨ All {total_files} task(s) execution completed!")
+    logger.info(f"   ✅ Successful: {successful}")
+    logger.info(f"   ❌ Failed: {failed}")
+    logger.info("=" * 80)
 
 
 if __name__ == "__main__":

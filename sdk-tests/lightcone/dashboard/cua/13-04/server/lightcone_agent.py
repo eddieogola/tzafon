@@ -428,15 +428,47 @@ def main():
         print(f"⚠️  Warning: The following environment variables are not set: {', '.join(missing_vars)}")
         print("   If your instructions use these placeholders, please set them in .env file")
 
-    # Initialize agent
-    agent = LightconeAgent("instructions/home_completions.md")
+    # Find all instruction files in the instructions directory
+    instructions_dir = Path("instructions")
+    if not instructions_dir.exists():
+        print(f"❌ Error: Instructions directory not found: {instructions_dir}")
+        sys.exit(1)
 
-    # Execute task with streaming (recommended for real-time feedback)
-    print("\n🔴 Executing task with STREAMING mode...\n")
-    agent.execute_task_streaming()
+    # Get all markdown files in the instructions directory
+    instruction_files = sorted(instructions_dir.glob("*.md"))
+
+    if not instruction_files:
+        print(f"❌ Error: No instruction files found in {instructions_dir}")
+        sys.exit(1)
+
+    print(f"\n📋 Found {len(instruction_files)} instruction file(s) to process:")
+    for i, file in enumerate(instruction_files, 1):
+        print(f"   {i}. {file.name}")
+    print()
+
+    # Process each instruction file
+    total_files = len(instruction_files)
+    for i, instruction_file in enumerate(instruction_files, 1):
+        print("\n" + "=" * 80)
+        print(f"📝 Processing {i}/{total_files}: {instruction_file.name}")
+        print("=" * 80)
+
+        # Initialize agent for this instruction file
+        agent = LightconeAgent(str(instruction_file))
+
+        # Execute task with streaming (recommended for real-time feedback)
+        print("\n🔴 Executing task with STREAMING mode...\n")
+        try:
+            agent.execute_task_streaming()
+            print(f"\n✅ Completed: {instruction_file.name}")
+        except Exception as e:
+            print(f"\n❌ Failed: {instruction_file.name}")
+            print(f"   Error: {e}")
+            # Continue with next file instead of stopping
+            continue
 
     print("\n" + "=" * 80)
-    print("✨ Task execution completed!")
+    print(f"✨ All {total_files} task(s) execution completed!")
     print("=" * 80)
 
 
