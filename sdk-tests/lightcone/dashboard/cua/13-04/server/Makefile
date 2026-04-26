@@ -3,7 +3,7 @@
 # This Makefile provides convenient commands to run automated UI tests
 # for the Lightcone dashboard using the Northstar CUA agent.
 
-.PHONY: help test-all test-home test-completions clean clean-results clean-logs install check-env
+.PHONY: help test-all test-home test-completions test-advanced test-home-adv test-completions-adv test-file clean clean-results clean-logs show-results quick-test install check-env
 
 # Default target - show help
 help:
@@ -13,19 +13,23 @@ help:
 	@echo ""
 	@echo "Available targets:"
 	@echo ""
-	@echo "  make test-all          - Run all test suites"
-	@echo "  make test-home         - Run home dashboard tests"
-	@echo "  make test-completions  - Run completions tests"
+	@echo "  make test-all             - Run all test suites"
+	@echo "  make test-home            - Run home dashboard tests"
+	@echo "  make test-completions     - Run completions tests"
+	@echo "  make test-file FILE=...   - Run a single test file"
 	@echo ""
-	@echo "  make test-advanced     - Run all tests with advanced agent"
-	@echo "  make test-home-adv     - Run home tests with advanced agent"
+	@echo "  make test-advanced        - Run all tests with advanced agent"
+	@echo "  make test-home-adv        - Run home tests with advanced agent"
+	@echo "  make test-completions-adv - Run completions tests with advanced agent"
 	@echo ""
-	@echo "  make clean             - Clean all generated files"
-	@echo "  make clean-results     - Clean only results directory"
-	@echo "  make clean-logs        - Clean only logs directory"
+	@echo "  make clean                - Clean all generated files"
+	@echo "  make clean-results        - Clean only results directory"
+	@echo "  make clean-logs           - Clean only logs directory"
+	@echo "  make show-results         - Show test results summary"
 	@echo ""
-	@echo "  make check-env         - Check environment configuration"
-	@echo "  make install           - Install dependencies"
+	@echo "  make quick-test           - Quick test (first home test)"
+	@echo "  make check-env            - Check environment configuration"
+	@echo "  make install              - Install dependencies"
 	@echo ""
 	@echo "Environment variables required:"
 	@echo "  TZAFON_API_KEY         - API key for Tzafon/Lightcone"
