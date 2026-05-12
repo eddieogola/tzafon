@@ -41,41 +41,41 @@ Getting Started
 https://docs.lightcone.ai/guides/quickstart/
 
 """
-quickstart_guide(client)
-authentication_guide()
-how_lightcone_works_guide(client)
+# quickstart_guide(client)
+# authentication_guide()
+# how_lightcone_works_guide(client)
 
 """
 Using Northstar
 https://docs.lightcone.ai/guides/tasks/
 
 """
-tasks_guide(client)
-run_a_task_guide(client)
+# tasks_guide(client)
+# run_a_task_guide(client)
 responses_api_guide(client)
-cua_protocol_guide(client)
-coordinates_guide(client)
-chat_completions_guide(client)
+# cua_protocol_guide(client)
+# coordinates_guide(client)
+# chat_completions_guide(client)
 
 """
 Environments
 https://docs.lightcone.ai/guides/computers/
 
 """
-computers(client)
-operate_a_computer(client)
-execute_shell(client)
-manage_browser_tabs(client)
-lightcone_os(client)
+# computers(client)
+# operate_a_computer(client)
+# execute_shell(client)
+# manage_browser_tabs(client)
+# lightcone_os(client)
 
 """
 Tutorials
 https://docs.lightcone.ai/tutorials/build-a-price-tracker/
 
 """
-build_price_tracker(client)
-scrape_behind_login(client)
-automate_form_with_ai(client)
+# build_price_tracker(client)
+# scrape_behind_login(client)
+# automate_form_with_ai(client)
 
 
 """
@@ -83,7 +83,7 @@ Integrations
 https://docs.lightcone.ai/integrations/playwright/
 
 """
-playwright_integration(client)
+# playwright_integration(client)
 
 # These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
 

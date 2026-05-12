@@ -2,7 +2,6 @@ from time import time
 
 from utils.term import Colors
 
-
 TOOL = {
     "type": "computer_use",
     "display_width": 1280,
@@ -28,11 +27,10 @@ def create_and_process_response(client):
         )
 
         for item in response.output or []:
-            if isinstance(item, dict) and item.get("type") == "computer_call":
-                action = item.get("action", {})
-                print(f"Action : {action}")
-                print(f"Action: {action.get('type')}")
-                print(f"Keys: {', '.join(action.get('keys', []))}")
+            if item.type == "computer_call":
+                action = item.action
+                print(f"Action: {action.type}")  # e.g., "click", "type", "navigate"
+                print(f"Coordinates: ({action.x}, {action.y})")
 
             elif item.type == "message":
                 for block in item.content or []:
@@ -68,6 +66,7 @@ def extracting_information(client):
         with client.computer.create(kind="browser") as computer:
             computer.navigate("https://example.com/pricing")
             computer.wait(3)
+            print("Navigated to pricing page, starting information extraction...")
 
             # --- Phase 1: Explore WITH tools (agent scrolls, dismisses popups, etc.) ---
             screenshot_url = computer.get_screenshot_url(computer.screenshot())
@@ -315,8 +314,8 @@ def manage_responses(client):
 
 def responses_api_guide(client):
     print(f"{Colors.YELLOW}*** Using Northstar: Responses API ***{Colors.RESET}\n")
-    # create_and_process_response(client)
-    # extracting_information(client)
+    create_and_process_response(client)
+    extracting_information(client)
     # multi_turn_with_previous_response_id(client)
-    system_instructions(client)
-    manage_responses(client)
+    # system_instructions(client)
+    # manage_responses(client)
