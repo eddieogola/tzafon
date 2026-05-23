@@ -131,6 +131,6 @@ def already_using_openai():
 
 
 def quickstart_guide(client):
-    quickstart(client)
-    go_deeper(client)
+    # quickstart(client)
+    # go_deeper(client)
     already_using_openai()
