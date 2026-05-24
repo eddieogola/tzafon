@@ -49,11 +49,12 @@ The marker is a unique line (`<label> | <environment_id> | created <iso>`) writt
 we resumed the **correct** VM.
 
 **Browser search (visual proof).** In addition to the marker file, each step launches Firefox on
-the desktop and Googles the VM's label, then screenshots — so a screenshot literally shows
-`<label> - Google Search`. Step A does this at setup; step B re-opens it *after* the timed section
-(so it never pollutes the benchmark) to let you eyeball that the resumed VM is the correct one.
-Disable with `BROWSER_SEARCH=0` for pure timing. Screenshot URLs are recorded
-(`environments.tsv` for step A, the `confirm_shot_url` column of `benchmark.csv` for step B).
+the desktop and Googles the VM's label, then screenshots. Step A searches just the label
+(`<label> - Google Search`). Step B appends the **run label** so day0 vs day1 screenshots are
+distinguishable — e.g. `bravo day0` then `bravo day1` (spaces are URL-encoded to `+`). Step B does
+this *after* the timed section (so it never pollutes the benchmark) to let you eyeball that the
+resumed VM is the correct one. Disable with `BROWSER_SEARCH=0` for pure timing. Screenshot URLs are
+recorded (`environments.tsv` for step A, the `confirm_shot_url` column of `benchmark.csv` for step B).
 
 ## Output files (git-ignored, under `state/`)
 

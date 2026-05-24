@@ -121,8 +121,8 @@ while IFS=$'\t' read -r label env_id _created _shot; do
   # 4b. visual confirmation (NOT timed): open the browser, search the label, screenshot.
   #     Lets you eyeball that the resumed VM really is this one.
   if [ "$BROWSER_SEARCH" = "1" ]; then
-    info "  browser  searching \"$label\"…"
-    open_browser_search "$restored_id" "$label"
+    info "  browser  searching \"$label $RUN_LABEL\"…"
+    open_browser_search "$restored_id" "$label $RUN_LABEL"
     confirm_shot_url="$(screenshot_url "$restored_id")"
     [ -n "$confirm_shot_url" ] && ok "  confirm  $confirm_shot_url"
   fi

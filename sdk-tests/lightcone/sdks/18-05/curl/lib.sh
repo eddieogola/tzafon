@@ -131,15 +131,17 @@ screenshot_url() {
   api POST "/computers/$1/screenshot" '{}' 2>/dev/null | jq -r '.result.screenshot_url // empty'
 }
 
-# open_browser_search ID LABEL
-#   Launches the desktop browser searching for LABEL, then waits for it to render.
+# open_browser_search ID QUERY
+#   Launches the desktop browser searching for QUERY, then waits for it to render.
+#   Spaces in QUERY are URL-encoded to '+' (e.g. "bravo day0" -> q=bravo+day0).
 #   Best-effort and detached (returns once the page has had time to paint); no-op
 #   when BROWSER_SEARCH=0. Caller takes the screenshot afterwards.
 open_browser_search() {
-  local id="$1" label="$2" url cmd
+  local id="$1" query="$2" url cmd
   [ "$BROWSER_SEARCH" = "1" ] || return 0
+  query="${query// /+}"                       # URL-encode spaces for the search query
   # shellcheck disable=SC2059
-  url="$(printf "$SEARCH_URL_TEMPLATE" "$label")"
+  url="$(printf "$SEARCH_URL_TEMPLATE" "$query")"
   cmd="$BROWSER_BIN \"$url\" >/tmp/browser.log 2>&1 &"
   api POST "/computers/$id/exec/sync" \
     "$(jq -nc --arg c "$cmd" --argjson t 20 '{command:$c, timeout_seconds:$t}')" >/dev/null 2>&1 || true
