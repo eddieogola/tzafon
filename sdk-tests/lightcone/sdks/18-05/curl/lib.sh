@@ -13,7 +13,7 @@ LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # --- config ------------------------------------------------------------------
 BASE_URL="${BASE_URL:-https://api-staging.tzafon.ai}"
 STATE_DIR="${STATE_DIR:-$LIB_DIR/state}"
-ENV_FILE="$LIB_DIR/../.env"                 # sdks/18-05/.env (holds TZAFON_API_KEY)
+ENV_FILE="$LIB_DIR/.env"                    # curl/.env (holds TZAFON_API_KEY)
 ENVIRONMENTS_TSV="$STATE_DIR/environments.tsv"
 BENCHMARK_CSV="$STATE_DIR/benchmark.csv"
 SHOTS_DIR="$STATE_DIR/screenshots"
