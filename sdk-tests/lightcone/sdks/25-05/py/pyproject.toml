@@ -1,0 +1,16 @@
+[project]
+name = "py"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "browser-use>=0.11.13",
+    "crewai>=1.6.1",
+    "dotenv>=0.9.9",
+    "kernel>=0.44.0",
+    "langchain-openai>=1.1.12",
+    "langchain-tzafon>=1.1.1",
+    "playwright>=1.58.0",
+    "tzafon>=2.40.0",
+]
