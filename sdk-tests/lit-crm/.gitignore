@@ -1,0 +1,10 @@
+.venv
+.pytest_cache
+__pycache__
+*.pyc
+.env
+.DS_Store
+dist
+build
+# local persistent-session id store (never contains credentials)
+.lit-crm/

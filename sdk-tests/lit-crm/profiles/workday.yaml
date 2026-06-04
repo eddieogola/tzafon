@@ -1,0 +1,103 @@
+app: workday
+# NOTE: Workday tenant URLs are organization-specific. The generic host below is
+# a placeholder — replace it with your tenant, e.g.
+#   https://wd5.myworkday.com/<tenant>
+# in base_url, login.start_url, capability start_urls, and allowed_domains. The
+# data-center subdomain (wd2/wd3/wd5/...) also varies by org.
+display_name: Workday
+base_url: https://www.myworkday.com
+display_width: 1280
+display_height: 720
+
+login:
+  start_url: https://www.myworkday.com
+  instructions: >
+    Navigate to your organization's Workday tenant URL (e.g.
+    https://wd5.myworkday.com/<tenant>), log in with your credentials/SSO, and
+    complete any 2FA in the live browser. Wait until the Workday Home with the
+    apps grid is visible, then press ENTER in this terminal.
+  success_check:
+    # Best-effort guess: the Workday Home shows an "Awaiting Your Action" inbox
+    # widget only once authenticated. Tune this token at your first real login.
+    type: html_contains
+    value: "Awaiting Your Action"
+
+defaults:
+  max_steps: 25
+  step_wait_seconds: 1.0
+
+capabilities:
+  - name: find_pending_time_off_requests
+    description: >
+      List time-off / absence requests awaiting your approval from the Workday
+      inbox. Read-only: never approves, denies, or sends anything back. Returns
+      a structured JSON list.
+    params:
+      - name: limit
+        type: integer
+        description: Maximum number of pending time-off requests to return.
+        required: false
+        default: 25
+    # Tenant-specific: replace host with your tenant, e.g.
+    # https://wd5.myworkday.com/<tenant>/d/inbox
+    start_url: https://www.myworkday.com/inbox
+    instruction_template: >
+      You are in the Workday Inbox (the "Awaiting Your Action" list). Scan the
+      inbox items and identify up to {limit} items that are time-off / absence
+      approval requests (titles typically contain "Time Off", "Absence", or
+      "Request Time Off"). Read the requester name, dates, and type shown in each
+      item's preview. Do NOT click "Approve", "Deny", "Send Back", or "Add
+      Approvers", and do not open or edit any other task. When the inbox is fully
+      visible, you are done.
+    guardrails:
+      max_steps: 15
+      allowed_domains: ["www.myworkday.com", "myworkday.com"]
+      forbidden_actions: ["navigate"]
+      require_confirmation: false
+    success_check:
+      type: html_contains
+      value: "Inbox"
+    extract:
+      prompt: >
+        From the visible inbox, list each pending time-off request as JSON:
+        [{"employee": ..., "request_type": ..., "dates": ..., "days": ...}].
+        Reply with JSON only.
+      format: json
+
+  - name: approve_time_off
+    description: >
+      Approve a pending time-off / absence request for a specific employee from
+      the Workday inbox. MUTATES state (approves the request and advances the
+      business process) — requires confirm=true.
+    params:
+      - name: employee_name
+        type: string
+        description: Exact full name of the employee whose time-off request to approve.
+        required: true
+      - name: confirm
+        type: boolean
+        description: Must be true to actually approve the time-off request.
+        required: true
+    # Tenant-specific: replace host with your tenant, e.g.
+    # https://wd5.myworkday.com/<tenant>/d/inbox
+    start_url: https://www.myworkday.com/inbox
+    instruction_template: >
+      You are in the Workday Inbox. Find the time-off / absence approval request
+      submitted by "{employee_name}" and open it. Review the dates and type, then
+      click the "Approve" button for that request, confirming any follow-up
+      dialog. Do NOT "Deny" or "Send Back" the request, do not change the dates,
+      and do not touch any other employee's request. You are done once the task
+      shows it has been approved / submitted.
+    guardrails:
+      max_steps: 25
+      allowed_domains: ["www.myworkday.com", "myworkday.com"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "Approve"
+    extract:
+      prompt: >
+        Report the result as JSON:
+        {"employee": ..., "approved": true|false}.
+      format: json

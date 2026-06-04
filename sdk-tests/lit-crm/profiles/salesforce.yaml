@@ -1,0 +1,127 @@
+app: salesforce
+display_name: Salesforce
+# Set your org's My Domain subdomain in place of "your-org". Lightning runs on
+# <subdomain>.lightning.force.com once you're authenticated.
+base_url: https://your-org.lightning.force.com
+display_width: 1280
+display_height: 720
+
+login:
+  start_url: https://login.salesforce.com
+  instructions: >
+    Log in with your Salesforce credentials and complete any MFA / verification
+    in the live browser. Wait until the Lightning app launcher and navigation bar
+    are fully visible, then press ENTER in this terminal.
+  success_check:
+    # Best-effort guess: "App Launcher" appears in the Lightning nav only after
+    # auth. Tune this token at first login if your org customizes the chrome.
+    type: html_contains
+    value: "App Launcher"
+
+defaults:
+  max_steps: 25
+  step_wait_seconds: 1.0
+
+capabilities:
+  - name: find_stale_opportunities
+    description: >
+      Find open opportunities with no logged activity in the last N days.
+      Read-only: never opens or edits a record. Returns a structured JSON list.
+    params:
+      - name: days_inactive
+        type: integer
+        description: Minimum number of days since the last activity to count as stale.
+        required: false
+        default: 30
+    start_url: https://your-org.lightning.force.com/lightning/o/Opportunity/list
+    instruction_template: >
+      You are on the Opportunities list view in Salesforce Lightning. Switch the
+      list view to "All Opportunities" if available, and make sure the Stage,
+      Close Date, and Last Activity columns are visible (sort by Last Activity
+      ascending if you can). Identify open opportunities (any stage that is not
+      "Closed Won" or "Closed Lost") whose Last Activity date is more than
+      {days_inactive} days ago, or that have no activity at all. Do NOT click into
+      any opportunity, edit any field, or log anything. When the matching rows are
+      fully visible, you are done.
+    guardrails:
+      max_steps: 18
+      allowed_domains: ["your-org.lightning.force.com"]
+      forbidden_actions: ["navigate"]
+      require_confirmation: false
+    success_check:
+      type: html_contains
+      value: "Opportunities"
+    extract:
+      prompt: >
+        From the visible opportunities list, list each stale open opportunity as
+        JSON:
+        [{"name": ..., "account": ..., "stage": ..., "amount": ..., "close_date": ..., "last_activity": ...}].
+        Reply with JSON only.
+      format: json
+
+  - name: update_opportunity_stage
+    description: >
+      Move a single opportunity to a new sales stage. MUTATES state (edits the
+      record) — requires confirm=true.
+    params:
+      - name: opportunity_name
+        type: string
+        description: Exact name of the opportunity to update.
+        required: true
+      - name: new_stage
+        type: string
+        description: The target stage to set (e.g. "Negotiation/Review", "Closed Won").
+        required: true
+      - name: confirm
+        type: boolean
+        description: Must be true to actually perform the change.
+        required: true
+    start_url: https://your-org.lightning.force.com/lightning/o/Opportunity/list
+    instruction_template: >
+      In the Opportunities list, find the opportunity named "{opportunity_name}"
+      and open it. Locate the Stage field (or the sales-path stage selector at the
+      top of the record), set the stage to "{new_stage}", and save the change
+      (click "Save", or "Mark as Current Stage" / "Mark Stage as Complete" on the
+      path, confirming any dialog). Do not edit any other field or any other
+      opportunity.
+    guardrails:
+      max_steps: 25
+      allowed_domains: ["your-org.lightning.force.com"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "was saved"
+
+  - name: log_call
+    description: >
+      Log a completed call against an account's activity timeline. MUTATES state
+      (creates an activity record) — requires confirm=true.
+    params:
+      - name: account_name
+        type: string
+        description: Exact name of the account to log the call against.
+        required: true
+      - name: notes
+        type: string
+        description: The call notes / comments to record on the logged call.
+        required: true
+      - name: confirm
+        type: boolean
+        description: Must be true to actually perform the change.
+        required: true
+    start_url: https://your-org.lightning.force.com/lightning/o/Account/list
+    instruction_template: >
+      In the Accounts list, find the account named "{account_name}" and open it.
+      On the Activity tab, click "Log a Call". In the Comments / description field
+      enter: "{notes}". Leave the subject as "Call" and the date as today, then
+      click "Save" to record the call. Do not edit account fields or create any
+      other activity.
+    guardrails:
+      max_steps: 25
+      allowed_domains: ["your-org.lightning.force.com"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "was created"

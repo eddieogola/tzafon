@@ -1,0 +1,102 @@
+app: greenhouse
+display_name: Greenhouse
+base_url: https://app.greenhouse.io
+display_width: 1280
+display_height: 720
+
+login:
+  start_url: https://app.greenhouse.io/users/sign_in
+  instructions: >
+    Log in with your Greenhouse credentials (or SSO) and complete any 2FA in the
+    live browser. Wait until the recruiting dashboard / Jobs page is visible,
+    then press ENTER in this terminal.
+  success_check:
+    # Best-effort guess: "Candidates" appears in the top nav only once you're
+    # authenticated. Tune this token at your first real login.
+    type: html_contains
+    value: "Candidates"
+
+defaults:
+  max_steps: 25
+  step_wait_seconds: 1.0
+
+capabilities:
+  - name: find_stalled_candidates
+    description: >
+      Find candidates who have been sitting in the same pipeline stage longer
+      than a number of days. Read-only: never moves a candidate or edits
+      anything. Returns a structured JSON list.
+    params:
+      - name: days_in_stage
+        type: integer
+        description: Flag candidates who have been in their current stage at least this many days.
+        required: false
+        default: 14
+      - name: limit
+        type: integer
+        description: Maximum number of stalled candidates to return.
+        required: false
+        default: 25
+    start_url: https://app.greenhouse.io/people?type=candidates
+    instruction_template: >
+      You are on the Greenhouse Candidates / All People page. Use the table's
+      "Time in current stage" (or "Last activity") column to identify up to
+      {limit} candidates who have been in their current stage for at least
+      {days_in_stage} days. Apply column sorting or the stage-age filter if
+      available, but do NOT open any candidate profile, send messages, or move
+      anyone between stages. When the candidate list is fully visible, you are
+      done.
+    guardrails:
+      max_steps: 15
+      allowed_domains: ["app.greenhouse.io"]
+      forbidden_actions: ["navigate"]
+      require_confirmation: false
+    success_check:
+      type: html_contains
+      value: "Stage"
+    extract:
+      prompt: >
+        From the visible candidates table, list each stalled candidate as JSON:
+        [{"candidate": ..., "job": ..., "current_stage": ..., "days_in_stage": ...}].
+        Reply with JSON only.
+      format: json
+
+  - name: advance_candidate_stage
+    description: >
+      Move a candidate to the next pipeline stage using Greenhouse's "Move to"
+      action on their profile. MUTATES state (changes the candidate's stage and
+      may notify the hiring team) — requires confirm=true.
+    params:
+      - name: candidate_name
+        type: string
+        description: Exact full name of the candidate to advance.
+        required: true
+      - name: new_stage
+        type: string
+        description: Name of the stage to move the candidate into (e.g. "Phone Interview").
+        required: true
+      - name: confirm
+        type: boolean
+        description: Must be true to actually move the candidate's stage.
+        required: true
+    start_url: https://app.greenhouse.io/people?type=candidates
+    instruction_template: >
+      Search for the candidate named "{candidate_name}" using the People search
+      box and open their profile. On the candidate's profile, use the stage
+      control (the "Move to" / current-stage dropdown near the top of the
+      application) and select the stage "{new_stage}", confirming any dialog. Do
+      NOT reject the candidate, edit scorecards, or change any other candidate.
+      You are done once the application shows "{new_stage}" as the current stage.
+    guardrails:
+      max_steps: 25
+      allowed_domains: ["app.greenhouse.io"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "Stage"
+    extract:
+      prompt: >
+        Report the result as JSON:
+        {"candidate": ..., "new_stage": ..., "moved": true|false}.
+      format: json

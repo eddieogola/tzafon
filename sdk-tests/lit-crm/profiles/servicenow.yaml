@@ -1,0 +1,101 @@
+app: servicenow
+display_name: ServiceNow
+# Set your ServiceNow instance: replace "your-instance" with your instance
+# subdomain (e.g. https://acme.service-now.com). This is the Now Platform UI.
+base_url: https://your-instance.service-now.com
+display_width: 1280
+display_height: 720
+
+login:
+  # Replace "your-instance" with your ServiceNow instance subdomain.
+  start_url: https://your-instance.service-now.com/now/nav/ui/home
+  instructions: >
+    Log in with your ServiceNow credentials and complete any 2FA / SSO in the
+    live browser. Wait until the Now Platform navigation (left "All" menu and
+    application navigator) is fully visible, then press ENTER in this terminal.
+  success_check:
+    # Best-effort guess: the Now Platform shell shows the "All" application
+    # navigator menu after auth. Tune this on first login if it doesn't match.
+    type: html_contains
+    value: "All"
+
+defaults:
+  max_steps: 25
+  step_wait_seconds: 1.0
+
+capabilities:
+  - name: find_open_incidents
+    description: >
+      Find open ServiceNow incidents at a given priority. Read-only: never opens
+      an incident form or changes anything. Returns a structured JSON list.
+    params:
+      - name: priority
+        type: string
+        description: >
+          Incident priority to filter by, as shown in ServiceNow (e.g.
+          "1 - Critical", "2 - High").
+        required: false
+        default: "1 - Critical"
+      - name: limit
+        type: integer
+        description: Maximum number of open incidents to return.
+        required: false
+        default: 25
+    # Replace "your-instance" with your ServiceNow instance subdomain.
+    start_url: https://your-instance.service-now.com/now/nav/ui/classic/params/target/incident_list.do
+    instruction_template: >
+      You are on the ServiceNow Incidents list (incident.list). Using the list
+      filter / condition builder, filter to State is one of the active states
+      (e.g. New, In Progress, On Hold) and Priority is "{priority}". Identify up
+      to {limit} matching open incidents. Do NOT open any incident record, change
+      state, or reassign. When the filtered list is fully visible, you are done.
+    guardrails:
+      max_steps: 15
+      allowed_domains: ["service-now.com"]
+      forbidden_actions: ["navigate"]
+      require_confirmation: false
+    success_check:
+      type: html_contains
+      value: "Incidents"
+    extract:
+      prompt: >
+        From the visible incidents list, list each open incident as JSON:
+        [{"incident_number": ..., "short_description": ..., "priority": ...,
+        "state": ..., "assigned_to": ...}]. Reply with JSON only.
+      format: json
+
+  - name: escalate_incident
+    description: >
+      Escalate a ServiceNow incident by raising its priority. MUTATES state
+      (changes the incident's priority) — requires confirm=true.
+    params:
+      - name: incident_number
+        type: string
+        description: The incident number to escalate (e.g. "INC0010023").
+        required: true
+      - name: new_priority
+        type: string
+        description: >
+          New priority to set, as shown in ServiceNow (e.g. "1 - Critical").
+        required: true
+      - name: confirm
+        type: boolean
+        description: Must be true to actually perform the change.
+        required: true
+    # Replace "your-instance" with your ServiceNow instance subdomain.
+    start_url: https://your-instance.service-now.com/now/nav/ui/classic/params/target/incident_list.do
+    instruction_template: >
+      On the ServiceNow Incidents list, search for the incident with Number
+      "{incident_number}" and open its record. On the incident form, set the
+      "Priority" field to "{new_priority}" (adjust Impact/Urgency if Priority is
+      read-only and derived from them). Then click "Update" (or the "Save" icon)
+      to commit the change. Do not change the assignment group, state, or any
+      other field. Only escalate this single incident.
+    guardrails:
+      max_steps: 25
+      allowed_domains: ["service-now.com"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "Priority"

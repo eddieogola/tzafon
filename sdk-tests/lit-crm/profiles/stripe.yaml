@@ -1,0 +1,82 @@
+app: stripe
+display_name: Stripe
+base_url: https://dashboard.stripe.com
+display_width: 1280
+display_height: 720
+
+login:
+  start_url: https://dashboard.stripe.com/login
+  instructions: >
+    Log in with your Stripe credentials and complete any 2FA in the live browser.
+    Wait until the dashboard home is visible, then press ENTER in this terminal.
+  success_check:
+    type: html_contains
+    value: "Payments"
+
+defaults:
+  max_steps: 25
+  step_wait_seconds: 1.0
+
+capabilities:
+  - name: find_overdue_invoices
+    description: >
+      Find invoices in Stripe that are past due. Returns a structured list of
+      overdue invoices with customer, amount, due date, and days overdue.
+    params:
+      - name: limit
+        type: integer
+        description: Maximum number of overdue invoices to return.
+        required: false
+        default: 25
+    start_url: https://dashboard.stripe.com/invoices?status=overdue
+    instruction_template: >
+      You are on the Stripe Invoices page filtered to overdue invoices.
+      Identify up to {limit} overdue invoices. Do NOT click into any invoice or
+      send anything. When the overdue list is fully visible, you are done.
+    guardrails:
+      max_steps: 15
+      allowed_domains: ["dashboard.stripe.com"]
+      forbidden_actions: ["navigate"]
+      require_confirmation: false
+    success_check:
+      type: html_contains
+      value: "Past due"
+    extract:
+      prompt: >
+        From the visible overdue-invoices table, list each overdue invoice as JSON:
+        [{"customer": ..., "amount": ..., "due_date": ..., "days_overdue": ...}].
+        Reply with JSON only.
+      format: json
+
+  - name: email_overdue_customers
+    description: >
+      Send Stripe's built-in payment reminder email to customers with overdue
+      invoices. MUTATES state (sends emails) — requires confirm=true.
+    params:
+      - name: max_customers
+        type: integer
+        description: Maximum number of customers to email.
+        required: false
+        default: 10
+      - name: confirm
+        type: boolean
+        description: Must be true to actually send reminder emails.
+        required: true
+    start_url: https://dashboard.stripe.com/invoices?status=overdue
+    instruction_template: >
+      For up to {max_customers} overdue invoices, open each invoice's actions menu
+      and choose "Send reminder", confirming each dialog. Do not edit amounts or
+      due dates. Stop after sending to {max_customers} customers.
+    guardrails:
+      max_steps: 40
+      allowed_domains: ["dashboard.stripe.com"]
+      forbidden_actions: []
+      require_confirmation: true
+    success_check:
+      type: html_contains
+      value: "Reminder sent"
+    extract:
+      prompt: >
+        How many payment reminders were successfully sent? Reply as JSON:
+        {"sent_count": ..., "customers": [...]}.
+      format: json
