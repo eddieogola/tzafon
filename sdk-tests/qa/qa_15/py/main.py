@@ -29,10 +29,10 @@ client = Lightcone(api_key=API_KEY)
 # bnb_search_for_homes(client)
 # github_search_for_tzafon(client)
 # search_for_sf_and_drag(client)
-list_tabs_direct_api(client)
+# list_tabs_direct_api(client)
 # multi_tab_open(client)
 # persistent_browser_session(client)
-# persistent_desktop_session(client)
+persistent_desktop_session(client)
 # test_desktop_session(client)
 
 # def run_browser():

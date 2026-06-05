@@ -22,10 +22,10 @@ const client: Lightcone = new Lightcone();
 // bnbSearchForHomes(client);
 // githubSearchForTzafon(client);
 // searchForSfAndDrag(client);
-listTabsExecutionAction(client);
+// listTabsExecutionAction(client);
 // multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
-// persistentBrowserSession(client);
+persistentBrowserSession(client);
 // persistentDesktopSession(client);
 
 // async function runBrowser(id: number) {
