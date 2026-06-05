@@ -144,7 +144,7 @@ def list_tabs_direct_api(client: Computer):
     with client.create(kind="browser") as computer:
         # METHOD 2: Use the direct API (via client.computers)
         computer.set_viewport(1920, 1080)
-        result = client.computers.execute_action(
+        result = client.computers.execute(
             id=computer.id, action={"type": "list_tabs"}
         )
 
@@ -162,13 +162,13 @@ def multi_tab_open(client: Computer):
         computer.wait(2)
 
         # List tabs to get the main tab ID
-        result = client.computers.execute_action(
+        result = client.computers.execute(
             id=computer.id, action={"type": "list_tabs"}
         )
         main_tab = result.result["tabs"][0]["tab_id"]
 
         # Create a second tab
-        result = client.computers.execute_action(
+        result = client.computers.execute(
             id=computer.id, action={"type": "new_tab", "url": "https://tzafon.ai/"}
         )
 
@@ -177,32 +177,32 @@ def multi_tab_open(client: Computer):
         print(f"Second tab ID: {second_tab}, result: {result}")
 
         # Work on second tab using execute_action
-        client.computers.execute_action(
+        client.computers.execute(
             id=computer.id,
             action={"type": "click", "x": 100, "y": 200, "tab_id": second_tab},
         )
 
-        client.computers.execute_action(
+        client.computers.execute(
             id=computer.id,
             action={"type": "type", "text": "search query", "tab_id": second_tab},
         )
 
         # Switch back to main tab
-        client.computers.execute_action(
+        client.computers.execute(
             id=computer.id, action={"type": "switch_tab", "tab_id": main_tab}
         )
 
         # Work on main tab
-        client.computers.execute_action(
+        client.computers.execute(
             id=computer.id,
             action={"type": "click", "x": 150, "y": 250, "tab_id": main_tab},
         )
 
         # Take screenshots of both tabs
-        screenshot1 = client.computers.execute_action(
+        screenshot1 = client.computers.execute(
             id=computer.id, action={"type": "screenshot", "tab_id": main_tab}
         )
-        screenshot2 = client.computers.execute_action(
+        screenshot2 = client.computers.execute(
             id=computer.id, action={"type": "screenshot", "tab_id": second_tab}
         )
 
@@ -210,11 +210,11 @@ def multi_tab_open(client: Computer):
         print(f"Tab 2: {screenshot2.result['screenshot_url']}")
 
         # Close the second tab
-        client.computers.execute_action(
+        client.computers.execute(
             id=computer.id, action={"type": "close_tab", "tab_id": second_tab}
         )
 
-        result = client.computers.execute_action(
+        result = client.computers.execute(
             id=computer.id, action={"type": "list_tabs"}
         )
         number_of_tabs_left = len(result.result["tabs"])
@@ -237,7 +237,7 @@ def multi_tab_playwright_on_wikipedia(client: Computer):
         computer.wait(2)
 
         # get open tabs
-        result = client.computers.execute_action(
+        result = client.computers.execute(
             id=computer.id, action={"type": "list_tabs"}
         )
 
