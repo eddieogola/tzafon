@@ -17,12 +17,12 @@ dotenv.config();
 
 const client: Lightcone = new Lightcone();
 
-changeWikipediaLanguageAndRightClick(client);
+// changeWikipediaLanguageAndRightClick(client);
 // nyTimesScrollToBottom(client);
 // bnbSearchForHomes(client);
 // githubSearchForTzafon(client);
 // searchForSfAndDrag(client);
-// listTabsExecutionAction(client);
+listTabsExecutionAction(client);
 // multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
 // persistentBrowserSession(client);

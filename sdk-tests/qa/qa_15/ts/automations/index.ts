@@ -81,16 +81,16 @@ export const bnbSearchForHomes = async (client: Lightcone) => {
     await computer.setViewport(1920, 1080);
     await computer.navigate("https://www.airbnb.com");
     await computer.wait(1);
-    await computer.click(600, 150);
-    await computer.wait(1);
-    await computer.click(650, 250);
-    await computer.wait(1);
-    await computer.click(750, 500);
-    await computer.click(1100, 550);
-    await computer.click(1300, 150);
-    await computer.wait(1);
-    await computer.click(920, 650);
-    await computer.wait(1);
+    // await computer.click(600, 150);
+    // await computer.wait(1);
+    // await computer.click(650, 250);
+    // await computer.wait(1);
+    // await computer.click(750, 500);
+    // await computer.click(1100, 550);
+    // await computer.click(1300, 150);
+    // await computer.wait(1);
+    // await computer.click(920, 650);
+    // await computer.wait(1);
 
     const result = await computer.screenshot();
     if (result.status?.toLowerCase() === "success") {
@@ -112,9 +112,9 @@ export const githubSearchForTzafon = async (client: Lightcone) => {
     await computer.click(1050, 20);
     await computer.wait(1);
     await computer.type("org:tzafon");
-    await computer.wait(2);
+    await computer.wait(1);
     await computer.hotkey("enter");
-    await computer.wait(2);
+    await computer.wait(1);
 
     const result = await computer.screenshot();
     if (result.status?.toLowerCase() === "success") {
@@ -338,7 +338,6 @@ export const persistentBrowserSession = async (client: Lightcone) => {
 };
 
 export const persistentDesktopSession = async (client: Lightcone) => {
-
   // Create a persistent desktop session and set it up
   const computer = await ComputerSession.create(client, {
     kind: "desktop",
@@ -346,7 +345,9 @@ export const persistentDesktopSession = async (client: Lightcone) => {
   });
 
   // Install software, configure the environment
-  await client.computers.exec.sync(computer.id, { command: "mkdir -p ~/Desktop/project" });
+  await client.computers.exec.sync(computer.id, {
+    command: "mkdir -p ~/Desktop/project",
+  });
   await computer.wait(3);
 
   const result = await computer.screenshot();

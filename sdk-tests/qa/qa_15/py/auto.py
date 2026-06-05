@@ -34,9 +34,9 @@ def ny_times_scroll_to_bottom(client: Lightcone):
     with client.computer.create(kind="browser") as computer:
         computer.set_viewport(1920, 1080)
         computer.navigate("https://www.nytimes.com/")
-        # computer.wait(2)
-        # computer.scroll(0, 1000)
-        # computer.wait(4)
+        computer.wait(2)
+        computer.scroll(0, 1000)
+        computer.wait(4)
 
         result = computer.screenshot()
         handle_screenshot_result(computer, result, "Screenshot after scrolling")
@@ -63,16 +63,16 @@ def bnb_search_for_homes(client: Computer):
         computer.set_viewport(1920, 1080)
         computer.navigate("https://www.airbnb.com")
         computer.wait(2)
-        computer.click(600, 150)
-        computer.wait(2)
-        computer.click(650, 250)
-        computer.wait(2)
-        computer.click(750, 500)
-        computer.click(1100, 550)
-        computer.click(1300, 150)
-        computer.wait(3)
-        computer.click(920, 650)
-        computer.wait(5)
+        # computer.click(600, 150)
+        # computer.wait(2)
+        # computer.click(650, 250)
+        # computer.wait(2)
+        # computer.click(750, 500)
+        # computer.click(1100, 550)
+        # computer.click(1300, 150)
+        # computer.wait(3)
+        # computer.click(920, 650)
+        # computer.wait(5)
 
         result = computer.screenshot()
 
@@ -81,16 +81,16 @@ def bnb_search_for_homes(client: Computer):
 
 def github_search_for_tzafon(client: Computer):
     with client.create(kind="browser") as computer:
-        # computer.set_viewport(1920, 1080)
+        computer.set_viewport(1920, 1080)
         computer.navigate("https://github.com")
         computer.wait(1)
         # computer.click(1500, 20) # 1080p
-        # computer.click(1050, 20)  # 720p
-        # computer.wait(1)
-        # computer.type("org:tzafon")
-        # computer.wait(1)
-        # computer.hotkey("enter")
-        # computer.wait(1)
+        computer.click(1050, 20)  # 720p
+        computer.wait(1)
+        computer.type("org:tzafon")
+        computer.wait(1)
+        computer.hotkey("enter")
+        computer.wait(1)
 
         result = computer.screenshot()
         handle_screenshot_result(computer, result, "Screenshot")
@@ -133,7 +133,7 @@ def list_tabs_execution_action(client: Computer):
         result = computer.set_viewport(1920, 1080)
         print("Set viewport result:", result)
 
-        result = computer.execute_action({"type": "list_tabs"})
+        result = client.computers.execute(id=computer.id, action={"type": "list_tabs"})
 
         tabs = result.result["tabs"]
         for tab in tabs:
