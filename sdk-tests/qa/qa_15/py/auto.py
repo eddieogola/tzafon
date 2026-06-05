@@ -63,16 +63,16 @@ def bnb_search_for_homes(client: Computer):
         computer.set_viewport(1920, 1080)
         computer.navigate("https://www.airbnb.com")
         computer.wait(2)
-        # computer.click(600, 150)
-        # computer.wait(2)
-        # computer.click(650, 250)
-        # computer.wait(2)
-        # computer.click(750, 500)
-        # computer.click(1100, 550)
-        # computer.click(1300, 150)
-        # computer.wait(3)
-        # computer.click(920, 650)
-        # computer.wait(5)
+        computer.click(600, 150)
+        computer.wait(2)
+        computer.click(650, 250)
+        computer.wait(2)
+        computer.click(750, 500)
+        computer.click(1100, 550)
+        computer.click(1300, 150)
+        computer.wait(3)
+        computer.click(920, 650)
+        computer.wait(5)
 
         result = computer.screenshot()
 
@@ -144,9 +144,7 @@ def list_tabs_direct_api(client: Computer):
     with client.create(kind="browser") as computer:
         # METHOD 2: Use the direct API (via client.computers)
         computer.set_viewport(1920, 1080)
-        result = client.computers.execute(
-            id=computer.id, action={"type": "list_tabs"}
-        )
+        result = client.computers.execute(id=computer.id, action={"type": "list_tabs"})
 
         tabs = result.result["tabs"]
         print("tabs results: ", tabs)
@@ -162,9 +160,7 @@ def multi_tab_open(client: Computer):
         computer.wait(2)
 
         # List tabs to get the main tab ID
-        result = client.computers.execute(
-            id=computer.id, action={"type": "list_tabs"}
-        )
+        result = client.computers.execute(id=computer.id, action={"type": "list_tabs"})
         main_tab = result.result["tabs"][0]["tab_id"]
 
         # Create a second tab
@@ -214,9 +210,7 @@ def multi_tab_open(client: Computer):
             id=computer.id, action={"type": "close_tab", "tab_id": second_tab}
         )
 
-        result = client.computers.execute(
-            id=computer.id, action={"type": "list_tabs"}
-        )
+        result = client.computers.execute(id=computer.id, action={"type": "list_tabs"})
         number_of_tabs_left = len(result.result["tabs"])
 
         print(f"Number of tabs left after closing second tab: {number_of_tabs_left}")
@@ -237,9 +231,7 @@ def multi_tab_playwright_on_wikipedia(client: Computer):
         computer.wait(2)
 
         # get open tabs
-        result = client.computers.execute(
-            id=computer.id, action={"type": "list_tabs"}
-        )
+        result = client.computers.execute(id=computer.id, action={"type": "list_tabs"})
 
         print("Number of open tabs:", len(result.result["tabs"]))
 
