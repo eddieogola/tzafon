@@ -25,8 +25,8 @@ const client: Lightcone = new Lightcone();
 // listTabsExecutionAction(client);
 // multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
-persistentBrowserSession(client);
-// persistentDesktopSession(client);
+// persistentBrowserSession(client);
+persistentDesktopSession(client);
 
 // async function runBrowser(id: number) {
 //   try {

@@ -297,7 +297,7 @@ def persistent_desktop_session(client: Computer):
     with client.create(kind="desktop", persistent=True) as computer:
         session_id = computer.id
         # Install software, configure the environment
-        client.computers.exec.execute_sync(
+        client.computers.exec.sync(
             id=computer.id, command="mkdir -p ~/Desktop/project"
         )
         computer.wait(3)
@@ -310,7 +310,7 @@ def persistent_desktop_session(client: Computer):
     # Restore the desktop environment later — all installed software and files will be intact:
     with client.create(kind="desktop", environment_id=session_id) as computer:
         # nodejs is already installed, project directory exists
-        client.computers.exec.execute_sync(
+        client.computers.exec.sync(
             id=computer.id, command="cd ~/Desktop/project && node --version"
         )
         computer.wait(2)
