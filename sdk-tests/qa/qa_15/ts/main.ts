@@ -26,14 +26,14 @@ const client: Lightcone = new Lightcone();
 // multiTabOpen(client);
 // multiTabPlaywrightOnWikipedia(client);
 // persistentBrowserSession(client);
-persistentDesktopSession(client);
+// persistentDesktopSession(client);
 
-// async function runBrowser(id: number) {
-//   try {
-//     await githubSearchForTzafon(client);
-//   } catch (error) {
-//     console.error(`Browser ${id}: ${error}`);
-//   }
-// }
+async function runBrowser(id: number) {
+  try {
+    await changeWikipediaLanguageAndRightClick(client);
+  } catch (error) {
+    console.error(`Browser ${id}: ${error}`);
+  }
+}
 
-// await Promise.all(Array.from({ length: 10 }, (_, i) => runBrowser(i)));
+await Promise.all(Array.from({ length: 10 }, (_, i) => runBrowser(i)));

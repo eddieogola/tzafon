@@ -323,7 +323,7 @@ def persistent_desktop_session(client: Computer):
 
 def test_desktop_session(client: Computer):
     with client.create(kind="desktop") as computer:
-        computer.execute({"command": "echo Hello, World! > ~/hello.txt"})
+        computer.debug("echo Hello, World! > ~/hello.txt")
         computer.wait(2)
 
         result = computer.screenshot()

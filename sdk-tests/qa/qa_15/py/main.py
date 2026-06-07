@@ -33,15 +33,16 @@ client = Lightcone(api_key=API_KEY)
 # multi_tab_open(client)
 # persistent_browser_session(client)
 # persistent_desktop_session(client)
-test_desktop_session(client)
-
-# def run_browser():
-#     search_for_sf_and_drag(client)
+# test_desktop_session(client)
 
 
-# threads = [threading.Thread(target=run_browser) for _ in range(100)]
+def run_browser():
+    change_wikipedia_language_and_right_click(client)
 
-# for t in threads:
-#     t.start()
-# for t in threads:
-#     t.join()
+
+threads = [threading.Thread(target=run_browser) for _ in range(100)]
+
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()
