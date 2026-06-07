@@ -81,16 +81,16 @@ export const bnbSearchForHomes = async (client: Lightcone) => {
     await computer.setViewport(1920, 1080);
     await computer.navigate("https://www.airbnb.com");
     await computer.wait(1);
-    // await computer.click(600, 150);
-    // await computer.wait(1);
-    // await computer.click(650, 250);
-    // await computer.wait(1);
-    // await computer.click(750, 500);
-    // await computer.click(1100, 550);
-    // await computer.click(1300, 150);
-    // await computer.wait(1);
-    // await computer.click(920, 650);
-    // await computer.wait(1);
+    await computer.click(600, 150);
+    await computer.wait(1);
+    await computer.click(650, 250);
+    await computer.wait(1);
+    await computer.click(750, 500);
+    await computer.click(1100, 550);
+    await computer.click(1300, 150);
+    await computer.wait(1);
+    await computer.click(920, 650);
+    await computer.wait(1);
 
     const result = await computer.screenshot();
     if (result.status?.toLowerCase() === "success") {
