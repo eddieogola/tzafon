@@ -36,4 +36,4 @@ async function runBrowser(id: number) {
   }
 }
 
-await Promise.all(Array.from({ length: 10 }, (_, i) => runBrowser(i)));
+await Promise.all(Array.from({ length: 100 }, (_, i) => runBrowser(i)));
