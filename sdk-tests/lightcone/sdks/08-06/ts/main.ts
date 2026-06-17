@@ -65,9 +65,9 @@ void availableExamples;
  * https://docs.lightcone.ai/guides/quickstart/
  */
 
-// quickstartGuide(client);
-// authenticationGuide();
-// howLightconeWorksGuide(client);
+quickstartGuide(client);
+authenticationGuide();
+howLightconeWorksGuide(client);
 
 /*
  * Using Northstar
