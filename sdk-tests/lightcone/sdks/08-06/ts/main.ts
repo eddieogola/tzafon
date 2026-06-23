@@ -1,4 +1,4 @@
-import Lightcone from "@tzafon/lightcone";
+import Lightcone from "@tzafon/lightcone/index.js";
 import quickstartGuide from "@/auto/getting-started/quickstart";
 import authenticationGuide from "@/auto/getting-started/authentication";
 import howLightconeWorksGuide from "@/auto/getting-started/howLightconeWorks";

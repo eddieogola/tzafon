@@ -8,7 +8,7 @@
     "noUnusedParameters": true,
     "strict": true,
     "paths": {
-      "@/*":["./*"]
+      "@/*":["*"]
     }
   }
 }

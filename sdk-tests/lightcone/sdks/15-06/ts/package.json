@@ -1,0 +1,27 @@
+{
+  "name": "ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx --env-file=../.env main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@10.26.2",
+  "devDependencies": {
+    "@types/node": "^25.9.4",
+    "tsx": "^4.22.4"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.73",
+    "@mastra/core": "^1.45.0",
+    "@onkernel/sdk": "^0.54.0",
+    "@tzafon/lightcone": "^0.18.0",
+    "ai": "^6.0.208",
+    "openai": "^6.44.0",
+    "playwright": "^1.61.0"
+  }
+}

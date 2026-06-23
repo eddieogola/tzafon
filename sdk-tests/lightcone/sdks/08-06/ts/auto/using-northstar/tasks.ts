@@ -1,4 +1,4 @@
-import type Lightcone from "@tzafon/lightcone";
+import type Lightcone from "@tzafon/lightcone/index.js";
 import { Colors } from "@/utils/term";
 
 async function startTaskStreaming(client: Lightcone): Promise<void> {
