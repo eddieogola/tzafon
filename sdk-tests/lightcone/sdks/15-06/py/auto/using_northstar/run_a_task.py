@@ -20,6 +20,8 @@ def start_task_with_streaming(client):
             model="tzafon.northstar-cua-fast",
             max_steps=20,
         ):
+            if event.get("type") == "completed":
+                break
             print(event)
 
     except Exception as e:
@@ -40,14 +42,14 @@ def fire_and_poll(client):
         )
 
         task = client.agent.tasks.start(
-            instruction="Open the terminal and check system resource usage with htop",
+            instruction="Open the browser and navigate to https://www.wikipedia.org",
             kind="desktop",
         )
-        print(f"Task started: {Colors.YELLOW}{task.task_id}{Colors.RESET}")
 
         while True:
             status = client.agent.tasks.retrieve_status(task.task_id)
             print(f"Status: {status.status}")
+            print(status)
             if status.status in ("completed", "failed"):
                 print(f"Exit code: {status.exit_code}")
                 break

@@ -65,9 +65,9 @@ void availableExamples;
  * https://docs.lightcone.ai/guides/quickstart/
  */
 
-// quickstartGuide(client);
-// authenticationGuide();
-// howLightconeWorksGuide(client);
+quickstartGuide(client);
+authenticationGuide();
+howLightconeWorksGuide(client);
 
 /*
  * Using Northstar
@@ -76,7 +76,7 @@ void availableExamples;
 
 // tasksGuide(client);
 // runATaskGuide(client);
-responsesApiGuide(client);
+// responsesApiGuide(client);
 // cuaProtocolGuide(client);
 // coordinatesGuide(client);
 // chatCompletionsGuide(client);

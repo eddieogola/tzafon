@@ -18,6 +18,9 @@ async function startTaskWithStreaming(client: Lightcone): Promise<void> {
     });
 
     for await (const event of stream) {
+      if (event.type === "completed") {
+        break;
+      }
       console.log(event);
     }
   } catch (e) {
@@ -43,8 +46,7 @@ async function fireAndPoll(client: Lightcone): Promise<void> {
 
   try {
     const task = await client.agent.tasks.start({
-      instruction:
-        "Open the terminal and check system resource usage with htop",
+      instruction: "Open the browser and navigate to https://www.wikipedia.org",
       kind: "desktop",
     });
     console.log(`Task started: ${Colors.YELLOW}${task.task_id}${Colors.RESET}`);
@@ -52,6 +54,7 @@ async function fireAndPoll(client: Lightcone): Promise<void> {
     while (true) {
       const status = await client.agent.tasks.retrieveStatus(task.task_id!);
       console.log(`Status: ${status.status}`);
+      console.log(status);
       if (status.status === "completed" || status.status === "failed") {
         console.log(`Exit code: ${status.exit_code}`);
         break;

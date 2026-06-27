@@ -2,10 +2,10 @@ import type Lightcone from "@tzafon/lightcone/index.js";
 import { Colors } from "@/utils/term";
 
 const TOOL = {
-  type: "computer_use" as const,
-  display_width: 1280,
-  display_height: 720,
-  environment: "desktop" as const,
+  type: "computer_use",
+  display_width: 1920,
+  display_height: 1080,
+  environment: "desktop",
 };
 
 async function executeAction(
@@ -86,7 +86,7 @@ async function fullComputerUseLoop(client: Lightcone): Promise<void> {
           content: [
             {
               type: "input_text",
-              text: "Open the terminal and run 'uname -a'",
+              text: "Open browser and go to wikipedia.org. Search for 'Python programming language' and summarize the first paragraph of the article.",
             },
             {
               type: "input_image",
@@ -131,7 +131,7 @@ async function fullComputerUseLoop(client: Lightcone): Promise<void> {
 
       const newScreenshot = await client.computers.screenshot(id);
       const newUrl = newScreenshot.result?.screenshot_url as string;
-
+      console.log(`New screenshot URL: ${newUrl}`);
       response = await client.responses.create({
         model: "tzafon.northstar-cua-fast",
         previous_response_id: response.id,
