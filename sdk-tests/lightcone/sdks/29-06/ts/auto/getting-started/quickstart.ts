@@ -53,7 +53,7 @@ async function goDeeper(client: Lightcone): Promise<void> {
   try {
     const screenshot = await client.computers.screenshot(id);
     const screenshotUrl = screenshot.result?.screenshot_url as string;
-
+    console.log(`Screenshot URL: ${screenshotUrl}`);
     const response: any = await client.responses.create({
       model: "tzafon.northstar-cua-fast",
       tools: [

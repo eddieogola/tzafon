@@ -60,72 +60,61 @@ const availableExamples = {
 };
 void availableExamples;
 
-/*
- * Getting Started
- * https://docs.lightcone.ai/guides/quickstart/
- */
+async function main() {
+  /*
+   * Getting Started
+   * https://docs.lightcone.ai/guides/quickstart/
+   */
+  // await quickstartGuide(client);
+  // await authenticationGuide();
+  // await howLightconeWorksGuide(client);
+  /*
+   * Using Northstar
+   * https://docs.lightcone.ai/guides/tasks/
+   */
+  // await tasksGuide(client);
+  // await runATaskGuide(client);
+  // await responsesApiGuide(client);
+  // await cuaProtocolGuide(client);
+  // await coordinatesGuide(client);
+  // await chatCompletionsGuide(client);
+  /*
+   * Environments
+   * https://docs.lightcone.ai/guides/computers/
+   */
+  // await computers(client);
+  // await operateAComputer(client);
+  // await executeShell(client);
+  // await manageBrowserTabs(client);
+  // await lightconeOs(client);
+  /*
+   * Tutorials
+   * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
+   */
+  // await buildPriceTracker(client);
+  // await scrapeBehinLogin(client);
+  // await automateFormWithAi(client);
+  /*
+   * Integrations
+   * https://docs.lightcone.ai/integrations/playwright/
+   */
+  // await playwrightIntegration(client);
+  // These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
+  /*
+   * Use Cases
+   * https://docs.lightcone.ai/use-cases/software-testing/
+   */
+  // await softwareTesting(client);
+  // await legacySoftware(client);
+  // await crossAppWorkflows(client);
+  /*
+   * Integrations
+   * https://docs.lightcone.ai/integrations/langchain/
+   */
+  // await langchainIntegration(client);
+  // await vercelAiIntegration(client);
+  await mastraIntegration(client);
+  // await kernelIntegration(client);
+}
 
-quickstartGuide(client);
-// authenticationGuide();
-// howLightconeWorksGuide(client);
-
-/*
- * Using Northstar
- * https://docs.lightcone.ai/guides/tasks/
- */
-
-// tasksGuide(client);
-// runATaskGuide(client);
-// responsesApiGuide(client);
-// cuaProtocolGuide(client);
-// coordinatesGuide(client);
-// chatCompletionsGuide(client);
-
-/*
- * Environments
- * https://docs.lightcone.ai/guides/computers/
- */
-
-// computers(client);
-// operateAComputer(client);
-// executeShell(client);
-// manageBrowserTabs(client);
-// lightconeOs(client);
-
-/*
- * Tutorials
- * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
- */
-
-// buildPriceTracker(client);
-// scrapeBehinLogin(client);
-// automateFormWithAi(client);
-
-/*
- * Integrations
- * https://docs.lightcone.ai/integrations/playwright/
- */
-
-// playwrightIntegration(client);
-
-// These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
-
-/*
- * Use Cases
- * https://docs.lightcone.ai/use-cases/software-testing/
- */
-
-// softwareTesting(client);
-// legacySoftware(client);
-// crossAppWorkflows(client);
-
-/*
- * Integrations
- * https://docs.lightcone.ai/integrations/langchain/
- */
-
-// langchainIntegration(client);
-
-// vercelAiIntegration(client);
-// mastraIntegration(client);
-// kernelIntegration(client);
+main();

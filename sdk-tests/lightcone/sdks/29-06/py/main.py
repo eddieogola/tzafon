@@ -41,7 +41,7 @@ Getting Started
 https://docs.lightcone.ai/guides/quickstart/
 
 """
-quickstart_guide(client)
+# quickstart_guide(client)
 # authentication_guide()
 # how_lightcone_works_guide(client)
 
@@ -84,8 +84,6 @@ https://docs.lightcone.ai/integrations/playwright/
 
 """
 # playwright_integration(client)
-
-# These are examples reliant on LLMs, hence commented out by default to avoid unnecessary API calls. Uncomment to run.
 
 
 """

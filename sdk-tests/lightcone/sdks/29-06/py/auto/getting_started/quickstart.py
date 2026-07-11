@@ -17,10 +17,7 @@ def quickstart(client):
             f"Reference: {Colors.BLUE}https://docs.lightcone.ai/guides/quickstart/#3-give-northstar-a-task{Colors.RESET}\n"
         )
         for event in client.agent.tasks.start_stream(
-            instruction=(
-                "Go to wikipedia.org, search for 'Alan Turing', and tell me "
-                "the first sentence of the article"
-            ),
+            instruction="Go to wikipedia.org, search for 'Alan Turing', and tell me the first sentence of the article",
             kind="browser",
         ):
             print(event)
@@ -49,7 +46,7 @@ def go_deeper(client):
 
         with client.computer.create(kind="desktop") as computer:
             screenshot_url = computer.get_screenshot_url(computer.screenshot())
-
+            print(f"Screenshot URL: {screenshot_url}")
             response = client.responses.create(
                 model="tzafon.northstar-cua-fast",
                 tools=[
@@ -82,14 +79,13 @@ def go_deeper(client):
             # Execute it, take a new screenshot, send it back —
             # see the CUA loop guide for the full pattern.
             for item in response.output or []:
-                if isinstance(item, dict) and item.get("type") == "computer_call":
-                    action = item.get("action")
-                    print(
-                        f"Coordinates : ({action.get('x', None)}, {action.get('y', None)})"
-                    )
+                if item.type == "computer_call":
+                    action = item.action
+                    print(f"Action type: {action.type}")
+                    print(f"Coordinates : ({action.x}, {action.y})")
                 elif item.type == "message":
                     for block in item.content or []:
-                        if hasattr(block, "text") and block.text:
+                        if block.text:
                             print(block.text)
 
     except Exception as e:
