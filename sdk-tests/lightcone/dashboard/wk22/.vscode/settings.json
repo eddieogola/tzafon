@@ -1,6 +1,0 @@
-{
-  "python.defaultInterpreterPath": "${workspaceFolder}/py/.venv/bin/python",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "never"
-  }
-}
