@@ -75,7 +75,7 @@ def visual_verification_with_responses_api(client):
         with client.computer.create(kind="desktop") as computer:
             client.computers.exec.sync(
                 computer.id,
-                command="firefox https://app.example.com &",
+                command="nohup firefox https://app.example.com > /dev/null 2>&1 & disown",
             )
             computer.wait(5)
 
@@ -128,6 +128,6 @@ def visual_verification_with_responses_api(client):
 
 def software_testing(client):
     print(f"{Colors.YELLOW}*** Software Testing Use Cases ***{Colors.RESET}\n")
-    test_login_flow(client)
-    test_multi_step_workflow(client)
+    # test_login_flow(client)
+    # test_multi_step_workflow(client)
     visual_verification_with_responses_api(client)

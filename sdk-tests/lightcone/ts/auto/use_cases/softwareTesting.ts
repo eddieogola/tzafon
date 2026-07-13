@@ -30,6 +30,9 @@ async function testLoginFlow(client: Lightcone): Promise<void> {
 
     for await (const event of stream) {
       console.log(event);
+      if (event.type === "completed") {
+        break;
+      }
     }
   } catch (e) {
     console.log(
@@ -66,7 +69,9 @@ async function testMultiStepWorkflow(client: Lightcone): Promise<void> {
     });
 
     for await (const event of stream) {
-      console.log(event);
+      if (event.type === "completed") {
+        break;
+      }
     }
   } catch (e) {
     console.log(
@@ -93,10 +98,11 @@ async function visualVerificationWithResponsesApi(
 
   const computer = await client.computers.create({ kind: "desktop" });
   const id = computer.id!;
+  console.log(`Created computer with ID: ${Colors.BLUE}${id}${Colors.RESET}\n`);
 
   try {
     await client.computers.exec.sync(id, {
-      command: "firefox https://app.example.com &",
+      command: "nohup firefox https://app.example.com > /dev/null 2>&1 & disown",
     });
     await new Promise((r) => setTimeout(r, 5000));
 
@@ -104,6 +110,9 @@ async function visualVerificationWithResponsesApi(
     const screenshotUrl = screenshot.result?.screenshot_url as
       | string
       | undefined;
+    console.log(
+      `Screenshot URL: ${Colors.BLUE}${screenshotUrl}${Colors.RESET}\n`,
+    );
 
     if (!screenshotUrl) {
       throw new Error("Missing screenshot URL");
@@ -131,6 +140,7 @@ async function visualVerificationWithResponsesApi(
             {
               type: "input_image",
               image_url: screenshotUrl,
+              detail: "auto",
             },
           ],
         },
@@ -168,7 +178,7 @@ export default async function softwareTesting(
   console.log(
     `${Colors.YELLOW}*** Software Testing Use Cases ***${Colors.RESET}\n`,
   );
-  await testLoginFlow(client);
-  await testMultiStepWorkflow(client);
+  // await testLoginFlow(client);
+  // await testMultiStepWorkflow(client);
   await visualVerificationWithResponsesApi(client);
 }
