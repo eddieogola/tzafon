@@ -1,0 +1,16 @@
+{
+	"servers": {
+		"@tzafon/lightcone-mcp": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@tzafon/lightcone-mcp"
+			],
+			"env": {
+				"TZAFON_API_KEY": "sk_a6cwzMg6l83BtxTXH9kOFZXoUz7RtxKz"
+			},
+			"type": "stdio"
+		}
+	},
+	"inputs": []
+}
