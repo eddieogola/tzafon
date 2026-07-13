@@ -72,21 +72,21 @@ async function main() {
    * Using Northstar
    * https://docs.lightcone.ai/guides/tasks/
    */
-  await tasksGuide(client);
-  await runATaskGuide(client);
-  await responsesApiGuide(client);
-  await cuaProtocolGuide(client);
-  await coordinatesGuide(client);
-  await chatCompletionsGuide(client);
+  // await tasksGuide(client);
+  // await runATaskGuide(client);
+  // await responsesApiGuide(client);
+  // await cuaProtocolGuide(client);
+  // await coordinatesGuide(client);
+  // await chatCompletionsGuide(client);
   /*
    * Environments
    * https://docs.lightcone.ai/guides/computers/
    */
-  // await computers(client);
-  // await operateAComputer(client);
-  // await executeShell(client);
-  // await manageBrowserTabs(client);
-  // await lightconeOs(client);
+  await computers(client);
+  await operateAComputer(client);
+  await executeShell(client);
+  await manageBrowserTabs(client);
+  await lightconeOs(client);
   /*
    * Tutorials
    * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
