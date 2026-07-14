@@ -82,11 +82,11 @@ async function main() {
    * Environments
    * https://docs.lightcone.ai/guides/computers/
    */
-  await computers(client);
-  await operateAComputer(client);
-  await executeShell(client);
-  await manageBrowserTabs(client);
-  await lightconeOs(client);
+  // await computers(client);
+  // await operateAComputer(client);
+  // await executeShell(client);
+  // await manageBrowserTabs(client);
+  // await lightconeOs(client);
   /*
    * Tutorials
    * https://docs.lightcone.ai/tutorials/build-a-price-tracker/
@@ -104,7 +104,7 @@ async function main() {
    * Use Cases
    * https://docs.lightcone.ai/use-cases/software-testing/
    */
-  // await softwareTesting(client);
+  await softwareTesting(client);
   // await legacySoftware(client);
   // await crossAppWorkflows(client);
   /*

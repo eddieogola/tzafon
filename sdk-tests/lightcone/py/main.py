@@ -62,11 +62,11 @@ Environments
 https://docs.lightcone.ai/guides/computers/
 
 """
-computers(client)
-operate_a_computer(client)
-execute_shell(client)
-manage_browser_tabs(client)
-lightcone_os(client)
+# computers(client)
+# operate_a_computer(client)
+# execute_shell(client)
+# manage_browser_tabs(client)
+# lightcone_os(client)
 
 """
 Tutorials
@@ -91,7 +91,7 @@ Use Cases
 https://docs.lightcone.ai/use-cases/software-testing/
 
 """
-# software_testing(client)
+software_testing(client)
 # legacy_software(client)
 # cross_app_workflows(client)
 
