@@ -14,6 +14,7 @@ import lightconeOs from "@/auto/environments/lightconeOs";
 import softwareTesting from "@/auto/use_cases/softwareTesting";
 import legacySoftware from "@/auto/use_cases/legacySoftware";
 import crossAppWorkflows from "@/auto/use_cases/crossAppWorkflows";
+import docsValidation from "@/auto/use_cases/docsValidation";
 import tasksGuide from "@/auto/using-northstar/tasks";
 import runATaskGuide from "@/auto/using-northstar/runATask";
 import responsesApiGuide from "@/auto/using-northstar/responsesApi";
@@ -25,6 +26,10 @@ import vercelAiIntegration from "@/auto/integrations/vercelAi";
 import playwrightIntegration from "@/auto/integrations/playwright";
 import mastraIntegration from "@/auto/integrations/mastra";
 import kernelIntegration from "@/auto/integrations/kernel";
+import observabilityGuide from "@/auto/production/observability";
+import productionGuide from "@/auto/production/production";
+import errorsGuide from "@/auto/production/errors";
+import loginsAndSessionsGuide from "@/auto/production/loginsAndSessions";
 
 const client = new Lightcone({
   apiKey: process.env.TZAFON_API_KEY!,
@@ -47,6 +52,7 @@ const availableExamples = {
   softwareTesting,
   legacySoftware,
   crossAppWorkflows,
+  docsValidation,
   tasksGuide,
   runATaskGuide,
   responsesApiGuide,
@@ -58,6 +64,10 @@ const availableExamples = {
   playwrightIntegration,
   mastraIntegration,
   kernelIntegration,
+  observabilityGuide,
+  productionGuide,
+  errorsGuide,
+  loginsAndSessionsGuide,
 };
 void availableExamples;
 
@@ -108,6 +118,7 @@ async function main() {
   await softwareTesting(client);
   // await legacySoftware(client);
   // await crossAppWorkflows(client);
+  // await docsValidation(client);
   /*
    * Integrations
    * https://docs.lightcone.ai/integrations/langchain/
@@ -116,6 +127,14 @@ async function main() {
   // await vercelAiIntegration(client);
   // await mastraIntegration(client);
   // await kernelIntegration(client);
+  /*
+   * Production
+   * https://docs.lightcone.ai/guides/observability/
+   */
+  // await observabilityGuide(client);
+  // await productionGuide(client);
+  // await errorsGuide(client);
+  // await loginsAndSessionsGuide(client);
 }
 
 main().then(() => {

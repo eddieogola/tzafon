@@ -36,11 +36,11 @@ def full_example(client):
 
 @example(PAGE, "working-with-page-context", title="Working with Page Context")
 def working_with_page_context(client):
-    with client.computer.create(kind="desktop") as computer:
-        client.computers.exec.sync(
-            computer.id, command=f"nohup firefox {URL} > /dev/null 2>&1 &"
-        )
-        computer.wait(3)
+    # Docs use a browser computer here. page_context is browser-only: a desktop
+    # session returns status=SUCCESS with page_context=None, so ctx.url raises.
+    with client.computer.create(kind="browser") as computer:
+        computer.navigate(URL)
+        computer.wait(2)
 
         result = client.computers.execute(
             computer.id,

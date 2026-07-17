@@ -4,7 +4,7 @@ import os
 from openai import OpenAI
 
 from utils.coords import DISPLAY_HEIGHT, DISPLAY_WIDTH, scale_coordinates, to_px
-from utils.example import example
+from utils.example import check, example
 from utils.term import Colors
 
 PAGE = "guides/coordinates"
@@ -49,15 +49,24 @@ def responses_api_raw_coordinates(client):
             ],
         )
 
+        # response.output yields pydantic models, never dicts — an isinstance(item, dict)
+        # guard here is dead code that silently skips the whole example.
         for item in response.output or []:
-            if isinstance(item, dict) and item.get("type") == "computer_call":
-                action = item["action"]
+            if item.type == "computer_call":
+                action = item.action
                 # Denormalize from 0-999 model space to pixel coordinates
-                x = to_px(action["x"], DISPLAY_WIDTH)
-                y = to_px(action["y"], DISPLAY_HEIGHT)
+                x = to_px(action.x, DISPLAY_WIDTH)
+                y = to_px(action.y, DISPLAY_HEIGHT)
                 computer.click(x, y)
-                print(f"Model coords: ({action['x']}, {action['y']})")
+                print(f"Model coords: ({action.x}, {action.y})")
                 print(f"Clicked pixel coordinates: ({x}, {y})")
+                # A search button is never at the left screen edge. northstar-cua-fast-1.6
+                # returns x=0 for every coordinate (the unversioned alias does not), so
+                # without this the example clicks nothing and still reports success.
+                check(
+                    action.x > 0,
+                    f"model returned x={action.x} — every click lands on the left edge",
+                )
                 break
 
 

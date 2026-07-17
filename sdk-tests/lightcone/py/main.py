@@ -18,6 +18,7 @@ from auto.environments.lightcone_os import lightcone_os
 from auto.use_cases.software_testing import software_testing
 from auto.use_cases.legacy_software import legacy_software
 from auto.use_cases.cross_app_workflows import cross_app_workflows
+from auto.use_cases.docs_validation import docs_validation
 from auto.using_northstar.tasks import tasks_guide
 from auto.using_northstar.run_a_task import run_a_task_guide
 from auto.using_northstar.responses_api import responses_api_guide
@@ -28,6 +29,13 @@ from auto.integrations.langchain import langchain_integration
 from auto.integrations.browser_use import browser_use_integration
 from auto.integrations.playwright import playwright_integration
 from auto.integrations.kernel import kernel_integration
+from auto.cookbook.warm_sessions_and_self_healing import warm_sessions_and_self_healing
+from auto.cookbook.verified_structured_extraction import verified_structured_extraction
+from auto.cookbook.wrap_a_legacy_app_in_an_api import wrap_a_legacy_app_in_an_api
+from auto.production.observability import observability_guide
+from auto.production.production import production_guide
+from auto.production.errors import errors_guide
+from auto.production.logins_and_sessions import logins_and_sessions_guide
 
 load_dotenv()
 
@@ -95,6 +103,7 @@ https://docs.lightcone.ai/use-cases/software-testing/
 software_testing(client)
 # legacy_software(client)
 # cross_app_workflows(client)
+# docs_validation(client)
 
 
 """
@@ -105,6 +114,28 @@ https://docs.lightcone.ai/integrations/langchain/
 # langchain_integration(client)
 # browser_use_integration(client)
 # kernel_integration(client)
+
+
+"""
+Cookbook
+https://docs.lightcone.ai/cookbook/warm-sessions-and-self-healing/
+
+Python-only pages; these aggregators build their own AsyncLightcone.
+"""
+# warm_sessions_and_self_healing()
+# verified_structured_extraction()
+# wrap_a_legacy_app_in_an_api()
+
+
+"""
+Production
+https://docs.lightcone.ai/guides/observability/
+
+"""
+# observability_guide(client)
+# production_guide(client)
+# errors_guide(client)
+# logins_and_sessions_guide(client)
 
 
 # Prints what ran and what broke; exits non-zero if any example failed.

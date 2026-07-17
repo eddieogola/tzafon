@@ -10,3 +10,5 @@ dist
 # Common
 .env
 .DS_Store
+# Artifact from the observability mp4 example
+recording.mp4

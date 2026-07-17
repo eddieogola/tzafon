@@ -35,12 +35,13 @@ def responses_api_loop(client):
     )
 
     # Execute the action, screenshot, send back, repeat
+    # response.output yields pydantic models, never dicts.
     for item in response.output or []:
-        if isinstance(item, dict) and item.get("type") == "computer_call":
-            action = item.get("action", {})
+        if item.type == "computer_call":
+            action = item.action
             print(action)
-            print(f"Action type : {action.get('type')}")
-            print(f"Keys : {', '.join(action.get('keys', []))}")
+            print(f"Action type : {action.type}")
+            print(f"Keys : {', '.join(getattr(action, 'keys', None) or [])}")
         elif item.type == "message":
             for block in item.content or []:
                 if hasattr(block, "text") and block.text:

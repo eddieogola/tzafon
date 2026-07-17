@@ -144,6 +144,21 @@ truth for SDK surface** — every conflict found so far has gone against the doc
 - **Task event stream**: typed as `string` in both SDKs, but yields structured events.
 - **Batch actions**: `go_to_url` is supported (it's in the SDK's own docstring) but absent from
   the docs' action list.
+- **Docs-validation page**: its own two examples don't compose. Example 1 prints
+  `item.action.x/.y` raw (0-999 model space); example 2 clicks those numbers as pixels. Follow
+  the page literally and you click the wrong place — on the page that exists to fix exactly
+  that. `use_cases/docs_validation` denormalizes with `to_px` between the two.
+- **`ActionResult.result` is a dict**: the Cookbook reads `shot.result.screenshot_url`. `result`
+  is typed `Optional[Dict[str, object]]` — the SDK's own `get_screenshot_url()` does
+  `result.result.get("screenshot_url")`. Attribute access raises. Affects
+  `cookbook/verified-structured-extraction` and `cookbook/wrap-a-legacy-app-in-an-api`.
+- **`resp.output_text`**: the Cookbook's `ask_screen` returns it. `ResponseCreateResponse` has no
+  such property — it's an OpenAI SDK convenience. Walk `output` for `type == "message"` blocks,
+  as `using_northstar/responses_api` does.
+- **`ComputerResponse.context_id`**: the Cookbook's adopt-or-create filters on `c.context_id`.
+  `context_id` is a **create-only** param; it is not a declared field on the response model. The
+  model allows extras, so the filter only works if the API echoes it back — otherwise every
+  candidate raises `AttributeError` and adopt-or-create always creates.
 
 When docs and reality disagree, run the code and believe the run.
 

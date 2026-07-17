@@ -19,12 +19,13 @@ def create_and_process_response(client):
         tools=[TOOL],
     )
 
+    # response.output yields pydantic models, never dicts.
     for item in response.output or []:
-        if isinstance(item, dict) and item.get("type") == "computer_call":
-            action = item.get("action", {})
+        if item.type == "computer_call":
+            action = item.action
             print(f"Action : {action}")
-            print(f"Action: {action.get('type')}")
-            print(f"Keys: {', '.join(action.get('keys', []))}")
+            print(f"Action: {action.type}")
+            print(f"Keys: {', '.join(getattr(action, 'keys', None) or [])}")
 
         elif item.type == "message":
             for block in item.content or []:
@@ -156,11 +157,7 @@ def multi_turn_with_previous_response_id(client):
         )
 
         computer_call = next(
-            (
-                item
-                for item in (response.output or [])
-                if isinstance(item, dict) and item.get("type") == "computer_call"
-            ),
+            (item for item in (response.output or []) if item.type == "computer_call"),
             None,
         )
         if not computer_call:
@@ -176,7 +173,7 @@ def multi_turn_with_previous_response_id(client):
             input=[
                 {
                     "type": "computer_call_output",
-                    "call_id": computer_call.get("call_id"),
+                    "call_id": computer_call.call_id,
                     "output": {
                         "type": "input_image",
                         "image_url": screenshot_url,
@@ -203,8 +200,8 @@ def system_instructions(client):
     )
 
     for item in response.output or []:
-        if isinstance(item, dict) and item.get("type") == "computer_call":
-            print(f"Action: {item.get('action', {}).get('type','')}")
+        if item.type == "computer_call":
+            print(f"Action: {item.action.type}")
         elif item.type == "message":
             for block in item.content or []:
                 if hasattr(block, "text") and block.text:

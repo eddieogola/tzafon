@@ -33,6 +33,22 @@ class ExampleTimeout(Exception):
     """Raised when an example exceeds its wall-clock budget."""
 
 
+class ExampleFailed(AssertionError):
+    """Raised by check() when an example's own verification fails."""
+
+
+def check(condition: object, message: str) -> None:
+    """Fail the example unless `condition` holds.
+
+    The harness only records a failure when an example *raises* — printing a
+    problem and returning still counts as a pass. Examples that verify
+    something (a login succeeded, an element was found) must use this, or they
+    go green while proving nothing.
+    """
+    if not condition:
+        raise ExampleFailed(message)
+
+
 @contextmanager
 def _deadline(seconds: int, label: str):
     """Wall-clock guard. SIGALRM is Unix + main-thread only; no-op elsewhere."""
