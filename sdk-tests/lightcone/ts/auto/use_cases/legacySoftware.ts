@@ -1,16 +1,16 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function operateLegacyWebApplication(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Operate a Legacy Web Application ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/legacy-software/#operate-a-legacy-web-application${Colors.RESET}\n`,
-  );
+const PAGE = "use-cases/legacy-software";
 
-  try {
+const operateLegacyWebApplication = example(
+  {
+    page: PAGE,
+    anchor: "operate-a-legacy-web-application",
+    title: "Operate a Legacy Web Application",
+  },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open Firefox and go to https://crm.example.com. " +
@@ -27,38 +27,31 @@ async function operateLegacyWebApplication(client: Lightcone): Promise<void> {
     for await (const event of stream) {
       console.log(event);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error operating legacy web application: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function operateDesktopApplication(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Operate a Desktop Application ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/legacy-software/#operate-a-desktop-application${Colors.RESET}\n`,
-  );
+const operateDesktopApplication = example(
+  {
+    page: PAGE,
+    anchor: "operate-a-desktop-application",
+    title: "Operate a Desktop Application",
+  },
+  async (client: Lightcone): Promise<void> => {
+    // Set up the environment
+    const computer = await client.computers.create({
+      kind: "desktop",
+      persistent: true,
+    });
+    const savedId = computer.id!;
 
-  const computer = await client.computers.create({
-    kind: "desktop",
-    persistent: true,
-  });
-  const id = computer.id!;
-
-  try {
-    await client.computers.exec.sync(id, {
+    await client.computers.exec.sync(savedId, {
       command: "apt-get install -y libreoffice",
     });
 
+    // Release the environment — it persists, so the task can resume it by id.
+    await client.computers.delete(savedId);
+
+    // Run the task
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open LibreOffice Calc. " +
@@ -67,42 +60,29 @@ async function operateDesktopApplication(client: Lightcone): Promise<void> {
         "Add a SUM formula at the bottom of the Amount column. " +
         "Save the file as /tmp/expenses.xlsx.",
       kind: "desktop",
-      environment_id: id,
+      environment_id: savedId, // reuse the environment with LibreOffice installed
       max_steps: 40,
     });
 
     for await (const event of stream) {
       console.log(event);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error operating desktop application: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function processQueueOfRecords(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Process a Queue of Records ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/legacy-software/#process-a-queue-of-records${Colors.RESET}\n`,
-  );
+const processQueueOfRecords = example(
+  {
+    page: PAGE,
+    anchor: "process-a-queue-of-records",
+    title: "Process a Queue of Records",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const records = [
+      { name: "Jane Smith", email: "jane@acme.com", role: "Manager" },
+      { name: "Bob Chen", email: "bob@acme.com", role: "Engineer" },
+      { name: "Sara Lee", email: "sara@acme.com", role: "Director" },
+    ];
 
-  const records = [
-    { name: "Jane Smith", email: "jane@acme.com", role: "Manager" },
-    { name: "Bob Chen", email: "bob@acme.com", role: "Engineer" },
-    { name: "Sara Lee", email: "sara@acme.com", role: "Director" },
-  ];
-
-  try {
     for (const record of records) {
       console.log(`Creating user: ${record.name}`);
 
@@ -119,17 +99,8 @@ async function processQueueOfRecords(client: Lightcone): Promise<void> {
         console.log(`  ${JSON.stringify(event)}`);
       }
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error processing queue of records: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function legacySoftware(client: Lightcone): Promise<void> {
   console.log(

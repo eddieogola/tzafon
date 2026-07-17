@@ -1,15 +1,15 @@
-import Lightcone from "@tzafon/lightcone/index.js";
-import { Colors } from "@/utils/term";
+import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 
-async function vercelAiToolCalling(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Vercel AI SDK: Tool Calling with Lightcone ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/vercel-ai/#example${Colors.RESET}\n`,
-  );
-  try {
+const PAGE = "integrations/vercel-ai";
+
+const vercelAiToolCalling = example(
+  {
+    page: PAGE,
+    anchor: "example",
+    title: "Vercel AI SDK: Tool Calling with Lightcone",
+  },
+  async (client: Lightcone): Promise<void> => {
     const { generateText, tool } = await import("ai");
     const { createOpenAI } = await import("@ai-sdk/openai");
 
@@ -22,7 +22,7 @@ async function vercelAiToolCalling(client: Lightcone): Promise<void> {
       // .chat() targets /v1/chat/completions; the bare `tzafon(id)` helper
       // defaults to the Responses API (/v1/responses), which 500s ("'role'")
       // on Tzafon once a tool round-trip is in the payload.
-      model: tzafon.chat("tzafon.northstar-cua-fast"),
+      model: tzafon.chat("tzafon.northstar-cua-fast-1.6"),
       tools: {
         browse: tool({
           description: "Visit a URL and take a screenshot of the page",
@@ -45,17 +45,8 @@ async function vercelAiToolCalling(client: Lightcone): Promise<void> {
     });
     console.log(result);
     console.log(result.text);
-  } catch (e) {
-    console.error(
-      `\n${Colors.RED}Error in Vercel AI tool calling example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function vercelAiIntegration(
   client: Lightcone,

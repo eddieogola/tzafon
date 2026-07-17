@@ -1,8 +1,10 @@
 import asyncio
 import os
-from time import time
 
+from utils.example import example
 from utils.term import Colors
+
+PAGE = "integrations/browser-use"
 
 
 async def _browser_use_with_lightcone(client):
@@ -37,7 +39,7 @@ async def _browser_use_with_lightcone(client):
 
         # Use Lightcone's own model via its OpenAI-compatible API
         llm = ChatOpenAI(
-            model="tzafon.northstar-cua-fast",
+            model="tzafon.northstar-cua-fast-1.6",
             base_url="https://api.tzafon.ai/v1",
             api_key=os.environ["TZAFON_API_KEY"],
         )
@@ -75,25 +77,9 @@ async def _browser_use_with_lightcone(client):
             print(f"{Colors.RED}Warning: computers.delete() failed: {e}{Colors.RESET}")
 
 
+@example(PAGE, "example", title="Browser-Use: With Lightcone Cloud Browser")
 def browser_use_with_lightcone(client):
-    try:
-        start_time = time()
-        print(
-            f"{Colors.YELLOW}*** Browser-Use: With Lightcone Cloud Browser ***{Colors.RESET}\n"
-        )
-        print(
-            f"Reference: {Colors.BLUE}https://docs.lightcone.ai/integrations/browser-use/#example{Colors.RESET}\n"
-        )
-
-        asyncio.run(_browser_use_with_lightcone(client))
-
-    except Exception as e:
-        print(f"\n{Colors.RED}Error in browser-use example: {e}{Colors.RESET}\n")
-    finally:
-        end_time = time()
-        print(
-            f"\n{Colors.GREEN}Execution time: {end_time - start_time:.2f} seconds{Colors.RESET}\n"
-        )
+    asyncio.run(_browser_use_with_lightcone(client))
 
 
 def browser_use_integration(client):

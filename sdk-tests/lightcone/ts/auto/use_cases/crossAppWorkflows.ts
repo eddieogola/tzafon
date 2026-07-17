@@ -1,18 +1,16 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function moveDataBetweenWebAppAndSpreadsheet(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Move Data Between a Web App and a Spreadsheet ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/cross-app-workflows/#move-data-between-a-web-app-and-a-spreadsheet${Colors.RESET}\n`,
-  );
+const PAGE = "use-cases/cross-app-workflows";
 
-  try {
+const moveDataBetweenWebAppAndSpreadsheet = example(
+  {
+    page: PAGE,
+    anchor: "move-data-between-a-web-app-and-a-spreadsheet",
+    title: "Move Data Between a Web App and a Spreadsheet",
+  },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open Firefox and go to https://crm.example.com. Log in with 'ops@example.com' / 'ops123'. " +
@@ -29,34 +27,22 @@ async function moveDataBetweenWebAppAndSpreadsheet(
     for await (const event of stream) {
       console.log(event);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error moving data between apps: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function processBatchAcrossSystems(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Process a Batch Across Systems ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/cross-app-workflows/#process-a-batch-across-systems${Colors.RESET}\n`,
-  );
+const processBatchAcrossSystems = example(
+  {
+    page: PAGE,
+    anchor: "process-a-batch-across-systems",
+    title: "Process a Batch Across Systems",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const records = [
+      { name: "Acme Corp", action: "renew" },
+      { name: "Globex Inc", action: "upgrade" },
+      { name: "Initech LLC", action: "cancel" },
+    ];
 
-  const records = [
-    { name: "Acme Corp", action: "renew" },
-    { name: "Globex Inc", action: "upgrade" },
-    { name: "Initech LLC", action: "cancel" },
-  ];
-
-  try {
     for (const record of records) {
       console.log(`Processing ${record.name}...`);
 
@@ -76,41 +62,33 @@ async function processBatchAcrossSystems(client: Lightcone): Promise<void> {
         console.log(`  ${JSON.stringify(event)}`);
       }
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error processing batch across systems: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function usePersistentStateForMultiSessionWorkflows(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Use Persistent State for Multi-session Workflows ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/cross-app-workflows/#use-persistent-state-for-multi-session-workflows${Colors.RESET}\n`,
-  );
+const usePersistentStateForMultiSessionWorkflows = example(
+  {
+    page: PAGE,
+    anchor: "use-persistent-state-for-multi-session-workflows",
+    title: "Use Persistent State for Multi-session Workflows",
+  },
+  async (client: Lightcone): Promise<void> => {
+    // First run: set up the environment
+    const computer = await client.computers.create({
+      kind: "desktop",
+      persistent: true,
+    });
+    const savedId = computer.id!;
 
-  const computer = await client.computers.create({
-    kind: "desktop",
-    persistent: true,
-  });
-  const savedId = computer.id!;
-
-  try {
+    // Install tools Northstar will need
     await client.computers.exec.sync(savedId, {
       command: "apt-get install -y libreoffice",
     });
     console.log(`Environment ready: ${Colors.YELLOW}${savedId}${Colors.RESET}`);
 
+    // Release the environment — it persists, so a later run can resume it by id.
+    await client.computers.delete(savedId);
+
+    // Subsequent runs: reuse the environment
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open LibreOffice Calc, load /tmp/data.csv, and add a 'Total' column that sums columns B through D",
@@ -121,18 +99,8 @@ async function usePersistentStateForMultiSessionWorkflows(
     for await (const event of stream) {
       console.log(event);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error using persistent state workflow: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(savedId);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function crossAppWorkflows(
   client: Lightcone,

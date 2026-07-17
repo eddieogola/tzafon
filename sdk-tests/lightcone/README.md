@@ -1,6 +1,10 @@
-# Lightcone SDK Tests (11-03)
+# Lightcone SDK Tests
 
-End-to-end tests for both the TypeScript and Python Lightcone SDKs.
+Docs-conformance tests for the Python and TypeScript Lightcone SDKs.
+
+Every runnable example on [docs.lightcone.ai](https://docs.lightcone.ai) should exist here, in both
+languages, and still work. When an example drifts from the docs — or the docs drift from the
+SDK — this suite is how you find out.
 
 ## Prerequisites
 
@@ -14,59 +18,157 @@ End-to-end tests for both the TypeScript and Python Lightcone SDKs.
 
 ### 1. Environment variables
 
-Copy the example env file and fill in your API key:
-
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set your `TZAFON_API_KEY`.
+Set `TZAFON_API_KEY`. Set `KERNEL_API_KEY` too if you want the Kernel integration to run —
+without it, `kernel_integration` fails with `Invalid or disabled API key`.
 
 ### 2. Install dependencies
 
-Install both TypeScript and Python dependencies:
-
 ```bash
-make install
+make install       # both
+make install-ts    # pnpm install in ts/
+make install-py    # uv sync in py/
 ```
 
-Or install them individually:
+## Running
 
 ```bash
-make install-ts   # pnpm install in ts/
-make install-py   # uv sync in py/
+make test          # Python, then TypeScript
+make test-py
+make test-ts
 ```
 
-## Running the tests
+Each run prints a summary and **exits non-zero if any example failed**, so it works in CI:
 
-Run both SDK tests sequentially (Python first, then TypeScript):
+```
+==============================================================
+  Summary
+==============================================================
 
-```bash
-make test
+  FAIL  Streaming Execution
+        https://docs.lightcone.ai/guides/shell-commands/#streaming-execution
+        NotFoundError: Error code: 404 - Session not found
+
+19/20 passed in 114.12s
 ```
 
-Each SDK displays a colored banner with the SDK name and installed package version before running.
+### Choosing what runs
 
-Run only one SDK:
+Comment/uncomment the calls in `py/main.py` and `ts/main.ts`. Most are off by default —
+the agentic examples make billed LLM calls and take minutes each.
 
-```bash
-make test-py   # Python SDK  (uv run main.py)
-make test-ts   # TypeScript SDK  (pnpm dev / tsx main.ts)
+A full run is ~80 examples across both languages and costs real money.
+
+## How a test is written
+
+One docs **page** → one module. One docs **anchor** → one function, tagged with the page and
+anchor it demonstrates:
+
+```python
+from utils.example import example
+
+PAGE = "guides/quickstart"
+
+@example(PAGE, "3-give-northstar-a-task", title="Quickstart: Give Northstar a Task")
+def quickstart(client):
+    for event in client.agent.tasks.start_stream(...):
+        print(event)
 ```
+
+```ts
+const quickstart = example(
+  { page: PAGE, anchor: "3-give-northstar-a-task", title: "Quickstart: Give Northstar a Task" },
+  async (client: Lightcone): Promise<void> => { ... },
+);
+```
+
+The decorator owns the banner, the timing, the error capture, and the `Reference:` URL —
+which is **derived** from `page` + `anchor`, never hand-typed. A URL you can't typo is a URL
+that can't silently 404 when the docs rename a heading.
+
+Keep example bodies looking like the docs. A reader should be able to diff them by eye; that's
+the point of the suite. Don't wrap SDK calls in helpers.
+
+### Per-example timeout
+
+Examples get a 600s wall-clock budget (`DEFAULT_TIMEOUT_SECONDS` in `py/utils/example.py`).
+This exists because a task event stream can wedge mid-task — it stops emitting without ever
+sending `completed` or `failed`, and the client's `timeout=` only covers individual HTTP
+requests, not the gap between stream events. Without the guard, one hung example blocks the
+whole run indefinitely (observed: 58 minutes on a single `start_stream` call).
+
+Override per example with `@example(..., timeout=1200)`.
 
 ## Project structure
 
 ```
 .
-├── .env              # API keys (not committed)
-├── .env.example      # Template for .env
-├── Makefile          # Task runner
-├── ts/               # TypeScript SDK tests
-│   ├── main.ts       # Entry point
-│   ├── auto/         # Test modules
-│   └── package.json
-└── py/               # Python SDK tests
-    ├── main.py       # Entry point
-    ├── auto/         # Test modules
-    └── pyproject.toml
+├── .env                  # API keys (not committed)
+├── Makefile
+├── py/
+│   ├── main.py           # entry point + which examples run
+│   ├── utils/
+│   │   ├── example.py    # @example decorator, summary(), exit code, timeout guard
+│   │   ├── coords.py     # to_px() — 0-999 model space -> pixels
+│   │   └── term.py
+│   └── auto/             # one dir per docs section, one module per page
+└── ts/                   # mirror of the above
 ```
+
+## Known failures
+
+These fail for reasons outside this repo. Don't "fix" them here:
+
+| Example | Cause |
+|---|---|
+| `Streaming Execution` (py + ts) | `computers.exec.create()` returns no output and destroys the session. Reproducible on desktop and browser. |
+| `browser_tool_for_agents` | Docs document `TzafonBrowserTool`; `langchain_tzafon` doesn't export it. |
+| `langchainIntegration` (ts) | Docs say `npm install @langchain/tzafon`. That package doesn't exist on npm (404). |
+| `kernel_integration` | Needs `KERNEL_API_KEY`. |
+
+## Where the docs are wrong
+
+Verified against the live API and the shipped packages. **The docs are not reliable ground
+truth for SDK surface** — every conflict found so far has gone against the docs:
+
+- **Tab fields**: the API returns `is_main` and `tab_id`. Docs say `is_main_tab` and `id`.
+- **`TzafonLoader`**: signature is `(urls, api_key, text_content)`. Docs pass `kind="browser"`,
+  which raises `TypeError`.
+- **`responses.delete()`**: doesn't exist. The API is `create` / `retrieve` / `cancel`.
+- **`computer_use`**: correct, and the API accepts it — but the TypeScript SDK's Responses
+  types are inherited from OpenAI's schema and only know `computer_use_preview`, so
+  `responses.create` needs an `as any` cast in TS.
+- **Task event stream**: typed as `string` in both SDKs, but yields structured events.
+- **Batch actions**: `go_to_url` is supported (it's in the SDK's own docstring) but absent from
+  the docs' action list.
+- **Docs-validation page**: its own two examples don't compose. Example 1 prints
+  `item.action.x/.y` raw (0-999 model space); example 2 clicks those numbers as pixels. Follow
+  the page literally and you click the wrong place — on the page that exists to fix exactly
+  that. `use_cases/docs_validation` denormalizes with `to_px` between the two.
+- **`ActionResult.result` is a dict**: the Cookbook reads `shot.result.screenshot_url`. `result`
+  is typed `Optional[Dict[str, object]]` — the SDK's own `get_screenshot_url()` does
+  `result.result.get("screenshot_url")`. Attribute access raises. Affects
+  `cookbook/verified-structured-extraction` and `cookbook/wrap-a-legacy-app-in-an-api`.
+- **`resp.output_text`**: the Cookbook's `ask_screen` returns it. `ResponseCreateResponse` has no
+  such property — it's an OpenAI SDK convenience. Walk `output` for `type == "message"` blocks,
+  as `using_northstar/responses_api` does.
+- **`ComputerResponse.context_id`**: the Cookbook's adopt-or-create filters on `c.context_id`.
+  `context_id` is a **create-only** param; it is not a declared field on the response model. The
+  model allows extras, so the filter only works if the API echoes it back — otherwise every
+  candidate raises `AttributeError` and adopt-or-create always creates.
+
+When docs and reality disagree, run the code and believe the run.
+
+## Gotchas
+
+- **Node + WSL2**: `pnpm dev` sets `NODE_OPTIONS=--network-family-autoselection-attempt-timeout=500`.
+  Node's default 250ms is too short for the IPv6 path to fail over in WSL2, and every request dies
+  with `fetch failed / ETIMEDOUT`. curl and Python fall back to IPv4 on their own; Node doesn't.
+- **`noUnusedLocals`** fights the comment-out selection style: commenting a call out in an
+  aggregator makes TypeScript flag the example as unused. That's why `main.ts` has
+  `void availableExamples`.
+- `tsc` isn't a dependency — `npx tsc` resolves to an unrelated package. Use
+  `npx -p typescript@5.9 tsc --noEmit`.

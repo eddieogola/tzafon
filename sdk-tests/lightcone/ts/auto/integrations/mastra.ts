@@ -1,15 +1,15 @@
-import Lightcone from "@tzafon/lightcone/index.js";
-import { Colors } from "@/utils/term";
+import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 
-async function mastraAgentWithBrowserTool(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Mastra: Agent with Lightcone Browser Tool ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/mastra/#example${Colors.RESET}\n`,
-  );
-  try {
+const PAGE = "integrations/mastra";
+
+const mastraAgentWithBrowserTool = example(
+  {
+    page: PAGE,
+    anchor: "example",
+    title: "Mastra: Agent with Lightcone Browser Tool",
+  },
+  async (client: Lightcone): Promise<void> => {
     const { Agent } = await import("@mastra/core/agent");
     const { createOpenAI } = await import("@ai-sdk/openai");
 
@@ -43,7 +43,7 @@ async function mastraAgentWithBrowserTool(client: Lightcone): Promise<void> {
       // Use .chat() to target /v1/chat/completions. The bare `tzafon(id)`
       // helper defaults to the OpenAI Responses API (/v1/responses), whose
       // multi-turn tool payloads currently 500 on Tzafon with "'role'".
-      model: tzafon.chat("tzafon.northstar-cua-fast"),
+      model: tzafon.chat("tzafon.northstar-cua-fast-1.6"),
       tools: { browse_web: browseWebTool },
     });
 
@@ -51,17 +51,8 @@ async function mastraAgentWithBrowserTool(client: Lightcone): Promise<void> {
       "Visit https://news.ycombinator.com and describe the top stories",
     );
     console.log(response.text);
-  } catch (e) {
-    console.error(
-      `\n${Colors.RED}Error in Mastra agent example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function mastraIntegration(
   client: Lightcone,

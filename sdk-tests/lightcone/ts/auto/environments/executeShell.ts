@@ -1,186 +1,146 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function synchronousExecution(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Synchronous Execution ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/shell-commands/#synchronous-execution${Colors.RESET}\n`,
-  );
+const PAGE = "guides/shell-commands";
 
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
+const synchronousExecution = example(
+  {
+    page: PAGE,
+    anchor: "synchronous-execution",
+    title: "Synchronous Execution",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
 
-  try {
-    const result = await client.computers.exec.sync(id, {
-      command: "echo 'Hello from Lightcone OS!'",
-    });
+    try {
+      const result = await client.computers.exec.sync(id, {
+        command: "echo 'Hello from Lightcone OS!'",
+      });
 
-    console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
-    console.log(`stderr: ${Colors.YELLOW}${result.stderr}${Colors.RESET}`);
-    console.log(`exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`);
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in synchronous execution: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
-
-async function streamingExecution(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Streaming Execution ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/shell-commands/#streaming-execution${Colors.RESET}\n`,
-  );
-
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
-
-  try {
-    const stream = await client.computers.exec.create(id, {
-      command: "printf 'line 1\\nline 2\\n'",
-    });
-
-    for await (const line of stream) {
-      if (line.type === "stdout") {
-        process.stdout.write(line.data ?? "");
-      } else if (line.type === "stderr") {
-        process.stderr.write(line.data ?? "");
-      } else if (line.type === "exit") {
-        console.log(`\nExit code: ${Colors.GREEN}${line.code}${Colors.RESET}`);
-      } else if (line.type === "error") {
-        console.log(
-          `\n${Colors.RED}Stream error: ${line.message}${Colors.RESET}`,
-        );
-      }
+      console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
+      console.log(`stderr: ${Colors.YELLOW}${result.stderr}${Colors.RESET}`);
+      console.log(
+        `exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in streaming execution: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function workingDirectoryAndEnvironment(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Working Directory and Environment ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/shell-commands/#working-directory-and-environment${Colors.RESET}\n`,
-  );
+const streamingExecution = example(
+  { page: PAGE, anchor: "streaming-execution", title: "Streaming Execution" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
 
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
+    try {
+      const stream = await client.computers.exec.create(id, {
+        command: "printf 'line 1\\nline 2\\n'",
+      });
 
-  try {
-    await client.computers.exec.sync(id, {
-      command: "mkdir -p /tmp/lightcone-shell-demo",
-    });
+      for await (const line of stream) {
+        if (line.type === "stdout") {
+          process.stdout.write(line.data ?? "");
+        } else if (line.type === "stderr") {
+          process.stderr.write(line.data ?? "");
+        } else if (line.type === "exit") {
+          console.log(`\nExit code: ${Colors.GREEN}${line.code}${Colors.RESET}`);
+        } else if (line.type === "error") {
+          console.log(
+            `\n${Colors.RED}Stream error: ${line.message}${Colors.RESET}`,
+          );
+        }
+      }
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-    const result = await client.computers.exec.sync(id, {
-      command: "pwd && echo $APP_MODE",
-      cwd: "/tmp/lightcone-shell-demo",
-      env: {
-        APP_MODE: "production",
-      },
-    });
+const workingDirectoryAndEnvironment = example(
+  {
+    page: PAGE,
+    anchor: "working-directory-and-environment",
+    title: "Working Directory and Environment",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
 
-    console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
-    console.log(`exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`);
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in working directory and environment: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+    try {
+      await client.computers.exec.sync(id, {
+        command: "mkdir -p /tmp/lightcone-shell-demo",
+      });
 
-async function timeouts(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Timeouts ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/shell-commands/#timeouts${Colors.RESET}\n`,
-  );
+      const result = await client.computers.exec.sync(id, {
+        command: "pwd && echo $APP_MODE",
+        cwd: "/tmp/lightcone-shell-demo",
+        env: {
+          APP_MODE: "production",
+        },
+      });
 
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
+      console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
+      console.log(
+        `exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-  try {
-    const result = await client.computers.exec.sync(id, {
-      command: "sleep 10",
-      timeout_seconds: 2,
-    });
+const timeouts = example(
+  { page: PAGE, anchor: "timeouts", title: "Timeouts" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
 
-    console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
-    console.log(`stderr: ${Colors.YELLOW}${result.stderr}${Colors.RESET}`);
-    console.log(`exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`);
-  } catch (e) {
-    console.log(`\n${Colors.RED}Error in timeouts: ${e}${Colors.RESET}\n`);
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+    try {
+      const result = await client.computers.exec.sync(id, {
+        command: "sleep 10",
+        timeout_seconds: 2,
+      });
 
-async function commonUseCases(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Common Use Cases ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/shell-commands/#common-use-cases${Colors.RESET}\n`,
-  );
+      console.log(`stdout: ${Colors.BLUE}${result.stdout}${Colors.RESET}`);
+      console.log(`stderr: ${Colors.YELLOW}${result.stderr}${Colors.RESET}`);
+      console.log(
+        `exit code: ${Colors.GREEN}${result.exit_code}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
+const commonUseCases = example(
+  { page: PAGE, anchor: "common-use-cases", title: "Common Use Cases" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
 
-  try {
-    const pythonResult = await client.computers.exec.sync(id, {
-      command: `python3 -c "import json; print(json.dumps({'status': 'ok'}))"`,
-    });
-    console.log(
-      `python output: ${Colors.BLUE}${(pythonResult.stdout ?? "").trim()}${Colors.RESET}`,
-    );
+    try {
+      const pythonResult = await client.computers.exec.sync(id, {
+        command: `python3 -c "import json; print(json.dumps({'status': 'ok'}))"`,
+      });
+      console.log(
+        `python output: ${Colors.BLUE}${(pythonResult.stdout ?? "").trim()}${Colors.RESET}`,
+      );
 
-    const processResult = await client.computers.exec.sync(id, {
-      command: "ps aux | grep -m 1 python",
-    });
-    console.log(
-      `process sample: ${Colors.YELLOW}${(processResult.stdout ?? "").trim()}${Colors.RESET}`,
-    );
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in common use cases: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+      const processResult = await client.computers.exec.sync(id, {
+        command: "ps aux | grep -m 1 python",
+      });
+      console.log(
+        `process sample: ${Colors.YELLOW}${(processResult.stdout ?? "").trim()}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
 export default async function executeShell(client: Lightcone): Promise<void> {
   console.log(

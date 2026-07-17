@@ -1,90 +1,60 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function sessionLifecycleCreate(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Session Lifecycle: Create ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#create${Colors.RESET}\n`,
-  );
+const PAGE = "guides/computers";
 
-  const computer = await client.computers.create({ kind: "browser" });
-  const id = computer.id!;
+const sessionLifecycleCreate = example(
+  { page: PAGE, anchor: "create", title: "Session Lifecycle: Create" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "browser" });
+    const id = computer.id!;
 
-  try {
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await new Promise((r) => setTimeout(r, 2000));
+    try {
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await new Promise((r) => setTimeout(r, 2000));
 
-    const result = await client.computers.screenshot(id);
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
-    );
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in session lifecycle create: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+      const result = await client.computers.screenshot(id);
+      console.log(
+        `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-async function sessionLifecycleInteract(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Session Lifecycle: Interact ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#interact${Colors.RESET}\n`,
-  );
+const sessionLifecycleInteract = example(
+  { page: PAGE, anchor: "interact", title: "Session Lifecycle: Interact" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "browser" });
+    const id = computer.id!;
 
-  const computer = await client.computers.create({ kind: "browser" });
-  const id = computer.id!;
+    try {
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await client.computers.click(id, { x: 100, y: 200 });
+      await client.computers.type(id, { text: "hello world" });
+      await client.computers.hotkey(id, { keys: ["Enter"] });
+      await client.computers.scroll(id, { dx: 0, dy: 300, x: 640, y: 400 });
 
-  try {
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await client.computers.click(id, { x: 100, y: 200 });
-    await client.computers.type(id, { text: "hello world" });
-    await client.computers.hotkey(id, { keys: ["Enter"] });
-    await client.computers.scroll(id, { dx: 0, dy: 300, x: 640, y: 400 });
+      const result = await client.computers.screenshot(id);
+      const url = result.result?.screenshot_url as string;
+      console.log(`Screenshot URL: ${Colors.BLUE}${url}${Colors.RESET}`);
 
-    const result = await client.computers.screenshot(id);
-    const url = result.result?.screenshot_url as string;
-    console.log(`Screenshot URL: ${Colors.BLUE}${url}${Colors.RESET}`);
+      const htmlResult = await client.computers.html(id);
+      const content = htmlResult.result?.html_content as string;
+      console.log(
+        `HTML content length: ${Colors.YELLOW}${content.length} chars${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-    const htmlResult = await client.computers.html(id);
-    const content = htmlResult.result?.html_content as string;
-    console.log(
-      `HTML content length: ${Colors.YELLOW}${content.length} chars${Colors.RESET}`,
-    );
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in session lifecycle interact: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
-
-async function sessionLifecycleTerminate(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Session Lifecycle: Terminate ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#terminate${Colors.RESET}\n`,
-  );
-
-  try {
+const sessionLifecycleTerminate = example(
+  { page: PAGE, anchor: "terminate", title: "Session Lifecycle: Terminate" },
+  async (client: Lightcone): Promise<void> => {
     const computer = await client.computers.create({ kind: "browser" });
     const id = computer.id!;
 
@@ -101,148 +71,107 @@ async function sessionLifecycleTerminate(client: Lightcone): Promise<void> {
       await client.computers.delete(id);
       console.log(`${Colors.GREEN}Session terminated manually${Colors.RESET}`);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in session lifecycle terminate: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function computerSessionWrapper(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** ComputerSession (High-Level Wrapper) ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#computersession-high-level-wrapper${Colors.RESET}\n`,
-  );
+const computerSessionWrapper = example(
+  {
+    page: PAGE,
+    anchor: "computersession-high-level-wrapper",
+    title: "ComputerSession (High-Level Wrapper)",
+  },
+  async (client: Lightcone): Promise<void> => {
+    // TypeScript uses ComputerSession.create() from the package
+    const { ComputerSession } = await import("@tzafon/lightcone/index.js");
+    const computer = await ComputerSession.create(client, { kind: "browser" });
 
-  // TypeScript uses ComputerSession.create() from the package
-  const { ComputerSession } = await import("@tzafon/lightcone/index.js");
-  const computer = await ComputerSession.create(client, { kind: "browser" });
+    try {
+      await computer.navigate("https://example.com");
+      await computer.click(100, 200);
+      const result = await computer.screenshot();
+      const url = ComputerSession.getScreenshotUrl(result);
+      console.log(`Screenshot URL: ${Colors.BLUE}${url}${Colors.RESET}`);
+    } finally {
+      await computer.terminate();
+    }
+  },
+);
 
-  try {
-    await computer.navigate("https://example.com");
-    await computer.click(100, 200);
-    const result = await computer.screenshot();
-    const url = ComputerSession.getScreenshotUrl(result);
-    console.log(`Screenshot URL: ${Colors.BLUE}${url}${Colors.RESET}`);
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in ComputerSession wrapper: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await computer.terminate();
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+const actionsReference = example(
+  { page: PAGE, anchor: "actions-reference", title: "Actions Reference" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "browser" });
+    const id = computer.id!;
 
-async function actionsReference(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Actions Reference ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#actions-reference${Colors.RESET}\n`,
-  );
+    try {
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await new Promise((r) => setTimeout(r, 2000));
 
-  const computer = await client.computers.create({ kind: "browser" });
-  const id = computer.id!;
+      // Mouse actions
+      console.log(`${Colors.YELLOW}--- Mouse Actions ---${Colors.RESET}`);
+      await client.computers.click(id, { x: 100, y: 200 }); // Left-click
+      await client.computers.doubleClick(id, { x: 100, y: 200 }); // Double-click
+      await client.computers.rightClick(id, { x: 100, y: 200 }); // Right-click
 
-  try {
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await new Promise((r) => setTimeout(r, 2000));
+      // Keyboard actions
+      console.log(`${Colors.YELLOW}--- Keyboard Actions ---${Colors.RESET}`);
+      await client.computers.type(id, { text: "hello world" });
+      await client.computers.hotkey(id, { keys: ["Enter"] });
 
-    // Mouse actions
-    console.log(`${Colors.YELLOW}--- Mouse Actions ---${Colors.RESET}`);
-    await client.computers.click(id, { x: 100, y: 200 }); // Left-click
-    await client.computers.doubleClick(id, { x: 100, y: 200 }); // Double-click
-    await client.computers.rightClick(id, { x: 100, y: 200 }); // Right-click
+      // Navigation & viewport
+      console.log(
+        `${Colors.YELLOW}--- Navigation & Viewport ---${Colors.RESET}`,
+      );
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await client.computers.scroll(id, { dx: 0, dy: 300, x: 640, y: 400 });
 
-    // Keyboard actions
-    console.log(`${Colors.YELLOW}--- Keyboard Actions ---${Colors.RESET}`);
-    await client.computers.type(id, { text: "hello world" });
-    await client.computers.hotkey(id, { keys: ["Enter"] });
+      const result = await client.computers.screenshot(id);
+      console.log(
+        `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
+      );
 
-    // Navigation & viewport
-    console.log(`${Colors.YELLOW}--- Navigation & Viewport ---${Colors.RESET}`);
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await client.computers.scroll(id, { dx: 0, dy: 300, x: 640, y: 400 });
+      const htmlResult = await client.computers.html(id);
+      const content = htmlResult.result?.html_content as string;
+      console.log(
+        `HTML content length: ${Colors.YELLOW}${content.length} chars${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-    const result = await client.computers.screenshot(id);
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
-    );
+const timeoutsAndKeepalive = example(
+  {
+    page: PAGE,
+    anchor: "timeouts-and-keepalive",
+    title: "Timeouts and Keepalive",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "browser" });
+    const id = computer.id!;
 
-    const htmlResult = await client.computers.html(id);
-    const content = htmlResult.result?.html_content as string;
-    console.log(
-      `HTML content length: ${Colors.YELLOW}${content.length} chars${Colors.RESET}`,
-    );
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in actions reference: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+    try {
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await new Promise((r) => setTimeout(r, 2000));
 
-async function timeoutsAndKeepalive(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Timeouts and Keepalive ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#timeouts-and-keepalive${Colors.RESET}\n`,
-  );
+      // Keep the session alive during long pauses
+      await client.computers.keepalive(id);
+      console.log(`${Colors.GREEN}Keep-alive sent${Colors.RESET}`);
 
-  const computer = await client.computers.create({ kind: "browser" });
-  const id = computer.id!;
+      const result = await client.computers.screenshot(id);
+      console.log(
+        `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
+      );
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
-  try {
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await new Promise((r) => setTimeout(r, 2000));
-
-    // Keep the session alive during long pauses
-    await client.computers.keepalive(id);
-    console.log(`${Colors.GREEN}Keep-alive sent${Colors.RESET}`);
-
-    const result = await client.computers.screenshot(id);
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
-    );
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in timeouts and keepalive: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
-
-async function persistentSessions(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Persistent Sessions ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#persistent-sessions${Colors.RESET}\n`,
-  );
-
-  try {
+const persistentSessions = example(
+  { page: PAGE, anchor: "persistent-state", title: "Persistent Sessions" },
+  async (client: Lightcone): Promise<void> => {
     // Save state on termination
     const session = await client.computers.create({
       kind: "browser",
@@ -271,91 +200,66 @@ async function persistentSessions(client: Lightcone): Promise<void> {
       console.log(
         `Restored session screenshot: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
       );
-      console.log(
-        `${Colors.GREEN}Session restored successfully${Colors.RESET}`,
-      );
+      console.log(`${Colors.GREEN}Session restored successfully${Colors.RESET}`);
     } finally {
       await client.computers.delete(restored.id!);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in persistent sessions: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function batchActions(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Batch Actions ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#batch-actions${Colors.RESET}\n`,
-  );
+const batchActions = example(
+  { page: PAGE, anchor: "batch-actions", title: "Batch Actions" },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "browser" });
+    const id = computer.id!;
 
-  const computer = await client.computers.create({ kind: "browser" });
-  const id = computer.id!;
-
-  try {
-    const results = await client.computers.batch(id, {
-      actions: [
-        { type: "go_to_url", url: "https://example.com" },
-        { type: "click", x: 100, y: 200 },
-        { type: "screenshot" },
-      ],
-    });
-    console.log(
-      `Executed: ${Colors.YELLOW}${results.executed}/${results.total}${Colors.RESET}`,
-    );
-    for (const r of results.results) {
-      console.log(`  Status: ${Colors.GREEN}${r.status}${Colors.RESET}`);
+    try {
+      const results = await client.computers.batch(id, {
+        actions: [
+          { type: "go_to_url", url: "https://example.com" },
+          { type: "click", x: 100, y: 200 },
+          { type: "screenshot" },
+        ],
+      });
+      console.log(
+        `Executed: ${Colors.YELLOW}${results.executed}/${results.total}${Colors.RESET}`,
+      );
+      for (const r of results.results) {
+        console.log(`  Status: ${Colors.GREEN}${r.status}${Colors.RESET}`);
+      }
+    } finally {
+      await client.computers.delete(id);
     }
-  } catch (e) {
-    console.log(`\n${Colors.RED}Error in batch actions: ${e}${Colors.RESET}\n`);
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function proxySupport(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Proxy Support ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/computers/#proxy-support${Colors.RESET}\n`,
-  );
+const proxySupport = example(
+  {
+    page: PAGE,
+    anchor: "proxy-support-browser-mode",
+    title: "Proxy Support",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({
+      kind: "browser",
+      use_advanced_proxy: true,
+    });
+    const id = computer.id!;
 
-  const computer = await client.computers.create({
-    kind: "browser",
-    use_advanced_proxy: true,
-  });
-  const id = computer.id!;
+    try {
+      await client.computers.navigate(id, { url: "https://example.com" });
+      await new Promise((r) => setTimeout(r, 2000));
 
-  try {
-    await client.computers.navigate(id, { url: "https://example.com" });
-    await new Promise((r) => setTimeout(r, 2000));
-
-    const result = await client.computers.screenshot(id);
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
-    );
-    console.log(`${Colors.GREEN}Advanced proxy active${Colors.RESET}`);
-  } catch (e) {
-    console.log(`\n${Colors.RED}Error in proxy support: ${e}${Colors.RESET}\n`);
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+      const result = await client.computers.screenshot(id);
+      console.log(
+        `Screenshot URL: ${Colors.BLUE}${result.result?.screenshot_url}${Colors.RESET}`,
+      );
+      console.log(`${Colors.GREEN}Advanced proxy active${Colors.RESET}`);
+    } finally {
+      await client.computers.delete(id);
+    }
+  },
+);
 
 export default async function computers(client: Lightcone): Promise<void> {
   console.log(
