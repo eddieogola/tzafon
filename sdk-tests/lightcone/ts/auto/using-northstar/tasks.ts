@@ -1,16 +1,12 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function startTaskStreaming(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Tasks: Start a Task (Streaming) ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/tasks/#start-a-task${Colors.RESET}\n`,
-  );
+const PAGE = "guides/tasks";
 
-  try {
+const startTaskStreaming = example(
+  { page: PAGE, anchor: "operations", title: "Tasks: Start a Task (Streaming)" },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open Firefox, go to Wikipedia, search for 'machine learning', and summarize the first paragraph",
@@ -23,30 +19,12 @@ async function startTaskStreaming(client: Lightcone): Promise<void> {
         break;
       }
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in tasks streaming example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function asyncTaskWithStatusAndControls(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Tasks: Async + Status + Controls ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/tasks/#check-task-status${Colors.RESET}\n`,
-  );
-
-  try {
+const asyncTaskWithStatusAndControls = example(
+  { page: PAGE, anchor: "operations", title: "Tasks: Async + Status + Controls" },
+  async (client: Lightcone): Promise<void> => {
     const task = await client.agent.tasks.start({
       instruction:
         "Open the terminal, check disk usage with df -h, and take a screenshot of the results",
@@ -74,17 +52,8 @@ async function asyncTaskWithStatusAndControls(
       }
       await new Promise((r) => setTimeout(r, 2000));
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in async task controls example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function tasksGuide(client: Lightcone): Promise<void> {
   console.log(

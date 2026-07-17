@@ -1,7 +1,9 @@
 import os
+import sys
 
 from tzafon import Lightcone
 from dotenv import load_dotenv
+from utils.example import summary
 from auto.getting_started.quickstart import quickstart_guide
 from auto.getting_started.authentication import authentication_guide
 from auto.getting_started.how_lightcone_works import how_lightcone_works_guide
@@ -23,7 +25,6 @@ from auto.using_northstar.cua_protocol import cua_protocol_guide
 from auto.using_northstar.coordinates import coordinates_guide
 from auto.using_northstar.chat_completions import chat_completions_guide
 from auto.integrations.langchain import langchain_integration
-from auto.integrations.crewai import crewai_integration
 from auto.integrations.browser_use import browser_use_integration
 from auto.integrations.playwright import playwright_integration
 from auto.integrations.kernel import kernel_integration
@@ -102,6 +103,9 @@ https://docs.lightcone.ai/integrations/langchain/
 
 """
 # langchain_integration(client)
-# crewai_integration(client)
 # browser_use_integration(client)
 # kernel_integration(client)
+
+
+# Prints what ran and what broke; exits non-zero if any example failed.
+sys.exit(summary())

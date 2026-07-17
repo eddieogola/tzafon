@@ -1,16 +1,12 @@
-import Lightcone from "@tzafon/lightcone/index.js";
-import { Colors } from "@/utils/term";
+import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
+
+const PAGE = "integrations/langchain";
 
 // TzafonLoader manages its own connection internally
-async function documentLoader(_client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** LangChain: Document Loader ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/langchain/#document-loader${Colors.RESET}\n`,
-  );
-  try {
+const documentLoader = example(
+  { page: PAGE, anchor: "document-loader", title: "LangChain: Document Loader" },
+  async (): Promise<void> => {
     const { TzafonLoader } = await import("@langchain/tzafon");
 
     const loader = new TzafonLoader({
@@ -23,20 +19,11 @@ async function documentLoader(_client: Lightcone): Promise<void> {
       console.log(doc.pageContent.slice(0, 200));
       console.log(doc.metadata.url);
     }
-  } catch (e) {
-    console.error(
-      `\n${Colors.RED}Error in document loader example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function langchainIntegration(
-  client: Lightcone,
+  _client: Lightcone,
 ): Promise<void> {
-  await documentLoader(client);
+  await documentLoader();
 }

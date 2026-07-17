@@ -1,18 +1,16 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function startAgentWithFormInstructions(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Starting Agent with Form Instructions ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/tutorials/automate-a-form-with-ai/#step-1-start-an-agent-with-form-instructions${Colors.RESET}\n`,
-  );
+const PAGE = "tutorials/automate-a-form-with-ai";
 
-  try {
+const startTaskWithFormInstructions = example(
+  {
+    page: PAGE,
+    anchor: "step-1-start-a-task-with-form-instructions",
+    title: "Start a Task with Form Instructions",
+  },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Go to https://httpbin.org/forms/post. " +
@@ -35,28 +33,16 @@ async function startAgentWithFormInstructions(
         break;
       }
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error starting agent with form instructions: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function fireAndPoll(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Fire-and-Poll for Background Execution ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/tutorials/automate-a-form-with-ai/#step-2-use-fire-and-poll-for-background-execution${Colors.RESET}\n`,
-  );
-
-  try {
+const fireAndPoll = example(
+  {
+    page: PAGE,
+    anchor: "step-2-use-fire-and-poll-for-background-execution",
+    title: "Fire-and-Poll for Background Execution",
+  },
+  async (client: Lightcone): Promise<void> => {
     const task = await client.agent.tasks.start({
       instruction:
         "Go to https://httpbin.org/forms/post. " +
@@ -80,26 +66,16 @@ async function fireAndPoll(client: Lightcone): Promise<void> {
       }
       await new Promise((r) => setTimeout(r, 3000));
     }
-  } catch (e) {
-    console.log(`\n${Colors.RED}Error in fire-and-poll: ${e}${Colors.RESET}\n`);
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function verifyWithManualCheck(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Verify with a Manual Check ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/tutorials/automate-a-form-with-ai/#step-3-verify-with-a-manual-check${Colors.RESET}\n`,
-  );
-
-  try {
+const verifyWithManualCheck = example(
+  {
+    page: PAGE,
+    anchor: "step-3-verify-with-a-manual-check",
+    title: "Verify with a Manual Check",
+  },
+  async (client: Lightcone): Promise<void> => {
     // Start with persistence so we can inspect afterward
     const task = await client.agent.tasks.start({
       instruction:
@@ -124,26 +100,16 @@ async function verifyWithManualCheck(client: Lightcone): Promise<void> {
     // Inspect the final state
     const status = await client.agent.tasks.retrieveStatus(task.task_id!);
     console.log(`Status: ${Colors.GREEN}${status.status}${Colors.RESET}`);
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error verifying with manual check: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function steerAStuckAgent(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Steer a Stuck Agent ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/tutorials/automate-a-form-with-ai/#step-4-steer-a-stuck-agent${Colors.RESET}\n`,
-  );
-
-  try {
+const steerAStuckTask = example(
+  {
+    page: PAGE,
+    anchor: "step-4-steer-a-stuck-task",
+    title: "Steer a Stuck Task",
+  },
+  async (client: Lightcone): Promise<void> => {
     const task = await client.agent.tasks.start({
       instruction: "Go to https://httpbin.org/forms/post and fill in the form.",
       kind: "browser",
@@ -178,17 +144,8 @@ async function steerAStuckAgent(client: Lightcone): Promise<void> {
       }
       await new Promise((r) => setTimeout(r, 3000));
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error steering stuck agent: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function automateFormWithAi(
   client: Lightcone,
@@ -196,8 +153,8 @@ export default async function automateFormWithAi(
   console.log(
     `${Colors.YELLOW}*** Automating Form Filling with AI ***${Colors.RESET}\n`,
   );
-  await startAgentWithFormInstructions(client);
+  await startTaskWithFormInstructions(client);
   await fireAndPoll(client);
   await verifyWithManualCheck(client);
-  await steerAStuckAgent(client);
+  await steerAStuckTask(client);
 }

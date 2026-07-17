@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --env-file=../.env main.ts"
+    "dev": "NODE_OPTIONS=--network-family-autoselection-attempt-timeout=500 tsx --env-file=../.env main.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,5 @@
 import Lightcone from "@tzafon/lightcone/index.js";
+import { summary } from "@/utils/example";
 import quickstartGuide from "@/auto/getting-started/quickstart";
 import authenticationGuide from "@/auto/getting-started/authentication";
 import howLightconeWorksGuide from "@/auto/getting-started/howLightconeWorks";
@@ -26,7 +27,7 @@ import mastraIntegration from "@/auto/integrations/mastra";
 import kernelIntegration from "@/auto/integrations/kernel";
 
 const client = new Lightcone({
-  apiKey: process.env.LIGHTCONE_API_KEY!,
+  apiKey: process.env.TZAFON_API_KEY!,
   timeout: 30000, // milliseconds
   maxRetries: 3,
 });
@@ -117,4 +118,7 @@ async function main() {
   // await kernelIntegration(client);
 }
 
-main();
+main().then(() => {
+  // Prints what ran and what broke; exits non-zero if any example failed.
+  process.exitCode = summary();
+});

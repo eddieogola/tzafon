@@ -1,5 +1,8 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
+
+const PAGE = "use-cases/software-testing";
 
 type ResponseOutputMessage = {
   type?: string;
@@ -9,14 +12,9 @@ type ResponseOutputMessage = {
   }>;
 };
 
-async function testLoginFlow(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Testing a Login Flow ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/software-testing/#test-a-login-flow${Colors.RESET}\n`,
-  );
-
-  try {
+const testLoginFlow = example(
+  { page: PAGE, anchor: "test-a-login-flow", title: "Testing a Login Flow" },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Go to https://app.example.com/login. " +
@@ -34,28 +32,16 @@ async function testLoginFlow(client: Lightcone): Promise<void> {
         break;
       }
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error testing login flow: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function testMultiStepWorkflow(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Testing a Multi-step Workflow ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/software-testing/#test-a-multi-step-workflow${Colors.RESET}\n`,
-  );
-
-  try {
+const testMultiStepWorkflow = example(
+  {
+    page: PAGE,
+    anchor: "test-a-multi-step-workflow",
+    title: "Testing a Multi-step Workflow",
+  },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Go to https://app.example.com. Log in with 'admin@example.com' / 'admin123'. " +
@@ -69,108 +55,88 @@ async function testMultiStepWorkflow(client: Lightcone): Promise<void> {
     });
 
     for await (const event of stream) {
+      console.log(event);
       if (event.type === "completed") {
         break;
       }
     }
-  } catch (e) {
+  },
+);
+
+const visualVerificationWithResponsesApi = example(
+  {
+    page: PAGE,
+    anchor: "visual-verification-with-the-responses-api",
+    title: "Visual Verification with Responses API",
+  },
+  async (client: Lightcone): Promise<void> => {
+    const computer = await client.computers.create({ kind: "desktop" });
+    const id = computer.id!;
     console.log(
-      `\n${Colors.RED}Error testing multi-step workflow: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
-
-async function visualVerificationWithResponsesApi(
-  client: Lightcone,
-): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Visual Verification with Responses API ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/use-cases/software-testing/#visual-verification-with-the-responses-api${Colors.RESET}\n`,
-  );
-
-  const computer = await client.computers.create({ kind: "desktop" });
-  const id = computer.id!;
-  console.log(`Created computer with ID: ${Colors.BLUE}${id}${Colors.RESET}\n`);
-
-  try {
-    await client.computers.exec.sync(id, {
-      command: "nohup firefox https://app.example.com > /dev/null 2>&1 & disown",
-    });
-    await new Promise((r) => setTimeout(r, 5000));
-
-    const screenshot = await client.computers.screenshot(id);
-    const screenshotUrl = screenshot.result?.screenshot_url as
-      | string
-      | undefined;
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${screenshotUrl}${Colors.RESET}\n`,
+      `Created computer with ID: ${Colors.BLUE}${id}${Colors.RESET}\n`,
     );
 
-    if (!screenshotUrl) {
-      throw new Error("Missing screenshot URL");
-    }
+    try {
+      await client.computers.exec.sync(id, {
+        command:
+          "nohup firefox https://app.example.com > /dev/null 2>&1 & disown",
+      });
+      await new Promise((r) => setTimeout(r, 5000));
 
-    console.log(
-      `Screenshot URL: ${Colors.BLUE}${screenshotUrl}${Colors.RESET}\n`,
-    );
+      const screenshot = await client.computers.screenshot(id);
+      const screenshotUrl = screenshot.result?.screenshot_url as
+        | string
+        | undefined;
+      console.log(
+        `Screenshot URL: ${Colors.BLUE}${screenshotUrl}${Colors.RESET}\n`,
+      );
 
-    const response = await client.responses.create({
-      model: "tzafon.northstar-cua-fast",
-      input: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "input_text",
-              text:
-                "Does this page look correct? Check for: " +
-                "1) Logo is visible " +
-                "2) Navigation bar has Home, Products, About links " +
-                "3) No error messages or broken images. " +
-                "Report any issues.",
-            },
-            {
-              type: "input_image",
-              image_url: screenshotUrl,
-              detail: "auto",
-            },
-          ],
-        },
-      ],
-    });
-
-    const output = (response.output ?? []) as ResponseOutputMessage[];
-    for (const item of output) {
-      if (item.type !== "message") {
-        continue;
+      if (!screenshotUrl) {
+        throw new Error("Missing screenshot URL");
       }
 
-      for (const block of item.content ?? []) {
-        if (block.type === "output_text" && block.text) {
-          console.log(block.text);
+      const response = await client.responses.create({
+        model: "tzafon.northstar-cua-fast-1.6",
+        input: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "input_text",
+                text:
+                  "Does this page look correct? Check for: " +
+                  "1) Logo is visible " +
+                  "2) Navigation bar has Home, Products, About links " +
+                  "3) No error messages or broken images. " +
+                  "Report any issues.",
+              },
+              {
+                type: "input_image",
+                image_url: screenshotUrl,
+                detail: "auto",
+              },
+            ],
+          },
+        ],
+      });
+
+      const output = (response.output ?? []) as ResponseOutputMessage[];
+      for (const item of output) {
+        if (item.type !== "message") {
+          continue;
+        }
+
+        for (const block of item.content ?? []) {
+          if (block.type === "output_text" && block.text) {
+            console.log(block.text);
+          }
         }
       }
+    } finally {
+      await client.computers.delete(id);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in visual verification with responses API: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    await client.computers.delete(id);
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function softwareTesting(
   client: Lightcone,

@@ -1,5 +1,7 @@
-import Lightcone from "@tzafon/lightcone/index.js";
-import { Colors } from "@/utils/term";
+import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
+
+const PAGE = "integrations/kernel";
 
 const TOOL = {
   type: "computer_use" as const,
@@ -8,15 +10,9 @@ const TOOL = {
   environment: "browser" as const,
 };
 
-async function kernelCuaLoop(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Kernel: CUA Loop with Northstar ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/integrations/kernel/#the-cua-loop${Colors.RESET}\n`,
-  );
-  try {
+const kernelCuaLoop = example(
+  { page: PAGE, anchor: "the-cua-loop", title: "Kernel: CUA Loop with Northstar" },
+  async (client: Lightcone): Promise<void> => {
     // @ts-ignore — optional peer dependency, install with: npm install @onkernel/sdk
     const Kernel = (await import("@onkernel/sdk/index.js")).default;
 
@@ -39,7 +35,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
 
     // First request to Northstar
     let response = await client.responses.create({
-      model: "tzafon.northstar-cua-fast",
+      model: "tzafon.northstar-cua-fast-1.6",
       input: [
         {
           role: "user",
@@ -127,7 +123,7 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
       const newB64 = Buffer.from(await newPng.arrayBuffer()).toString("base64");
 
       response = await client.responses.create({
-        model: "tzafon.northstar-cua-fast",
+        model: "tzafon.northstar-cua-fast-1.6",
         previous_response_id: response.id!,
         input: [
           {
@@ -146,17 +142,8 @@ async function kernelCuaLoop(client: Lightcone): Promise<void> {
     }
 
     await kernel.browsers.deleteByID(session.session_id);
-  } catch (e) {
-    console.error(
-      `\n${Colors.RED}Error in kernel CUA loop: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function kernelIntegration(
   client: Lightcone,

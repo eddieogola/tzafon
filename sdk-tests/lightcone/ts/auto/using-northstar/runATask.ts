@@ -1,19 +1,21 @@
 import type Lightcone from "@tzafon/lightcone/index.js";
+import { example } from "@/utils/example";
 import { Colors } from "@/utils/term";
 
-async function startTaskWithStreaming(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(`${Colors.YELLOW}*** Run a Task: Streaming ***${Colors.RESET}\n`);
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/run-a-task/#start-a-task-with-streaming${Colors.RESET}\n`,
-  );
+const PAGE = "guides/run-a-task";
 
-  try {
+const startTaskWithStreaming = example(
+  {
+    page: PAGE,
+    anchor: "start-a-task-with-streaming",
+    title: "Run a Task: Streaming",
+  },
+  async (client: Lightcone): Promise<void> => {
     const stream = await client.agent.tasks.startStream({
       instruction:
         "Open the file manager, navigate to /home, and list the contents. Then open the terminal and run 'uname -a'.",
       kind: "desktop",
-      model: "tzafon.northstar-cua-fast",
+      model: "tzafon.northstar-cua-fast-1.6",
       max_steps: 20,
     });
 
@@ -23,28 +25,12 @@ async function startTaskWithStreaming(client: Lightcone): Promise<void> {
       }
       console.log(event);
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in streaming run-a-task: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function fireAndPoll(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Run a Task: Fire and Poll ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/run-a-task/#fire-and-poll${Colors.RESET}\n`,
-  );
-
-  try {
+const fireAndPoll = example(
+  { page: PAGE, anchor: "fire-and-poll", title: "Run a Task: Fire and Poll" },
+  async (client: Lightcone): Promise<void> => {
     const task = await client.agent.tasks.start({
       instruction: "Open the browser and navigate to https://www.wikipedia.org",
       kind: "desktop",
@@ -61,28 +47,12 @@ async function fireAndPoll(client: Lightcone): Promise<void> {
       }
       await new Promise((r) => setTimeout(r, 2000));
     }
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in fire-and-poll example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
-async function steerMidTask(client: Lightcone): Promise<void> {
-  const startTime = Date.now();
-  console.log(
-    `${Colors.YELLOW}*** Run a Task: Steer Mid-task ***${Colors.RESET}\n`,
-  );
-  console.log(
-    `Reference: ${Colors.BLUE}https://docs.lightcone.ai/guides/run-a-task/#steer-mid-task${Colors.RESET}\n`,
-  );
-
-  try {
+const steerMidTask = example(
+  { page: PAGE, anchor: "steer-mid-task", title: "Run a Task: Steer Mid-task" },
+  async (client: Lightcone): Promise<void> => {
     const task = await client.agent.tasks.start({
       instruction: "Research the latest AI news using Firefox",
       kind: "desktop",
@@ -100,17 +70,8 @@ async function steerMidTask(client: Lightcone): Promise<void> {
     await new Promise((r) => setTimeout(r, 1000));
     await client.agent.tasks.resume(task.task_id!);
     console.log("Task resumed");
-  } catch (e) {
-    console.log(
-      `\n${Colors.RED}Error in steer-mid-task example: ${e}${Colors.RESET}\n`,
-    );
-  } finally {
-    const endTime = Date.now();
-    console.log(
-      `\n${Colors.GREEN}Execution time: ${((endTime - startTime) / 1000).toFixed(2)} seconds${Colors.RESET}\n`,
-    );
-  }
-}
+  },
+);
 
 export default async function runATaskGuide(client: Lightcone): Promise<void> {
   console.log(
