@@ -35,6 +35,9 @@ make install-py    # uv sync in py/
 
 ## Running
 
+**For the operational guide — running one module, reading results, why a full run is red on
+purpose, and the shell/environment traps — see [RUNBOOK.md](RUNBOOK.md).** The short version:
+
 ```bash
 make test          # Python, then TypeScript
 make test-py
